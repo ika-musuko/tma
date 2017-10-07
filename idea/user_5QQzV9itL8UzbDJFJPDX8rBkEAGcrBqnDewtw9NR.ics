@@ -1,0 +1,829 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+X-WR-CALDESC:次のユーザのカレンダー イベント: Sherwyn Sen
+X-WR-CALNAME:Sherwyn Sen のカレンダー (Canvas)
+CALSCALE:GREGORIAN
+PRODID:iCalendar-Ruby
+BEGIN:VEVENT
+DESCRIPTION:IMPORTANT: Before submitting please read "Submission Instructio
+ ns" under Files -> Homework. Not following the instructions will result in 
+ reduced points.\n\nProblem 1\n\nWrite a class called StringCode with the fo
+ llowing functions. (Do not change these function names or return types\, el
+ se the tests will fail).\n\npublic static String blowup(String str)\n\nRetu
+ rns a version of the original string as follows: each digit 0-9 that appear
+ s in the original string is replaced by that many occurrences of the charac
+ ter to the right of the digit. So the string "a3tx2z" yields "attttxzzz"\, 
+ and "12x" yields "2xxx". A digit not followed by a character (i.e. at the e
+ nd of the string) is replaced by nothing.(Keep the digit as is)\n\n  public
+  static int maxRun(String str)\n\nGiven a string\, returns the length of th
+ e largest run in the string. A "run" is a series of zero or more adjacent c
+ haracters that are the same. So the max run of "xxyyyz" is 3\, and the max 
+ run of "xyz" is 1.\n\nA junit test for the Matrix class has been provided u
+ nder Files -> Homework -> HW01. Your class must pass all the tests in that 
+ file. \n\n \n\n \n\nProblem 2\n\nDefine a class Matrix\, which represents t
+ wo-dimensional integer arrays and supports the following operations. Use th
+ e prototype specified in bold below. Use appropriate access modifiers.\n\n*
+  Create a new Matrix with specified rows and columns: Matrix(int rows\, int
+  columns)\n\n* Convert a Matrix to a string representation so that it can b
+ e printed: String getString() \n\n* For ex if you have the following Matrix
+  [[1\,2]\,[3\,4]] the string representation should return "1\t2\t\n3\t\4\t\
+ n"\n\n* Gettors for row and column. Gettors and Settors for individual elem
+ ents. \n\n* int getRow()\, int getColumn()\, int getValueAt(int row\, int c
+ olumn)\n\n* void setValueAt(int row\, int column\, int value)\n\n* Static m
+ ethod: Add two Matrices  to get a new Matrix. static Matrix add(Matrix one\
+ , Matrix other)\n\n* Note: Two matrices can only be added if they have the 
+ same number of rows and columns.\n\n* Multiply a Matrix by an int and retur
+ n a new Matrix. Matrix multiply(int x)\n\n* This will multiply each element
+  of the matrix by x.\n\n* Compute the diagonal sum of the Matrix as the sum
+  of the elements along the main diagonal\, only if the matrix has equal num
+ ber of rows and columns. Else return Integer.MIN_VALUE int getDiagonalSum()
+ \n\nA junit test for the Matrix class has been provided under Files -> Home
+ work -> HW01. Your class must pass all the tests in that file. \n\nProblem 
+ 3: Class Hierarchy\n\nOrchestras are often thought of as divided into secti
+ ons based upon the type of instrument contained within those sections (wood
+ winds\, brass\, strings\, etc). These types of instruments all have their o
+ wn unique properties\, but within these sections\, each instrument itself h
+ as specific characteristics\, such as a transposition\, a range of notes wi
+ thin which it is feasible for a performer to play\, and a variety of extend
+ ed techniques available to the performer. Create a class hierarchy containi
+ ng parent class\, Instrument()\, and two subclasses\, String() and Woodwind
+ (). Each of these subclasses have their own subclasses\, representing instr
+ uments that belong to them as well as attributes (transposition\, range\, e
+ xtendedTechniques). Draw a class diagram for this class hierarchy and inclu
+ de that with your submission. NO code necessary for this question. \n\nStri
+ ng Instruments: Violin\, Cello\, Guitar...\n\nWoodwind: Clarinet\, Saxophon
+ e\, Flute...\n\n \n\n 
+DTEND;VALUE=DATE:20170907
+DTSTAMP:20170921T194200Z
+DTSTART;VALUE=DATE:20170907
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW01 [FA17: CS-151 Sec 04 - Object Orntd Dsgn]
+UID:event-assignment-4505921
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1245600&mo
+ nth=09&year=2017#assignment_4505921
+X-ALT-DESC;FMTTYPE=text/html:<p><strong>IMPORTANT: Before submitting please
+  read "Submission Instructions" under Files -&gt\; Homework. Not following 
+ the instructions will result in reduced points.</strong></p>\n<p><strong>Pr
+ oblem 1</strong></p>\n<p><strong>Write a class called StringCode with the f
+ ollowing functions. (Do not change these function names or return types\, e
+ lse the tests will fail).</strong></p>\n<p><strong>public static String blo
+ wup(String str)</strong></p>\n<p>Returns a version of the original string a
+ s follows: each digit 0-9 that appears in the original string is replaced b
+ y that many occurrences of the character to the right of the digit. So the 
+ string "a3tx2z" yields "a<span>ttt</span>tx<span>zz</span>z"\, and "12x" yi
+ elds "2<span>xx</span>x". A digit not followed by a character (i.e. at the 
+ end of the string) is replaced by nothing.(Keep the digit as is)</p>\n<p> <
+ strong> public static int maxRun(String str)</strong></p>\n<p>Given a strin
+ g\, returns the length of the largest run in the string. A "run" is a serie
+ s of zero or more adjacent characters that are the same. So the max run of 
+ "xxyyyz" is 3\, and the max run of "xyz" is 1.</p>\n<p><strong>A junit test
+  for the Matrix class has been provided under Files -&gt\; Homework -&gt\; 
+ HW01. Your class must pass all the tests in that file. </strong></p>\n<p> <
+ /p>\n<p> </p>\n<p><strong>Problem 2</strong></p>\n<p>Define a class Matrix\
+ , which represents two-dimensional integer arrays and supports the followin
+ g operations. Use the prototype specified in bold below. <strong>Use approp
+ riate access modifiers.</strong></p>\n<ul>\n<li>Create a new Matrix with sp
+ ecified rows and columns: Matrix<strong>(int rows\, int columns)</strong>\n
+ </li>\n<li>Convert a Matrix to a string representation so that it can be pr
+ inted: <strong>String getString() </strong>\n<ul>\n<li>For ex if you have t
+ he following Matrix [[1\,2]\,[3\,4]] the string representation should retur
+ n "1\t2\t\n3\t\4\t\n"</li>\n</ul>\n</li>\n<li>Gettors for row and column. G
+ ettors and Settors for individual elements. <br>\n<ul>\n<li><strong>int get
+ Row()\, int getColumn()\, int getValueAt(int row\, int column)</strong></li
+ >\n<li><strong>void setValueAt(int row\, int column\, int value)</strong></
+ li>\n</ul>\n</li>\n<li>Static method: Add two Matrices  to get a new Matrix
+ .<strong> static Matrix add(Matrix one\, Matrix other)</strong>\n<ul>\n<li>
+ Note: Two matrices can only be added if they have the same number of rows a
+ nd columns.</li>\n</ul>\n</li>\n<li>Multiply a Matrix by an int and return 
+ a new Matrix. <strong>Matrix multiply(int x)</strong>\n<ul>\n<li>This will 
+ multiply each element of the matrix by x.</li>\n</ul>\n</li>\n<li>Compute t
+ he diagonal sum of the Matrix as the sum of the elements along the main dia
+ gonal\, only if the matrix has equal number of rows and columns. Else retur
+ n Integer.MIN_VALUE <strong>int getDiagonalSum()</strong>\n</li>\n</ul>\n<p
+ ><strong>A junit test for the Matrix class has been provided under Files -&
+ gt\; Homework -&gt\; HW01. Your class must pass all the tests in that file.
+  </strong></p>\n<p><strong>Problem 3: Class Hierarchy</strong></p>\n<p><spa
+ n>Orchestras are often thought of as divided into sections based upon the t
+ ype of instrument contained within those sections (woodwinds\, brass\, stri
+ ngs\, etc). These types of instruments all have their own unique properties
+ \, but within these sections\, each instrument itself has specific characte
+ ristics\, such as a transposition\, a range of notes within which it is fea
+ sible for a performer to play\, and a variety of extended techniques availa
+ ble to the performer. Create a class hierarchy containing parent class\, In
+ strument()\, and two subclasses\, String() and Woodwind(). Each of these su
+ bclasses have their own subclasses\, representing instruments that belong t
+ o them as well as attributes (transposition\, range\, extendedTechniques). 
+ Draw a class diagram for this class hierarchy and include that with your su
+ bmission. NO code necessary for this question. </span></p>\n<p><span>String
+  Instruments: Violin\, Cello\, Guitar...</span></p>\n<p><span>Woodwind: Cla
+ rinet\, Saxophone\, Flute...</span></p>\n<p> </p>\n<p> </p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20170907
+DTSTAMP:20170909T224600Z
+DTSTART;VALUE=DATE:20170907
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW 1 [FA17: CMPE-120 Sec 05 - Computer Org and Arch]
+UID:event-assignment-4483863
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1246330&mo
+ nth=09&year=2017#assignment_4483863
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 2:  1\, 2\, 3\, 4\, 5 (10 points each)\n\n \n\nClarificatio
+ n for #3:\n\nSignificant bit of DOUT bus is the least significant bit of th
+ e output value of the last OUT instruction.  For example\, if the instructi
+ on is OUT 4\, then the least significant bit of 4 is value 0\; therefore\, 
+ LOC = 0 when the next instruction is executed.  Similarly\, if the instruct
+ ion is OUT 5\, then LOC = 1 when the next instruction is executed.  Otherwi
+ se\, if the instruction is not OUT\, the value of DOUT is the same as when 
+ it was last set.\n\nAssuming each assembly instruction (code line) takes on
+ e clock cycle to complete\, 10 clock cycles is the time it takes to execute
+  10 lines of assembly code.
+DTEND;VALUE=DATE:20170911
+DTSTAMP:20170915T194700Z
+DTSTART;VALUE=DATE:20170911
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch. 2 Exercises [FA17: CMPE-102 Sec 02 - Assembly Language Programm
+ ing]
+UID:event-assignment-4536508
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4536508
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 2:  1\, 2\, 3\, 4\, 5 (10 points each)<
+ /p>\n<p> </p>\n<p><span style="text-decoration: underline\;">Clarification 
+ for #3:</span></p>\n<p>Significant bit of DOUT bus is the least significant
+  bit of the output value of the last OUT instruction.  For example\, if the
+  instruction is OUT 4\, then the least significant bit of 4 is value 0\; th
+ erefore\, LOC = 0 when the next instruction is executed.  Similarly\, if th
+ e instruction is OUT 5\, then LOC = 1 when the next instruction is executed
+ .  Otherwise\, if the instruction is not OUT\, the value of DOUT is the sam
+ e as when it was last set.</p>\n<p>Assuming each assembly instruction (code
+  line) takes one clock cycle to complete\, 10 clock cycles is the time it t
+ akes to execute 10 lines of assembly code.</p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch.1:  1 - 8 (10 pts each)
+DTEND;VALUE=DATE:20170911
+DTSTAMP:20171001T001200Z
+DTSTART;VALUE=DATE:20170911
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch.1 Exercises [FA17: CMPE-102 Sec 02 - Assembly Language Programmi
+ ng]
+UID:event-assignment-4534981
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4534981
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch.1:  1 - 8 (10 pts each)</p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:[Lab1.docx](https://sjsu.instructure.com/courses/1240231/files/
+ 47832448/download?wrap=1)
+DTEND;VALUE=DATE:20170912
+DTSTAMP:20170926T022700Z
+DTSTART;VALUE=DATE:20170912
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Homework1 [FA17: CS-146 Sec 07 - Data Struct and Alg]
+UID:event-assignment-4538810
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240231&mo
+ nth=09&year=2017#assignment_4538810
+X-ALT-DESC;FMTTYPE=text/html:<p><a class="instructure_file_link instructure
+ _scribd_file" title="Lab1.docx" href="https://sjsu.instructure.com/courses/
+ 1240231/files/47832448/download?wrap=1" data-api-endpoint="https://sjsu.ins
+ tructure.com/api/v1/courses/1240231/files/47832448" data-api-returntype="Fi
+ le">Lab1.docx</a></p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20170912
+DTSTAMP:20170923T185100Z
+DTSTART;VALUE=DATE:20170912
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW 2 [FA17: CMPE-120 Sec 05 - Computer Org and Arch]
+UID:event-assignment-4483864
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1246330&mo
+ nth=09&year=2017#assignment_4483864
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 3:\n\n* 1\, 2\, 3\, 4\, 5
+DTEND;VALUE=DATE:20170918
+DTSTAMP:20171001T001500Z
+DTSTART;VALUE=DATE:20170918
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch. 3 Exercises (part I) [FA17: CMPE-102 Sec 02 - Assembly Language
+  Programming]
+UID:event-assignment-4541054
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4541054
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 3:</p>\n<ul>\n<li>1\, 2\, 3\, 4\, 5</li
+ >\n</ul>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:1.  Follow the instruction in MPLAB_Setup.txt to install MPLAB.
+ \n\n2.  Once MPLAB has been successfully installed\, use the attached sampl
+ e.s to test out your assembly environment.\n\nSubmit the followings to Canv
+ as:\n\n* Screenshot of SFR window after program execution\n\n* Screenshot o
+ f DATA memory content after program execution\n\n[](https://sjsu.instructur
+ e.com/courses/1244638/files/47929356/download?wrap=1)[](https://sjsu.instru
+ cture.com/courses/1244638/files/47860455/download?wrap=1)\n\n[MPLAB_Setup.t
+ xt](https://sjsu.instructure.com/courses/1244638/files/47929356/download?wr
+ ap=1)\n\n[sample.s](https://sjsu.instructure.com/courses/1244638/files/4786
+ 0455/download?wrap=1)
+DTEND;VALUE=DATE:20170918
+DTSTAMP:20171001T001600Z
+DTSTART;VALUE=DATE:20170918
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:MPLAB Setup [FA17: CMPE-102 Sec 02 - Assembly Language Programming]
+UID:event-assignment-4540368
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4540368
+X-ALT-DESC;FMTTYPE=text/html:<p>1.  Follow the instruction in <strong>MPLAB
+ _Setup.txt</strong> to install MPLAB.</p>\n<p>2.  Once MPLAB has been succe
+ ssfully installed\, use the attached <strong>sample.s</strong> to test out 
+ your assembly environment.</p>\n<p>Submit the followings to Canvas:</p>\n<u
+ l>\n<li>Screenshot of SFR window after program execution</li>\n<li>Screensh
+ ot of DATA memory content after program execution</li>\n</ul>\n<p><a class=
+ "instructure_file_link instructure_scribd_file" title="MPLAB_Setup.txt" hre
+ f="https://sjsu.instructure.com/courses/1244638/files/47929356/download?wra
+ p=1" data-api-endpoint="https://sjsu.instructure.com/api/v1/courses/1244638
+ /files/47929356" data-api-returntype="File"></a><a class="instructure_file_
+ link instructure_scribd_file" title="sample.s" href="https://sjsu.instructu
+ re.com/courses/1244638/files/47860455/download?wrap=1" data-api-endpoint="h
+ ttps://sjsu.instructure.com/api/v1/courses/1244638/files/47860455" data-api
+ -returntype="File"></a></p>\n<p><a class="instructure_file_link instructure
+ _scribd_file" title="MPLAB_Setup-1.txt" href="https://sjsu.instructure.com/
+ courses/1244638/files/47929356/download?wrap=1" data-api-endpoint="https://
+ sjsu.instructure.com/api/v1/courses/1244638/files/47929356" data-api-return
+ type="File">MPLAB_Setup.txt</a></p>\n<p><a class="instructure_file_link ins
+ tructure_scribd_file" title="sample.s" href="https://sjsu.instructure.com/c
+ ourses/1244638/files/47860455/download?wrap=1" data-api-endpoint="https://s
+ jsu.instructure.com/api/v1/courses/1244638/files/47860455" data-api-returnt
+ ype="File">sample.s</a></p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20170919
+DTSTAMP:20170924T041400Z
+DTSTART;VALUE=DATE:20170919
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW 3 [FA17: CMPE-120 Sec 05 - Computer Org and Arch]
+UID:event-assignment-4483866
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1246330&mo
+ nth=09&year=2017#assignment_4483866
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:[Homework2.pdf](https://sjsu.instructure.com/courses/1240231/fi
+ les/47884520/download?wrap=1)
+DTEND;VALUE=DATE:20170920
+DTSTAMP:20171002T052100Z
+DTSTART;VALUE=DATE:20170920
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Homework2 [FA17: CS-146 Sec 07 - Data Struct and Alg]
+UID:event-assignment-4541474
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240231&mo
+ nth=09&year=2017#assignment_4541474
+X-ALT-DESC;FMTTYPE=text/html:<p><a class="instructure_file_link instructure
+ _scribd_file" title="Homework2.pdf" href="https://sjsu.instructure.com/cour
+ ses/1240231/files/47884520/download?wrap=1" data-api-endpoint="https://sjsu
+ .instructure.com/api/v1/courses/1240231/files/47884520" data-api-returntype
+ ="File">Homework2.pdf</a></p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:In this assignment you will create a few sequence diagrams and 
+ class diagrams. Please include the CRC in your class diagrams.\n\nINSTRUCTI
+ ONS: You may work in groups of up to 3 people. Please put all group members
+  names in the README file. One submission per group. Submit ONLY README and
+  pdf files of your diagrams as a zip. No other formats will be accepted. \n
+ \nQuestion 1 : Class Diagrams\n\n1a. Texas Hold ‘em poker game\n\n* [2](htt
+ p://recherche.ircam.fr/anasyn/peeters/ARTICLES/Peeters_2003_cuidadoaudiofea
+ tures.pdf) to 8 human or computer players\n\n* Each player has ||I8 name an
+ d stack of chips\n\n* Computer players have a difficulty setting: easy\, me
+ dium\, hard\n\n* Summary of each hand: Dealer collects ante from appropriat
+ e players\, shuffles the deck\, and deals each player a hand of 2 cards fro
+ m the deck. A betting round occurs\, followed by dealing 3 shared cards fro
+ m the deck. As shared cards are dealt\, more betting rounds occur\, where e
+ ach player can fold\, check\, or raise. At the end of a round\, if more tha
+ n one player is remaining\, players' hands are compared\, and the best hand
+  wins the pot of all chips bet so far.\n\n* What classes are in this system
+ ? What are their responsibilities? Which classes collaborate?\n\n* Draw a c
+ lass diagram for this system. Include relationships between classes (genera
+ lization and associational). \n\n1b: Shopping Cart\n\n* Customer can place 
+ items in a shopping cart\n\n* There can be multiple items per order\n\n* An
+  order goes through various states - incart\, paid\, fulfilled or cancelled
+ .\n\n* The system has the ability to return part or all of the items in an 
+ order\n\n* Customer can make a payment using Cash\, Credit\, Debit or EBT\n
+ \n* If a payment is declined\, the order is cancelled. \n\n* What classes a
+ re in this system? What are their responsibilities? Which classes collabora
+ te?\n\n* Draw a class diagram for this system. Include relationships betwee
+ n classes (generalization and associational).\n\nQuestion 2: Sequence Diagr
+ ams\n\n2a. Schedule an appointment\n\nThe scenario begins when the user cho
+ oses to add a new appointment in the UI. The UI notices which part of the c
+ alendar is active and pops up an Add Appointment window for that date and t
+ ime. The user enters information about the appointment's name\, location\, 
+ start and end times. The UI will prevent the user from entering an appointm
+ ent that has invalid information\, such as an empty name or negative durati
+ on. The calendar records the new appointment in the user's list of appointm
+ ents. Any reminder selected by the user is added to the list of reminders. 
+ If the user already has an appointment at that time\, the user is shown a m
+ essage and asked to choose an available time or replace the appointment. If
+  the user enters an appointment with the same name and duration as an exist
+ ing meeting\, the calendar asks the user whether he/she intended to join th
+ at meeting instead. If so\, the user is added to that meeting's list of par
+ ticipants.\n\n2b. Returning an Item (Refer to Shopping Cart above)\n\nThe u
+ ser clicks on return on UI that displays a list of items purchased in the p
+ ast (Remember there is an implicit grouping by order but that's an abstract
+ ion that the user doesn't need to know) . The user then chooses the item(s)
+  to return. A feedback screen is shown to enter why the return is being mad
+ e. Upon entering the details\, the item is marked as returned and a refund 
+ is initiated to the same payment type that was used in the order. A confirm
+ ation page is shown to the user. \n\nPlease used piazza for asking any ques
+ tions regarding this assignment. 
+DTEND;VALUE=DATE:20170922
+DTSTAMP:20170924T065800Z
+DTSTART;VALUE=DATE:20170922
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW02 [FA17: CS-151 Sec 04 - Object Orntd Dsgn]
+UID:event-assignment-4505922
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1245600&mo
+ nth=09&year=2017#assignment_4505922
+X-ALT-DESC;FMTTYPE=text/html:<p>In this assignment you will create a few se
+ quence diagrams and class diagrams. Please include the CRC in your class di
+ agrams.</p>\n<p><strong>INSTRUCTIONS:</strong> <strong>You may work in grou
+ ps of up to 3 people</strong>. Please put all group members names in the RE
+ ADME file. One submission per group. Submit ONLY README and pdf files of yo
+ ur diagrams as a zip. No other formats will be accepted. </p>\n<p><strong>Q
+ uestion 1 : Class Diagrams</strong></p>\n<p><strong>1a. Texas Hold ‘em poke
+ r game</strong></p>\n<ul>\n<li><span style="font-size: 12pt\;"><a href="htt
+ p://recherche.ircam.fr/anasyn/peeters/ARTICLES/Peeters_2003_cuidadoaudiofea
+ tures.pdf">2</a> to 8 human or computer players</span></li>\n<li><span styl
+ e="font-size: 12pt\;">Each player has ||I8 name and stack of chips</span></
+ li>\n<li><span style="font-size: 12pt\;">Computer players have a difficulty
+  setting: easy\, medium\, hard </span></li>\n<li>\n<span style="font-size: 
+ 12pt\;">Summary of each hand: </span>Dealer collects ante from appropriate 
+ players\, shuffles the deck\, and deals each player a hand of 2 cards from 
+ the deck. A betting round occurs\, followed by dealing 3 shared cards from 
+ the deck. As shared cards are dealt\, more betting rounds occur\, where eac
+ h player can fold\, check\, or raise. At the end of a round\, if more than 
+ one player is remaining\, players' hands are compared\, and the best hand w
+ ins the pot of all chips bet so far.</li>\n<li>What classes are in this sys
+ tem? What are their responsibilities? Which classes collaborate?</li>\n<li>
+ Draw a class diagram for this system. Include relationships between classes
+  (generalization and associational).<strong> </strong>\n</li>\n</ul>\n<p><s
+ trong>1b: Shopping Cart</strong></p>\n<ul>\n<li><span style="font-size: 12p
+ t\;">Customer can place items in a shopping cart</span></li>\n<li><span sty
+ le="font-size: 12pt\;">There can be multiple items per order</span></li>\n<
+ li><span style="font-size: 12pt\;">An order goes through various states - i
+ ncart\, paid\, fulfilled or cancelled.</span></li>\n<li><span style="font-s
+ ize: 12pt\;">The system has the ability to return part or all of the items 
+ in an order</span></li>\n<li><span style="font-size: 12pt\;">Customer can m
+ ake a payment using Cash\, Credit\, Debit or EBT</span></li>\n<li><span sty
+ le="font-size: 12pt\;">If a payment is declined\, the order is cancelled. <
+ /span></li>\n<li><span style="font-size: 12pt\;">What classes are in this s
+ ystem? What are their responsibilities? Which classes collaborate?</span></
+ li>\n<li><span style="font-size: 12pt\;">Draw a class diagram for this syst
+ em. Include relationships between classes (generalization and associational
+ ).</span></li>\n</ul>\n<p><strong>Question 2: Sequence Diagrams</strong></p
+ >\n<p><strong>2a. Schedule an appointment</strong></p>\n<p>The scenario beg
+ ins when the user chooses to add a new appointment in the UI. The UI notice
+ s which part of the calendar is active and pops up an Add Appointment windo
+ w for that date and time. The user enters information about the appointment
+ 's name\, location\, start and end times. The UI will prevent the user from
+  entering an appointment that has invalid information\, such as an empty na
+ me or negative duration. The calendar records the new appointment in the us
+ er's list of appointments. Any reminder selected by the user is added to th
+ e list of reminders. If the user already has an appointment at that time\, 
+ the user is shown a message and asked to choose an available time or replac
+ e the appointment. If the user enters an appointment with the same name and
+  duration as an existing meeting\, the calendar asks the user whether he/sh
+ e intended to join that meeting instead. If so\, the user is added to that 
+ meeting's list of participants.</p>\n<p><strong>2b. Returning an Item (Refe
+ r to Shopping Cart above)</strong></p>\n<p>The user clicks on return on UI 
+ that displays a list of items purchased in the past (Remember there is an i
+ mplicit grouping by order but that's an abstraction that the user doesn't n
+ eed to know) . The user then chooses the item(s) to return. A feedback scre
+ en is shown to enter why the return is being made. Upon entering the detail
+ s\, the item is marked as returned and a refund is initiated to the same pa
+ yment type that was used in the order. A confirmation page is shown to the 
+ user. </p>\n<p><strong>Please used piazza for asking any questions regardin
+ g this assignment. </strong></p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Given arrays A and B\, of byte values below:\n\n Matrix A:\n\nA
+ ddress  \n\nValue\n\n0x1000\n\n2\n\n0x1001\n\n14\n\n0x1002\n\n26\n\n0x1003\
+ n\n38\n\n \n\nMatrix B = \n\nAddress  \n\nValue\n\n0x1061\n\n1\n\n0x1062\n\
+ n13\n\n0x1063\n\n25\n\n0x1064\n\n37\n\n1.  Initialize Matrix A & B at the s
+ pecified memory address.\n\n2.  Initialize Matrix C (same dimension) with a
+ ll zero's at location 0x1300.\n\n3.  Compute C = A + B.  (The result should
+  be stored at location 0x1300).\n\nFor submission\, include the followings:
+ \n\n- Screen shot of data memory showing contents of matrices A\, B\, and C
+ .\n\n- Source file (.s)\n\n \n\n 
+DTEND;VALUE=DATE:20170925
+DTSTAMP:20171003T052100Z
+DTSTART;VALUE=DATE:20170925
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Array Addition [FA17: CMPE-102 Sec 02 - Assembly Language Programmi
+ ng]
+UID:event-assignment-4544798
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4544798
+X-ALT-DESC;FMTTYPE=text/html:<p>Given arrays A and B\, of byte values below
+ :</p>\n<p> <strong>Matrix A:</strong></p>\n<table style="width: 196.703125p
+ x\;">\n<tbody>\n<tr>\n<td style="width: 86px\;"><em>Address<strong>  </stro
+ ng></em></td>\n<td style="width: 93.703125px\;"><i>Value</i></td>\n</tr>\n<
+ tr>\n<td style="width: 86px\;"><em>0x1000</em></td>\n<td style="width: 93.7
+ 03125px\;">2</td>\n</tr>\n<tr>\n<td style="width: 86px\;"><em>0x1001</em></
+ td>\n<td style="width: 93.703125px\;">14</td>\n</tr>\n<tr>\n<td style="widt
+ h: 86px\;"><em>0x1002</em></td>\n<td style="width: 93.703125px\;">26</td>\n
+ </tr>\n<tr>\n<td style="width: 86px\;"><em>0x1003</em></td>\n<td style="wid
+ th: 93.703125px\;">38</td>\n</tr>\n</tbody>\n</table>\n<p><em> </em></p>\n<
+ p><strong>Matrix B = </strong></p>\n<table style="width: 193.328125px\;">\n
+ <tbody>\n<tr>\n<td style="width: 94px\;"><em>Address  </em></td>\n<td style
+ ="width: 100.328125px\;"><i>Value</i></td>\n</tr>\n<tr>\n<td style="width: 
+ 94px\;"><em>0x1061</em></td>\n<td style="width: 100.328125px\;">1</td>\n</t
+ r>\n<tr>\n<td style="width: 94px\;"><em>0x1062</em></td>\n<td style="width:
+  100.328125px\;">13</td>\n</tr>\n<tr>\n<td style="width: 94px\;"><em>0x1063
+ </em></td>\n<td style="width: 100.328125px\;">25</td>\n</tr>\n<tr>\n<td sty
+ le="width: 94px\;"><em>0x1064</em></td>\n<td style="width: 100.328125px\;">
+ 37</td>\n</tr>\n</tbody>\n</table>\n<p>1.  Initialize Matrix A &amp\; B at 
+ the specified memory address.</p>\n<p>2.  Initialize Matrix C (same dimensi
+ on) with all zero's at location 0x1300.</p>\n<p>3.  Compute C = A + B.  (Th
+ e result should be stored at location 0x1300).</p>\n<p>For submission\, inc
+ lude the followings:</p>\n<p>- Screen shot of data memory showing contents 
+ of matrices A\, B\, and C.</p>\n<p>- Source file (.s)</p>\n<p> </p>\n<p> </
+ p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 3\n\n* 6\, 7\, 8\, 9\, 12\, 13\, 15\n\n* 16\, 18\, 20\, 22\
+ , 24\, 26\, 28\, 32\n\n \n\n 
+DTEND;VALUE=DATE:20170925
+DTSTAMP:20171001T005400Z
+DTSTART;VALUE=DATE:20170925
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch. 3 Exercises (part II) [FA17: CMPE-102 Sec 02 - Assembly Languag
+ e Programming]
+UID:event-assignment-4544232
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=09&year=2017#assignment_4544232
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 3</p>\n<ul>\n<li>6\, 7\, 8\, 9\, 12\, 1
+ 3\, 15</li>\n<li>16\, 18\, 20\, 22\, 24\, 26\, 28\, 32</li>\n</ul>\n<p> </p
+ >\n<p> </p>
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20170926
+DTSTAMP:20170915T000500Z
+DTSTART;VALUE=DATE:20170926
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CMPE 120 Midterm Exam: Ch 1~3
+UID:event-calendar-event-1211272
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=09&year=2017#calendar_event_1211272
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20170926
+DTSTAMP:20170922T001100Z
+DTSTART;VALUE=DATE:20170926
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CMPE 131: Presentation and Documentation
+UID:event-calendar-event-1212129
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=09&year=2017#calendar_event_1212129
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 4\n\n* 1\, 3\, 5\, 7\, 9\, 11\, 13\, 15\, 17\, 19\, 21
+DTEND;VALUE=DATE:20171002
+DTSTAMP:20171003T060500Z
+DTSTART;VALUE=DATE:20171002
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch. 4 Exercises (Part I) [FA17: CMPE-102 Sec 02 - Assembly Language
+  Programming]
+UID:event-assignment-4547757
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=10&year=2017#assignment_4547757
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 4</p>\n<ul>\n<li>1\, 3\, 5\, 7\, 9\, 11
+ \, 13\, 15\, 17\, 19\, 21</li>\n</ul>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Given:\n\nValue1 = 0xAB90\;\n\nValue2 = 0x12CD\;\n\nWrite a sho
+ rt assembly program to do the followings:\n\nResult1:  a 16-bit value conta
+ ining bits 15-8 of Value1 in its MSB and bits 7-0 of Value2 in its LSB.\n\n
+ Result2:  a 16-bit variable whose value is derived from Result1 by invertin
+ g all the odd position bits of Result1.\n\nYou can assume Value1\, Value2\,
+  Result1\, and Result2 are all variables in data memory.\n\n \n\nFor submis
+ sion\, include the followings:\n\n- Screen shot of data memory showing cont
+ ents of all variables.\n\n- Source file (.s)\n\n 
+DTEND;VALUE=DATE:20171002
+DTSTAMP:20171003T083600Z
+DTSTART;VALUE=DATE:20171002
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Logical Bitwise Functions [FA17: CMPE-102 Sec 02 - Assembly Languag
+ e Programming]
+UID:event-assignment-4547781
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=10&year=2017#assignment_4547781
+X-ALT-DESC;FMTTYPE=text/html:<p>Given:</p>\n<p style="padding-left: 30px\;"
+ ><strong>Value1</strong> = 0xAB90\;</p>\n<p style="padding-left: 30px\;"><s
+ trong>Value2</strong> = 0x12CD\;</p>\n<p>Write a short assembly program to 
+ do the followings:</p>\n<p style="padding-left: 30px\;"><strong>Result1</st
+ rong>:  a 16-bit value containing bits 15-8 of <strong>Value1</strong> in i
+ ts MSB and bits 7-0 of <strong>Value2</strong> in its LSB.</p>\n<p style="p
+ adding-left: 30px\;"><strong>Result2</strong>:  a 16-bit variable whose val
+ ue is derived from <strong>Result1</strong> by inverting all the odd positi
+ on bits of <strong>Result1</strong>.</p>\n<p>You can assume <strong>Value1<
+ /strong>\, <strong>Value2</strong>\, <strong>Result1</strong>\, and <strong
+ >Result2</strong> are all variables in data memory.</p>\n<p> </p>\n<p>For s
+ ubmission\, include the followings:</p>\n<p>- Screen shot of data memory sh
+ owing contents of all variables.</p>\n<p>- Source file (.s)</p>\n<p> </p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:[Hw3.pdf](https://sjsu.instructure.com/courses/1240231/files/48
+ 012570/download?wrap=1)
+DTEND;VALUE=DATE:20171002
+DTSTAMP:20171005T060900Z
+DTSTART;VALUE=DATE:20171002
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Homework3 [FA17: CS-146 Sec 07 - Data Struct and Alg]
+UID:event-assignment-4549013
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240231&mo
+ nth=10&year=2017#assignment_4549013
+X-ALT-DESC;FMTTYPE=text/html:<p><a class="instructure_file_link instructure
+ _scribd_file" title="Hw3.pdf" href="https://sjsu.instructure.com/courses/12
+ 40231/files/48012570/download?wrap=1" data-api-endpoint="https://sjsu.instr
+ ucture.com/api/v1/courses/1240231/files/48012570" data-api-returntype="File
+ ">Hw3.pdf</a></p>
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171004T065900Z
+DTSTAMP:20170929T082000Z
+DTSTART:20171004T065800Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:HW 4 CMPE 120
+UID:event-calendar-event-1212808
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1212808
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171004T231500Z
+DTSTAMP:20171002T130600Z
+DTSTART:20171004T220000Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CS 146 Midterm Exam
+UID:event-calendar-event-1212125
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1212125
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:This is an INDIVIDUAL assignment. The goal is to create a simpl
+ e ui to play litebrite. [Litebrite](https://en.wikipedia.org/wiki/Lite-Brit
+ e) is game of a array of spaces that can be filled with colored lights to c
+ reate art\n\nLite-Brite allows the artist to create a glowing picture by pl
+ acing multi-colored [translucent](https://en.wikipedia.org/wiki/Transparenc
+ y_(optics)) [plastic](https://en.wikipedia.org/wiki/Plastic) pegs through [
+ opaque](https://en.wikipedia.org/wiki/Opacity_(optics)) [black](https://en.
+ wikipedia.org/wiki/Black) [paper](https://en.wikipedia.org/wiki/Paper).[[4]
+ ](https://en.wikipedia.org/wiki/Lite-Brite#cite_note-4) Using a standard li
+ ghtbulb\, the light is blocked by the black paper except where the pegs con
+ duct the light. When lit\, the pegs have an appearance similar to that of [
+ LEDs](https://en.wikipedia.org/wiki/LED).\n\nGoal of the project is to simu
+ late this in Java. The original lite-brite has a hexagonal pattern but to s
+ implify we will use a regular rectangular pattern. Provide the user with a 
+ colorpicker ([a quick tutorial here](http://docs.oracle.com/javafx/2/ui_con
+ trols/color-picker.htm)). Once they choose a color they can click on any gr
+ id and your code should color that grid with the chosen color. The user wil
+ l be able to change colors and continue "drawing". Clicking on a colored gr
+ id should turn off the the color (remove the coloring/return the grid to bl
+ ack). \n\nSample Image:\n\n [LiteBriteScreen.png](https://sjsu.instructure.
+ com/courses/1245600/files/48014785/preview)\n\nThe starter code in zip vers
+ ion has also been uploaded to Canvas[ LiteBrite.zip](https://sjsu.instructu
+ re.com/courses/1245600/files/47589265/download?wrap=1)\n\n \n\nExtra Credit
+ :\n\n1. Submit a nice drawing with your application. Submit this as a png/j
+ pg/pdf include it in the zip file. (2 points)\n\n2. Provide the ability to 
+ reset/erase the board  and start afresh (3 points).\n\n \n\n \n\n Submissio
+ n Instructions:\n\nPlease submit the following files\n\n1. LiteBrite.java \
+ n\n2. Any modified css that you may have used. \n\n3. An EXECUTABLE jar fil
+ e LiteBrite.jar. (Netbeans will automagically do this. You will find this f
+ ile under dist folder in your project).\n\n4. README.txt with your name stu
+ dentID and any other info you wish to communicate to the grader/me. \n\n5. 
+ Any extra credit files. \n\n \n\nPlace all these files in  zip file. Follow
+  naming conventions and other instructions from previous homework. Submit t
+ he zip file. Please do not include any package declaration in your files. 
+DTEND;VALUE=DATE:20171006
+DTSTAMP:20171006T224300Z
+DTSTART;VALUE=DATE:20171006
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:HW03 [FA17: CS-151 Sec 04 - Object Orntd Dsgn]
+UID:event-assignment-4505924
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1245600&mo
+ nth=10&year=2017#assignment_4505924
+X-ALT-DESC;FMTTYPE=text/html:<p>This is an INDIVIDUAL assignment. The goal 
+ is to create a simple ui to play litebrite. <a id="" class="" title="" href
+ ="https://en.wikipedia.org/wiki/Lite-Brite" target="">Litebrite</a> is game
+  of a array of spaces that can be filled with colored lights to create art<
+ /p>\n<p><span>Lite-Brite allows the artist to create a glowing picture by p
+ lacing multi-colored </span><a class="mw-redirect" title="Transparency (opt
+ ics)" href="https://en.wikipedia.org/wiki/Transparency_(optics)">translucen
+ t</a><span> </span><a title="Plastic" href="https://en.wikipedia.org/wiki/P
+ lastic">plastic</a><span> pegs through </span><a title="Opacity (optics)" h
+ ref="https://en.wikipedia.org/wiki/Opacity_(optics)">opaque</a><span> </spa
+ n><a title="Black" href="https://en.wikipedia.org/wiki/Black">black</a><spa
+ n> </span><a title="Paper" href="https://en.wikipedia.org/wiki/Paper">paper
+ </a><span>.</span><sup id="cite_ref-4" class="reference"><a href="https://e
+ n.wikipedia.org/wiki/Lite-Brite#cite_note-4">[4]</a></sup><span> Using a st
+ andard lightbulb\, the light is blocked by the black paper except where the
+  pegs conduct the light. When lit\, the pegs have an appearance similar to 
+ that of </span><a class="mw-redirect" title="LED" href="https://en.wikipedi
+ a.org/wiki/LED">LEDs</a><span>.</span></p>\n<p><span>Goal of the project is
+  to simulate this in Java. The original lite-brite has a hexagonal pattern 
+ but to simplify we will use a regular rectangular pattern. Provide the user
+  with a colorpicker (<a href="http://docs.oracle.com/javafx/2/ui_controls/c
+ olor-picker.htm">a quick tutorial here</a>). Once they choose a color they 
+ can click on any grid and your code should color that grid with the chosen 
+ color. The user will be able to change colors and continue "drawing". Click
+ ing on a colored grid should turn off the the color (remove the coloring/re
+ turn the grid to black). </span></p>\n<p><span>Sample Image:</span></p>\n<p
+ > <img src="https://sjsu.instructure.com/courses/1245600/files/48014785/pre
+ view" alt="LiteBriteScreen.png" width="510" height="532" data-api-endpoint=
+ "https://sjsu.instructure.com/api/v1/courses/1245600/files/48014785" data-a
+ pi-returntype="File"></p>\n<p><span>The starter code in zip version has als
+ o been uploaded to Canvas<a class="instructure_file_link" title="LiteBrite.
+ zip" href="https://sjsu.instructure.com/courses/1245600/files/47589265/down
+ load?wrap=1" data-api-endpoint="https://sjsu.instructure.com/api/v1/courses
+ /1245600/files/47589265" data-api-returntype="File"> LiteBrite.zip</a></spa
+ n></p>\n<p> </p>\n<p><strong>Extra Credit:</strong></p>\n<p>1. Submit a nic
+ e drawing with your application. Submit this as a png/jpg/pdf include it in
+  the zip file. (2 points)</p>\n<p>2. Provide the ability to reset/erase the
+  board  and start afresh (3 points).</p>\n<p> </p>\n<p> </p>\n<p> <strong>S
+ ubmission Instructions:</strong></p>\n<p>Please submit the following files<
+ /p>\n<p>1. LiteBrite.java </p>\n<p>2. Any modified css that you may have us
+ ed. </p>\n<p>3. An EXECUTABLE jar file LiteBrite.jar. (Netbeans will automa
+ gically do this. You will find this file under dist folder in your project)
+ .<img width="38" height="38"></p>\n<p>4. README.txt with your name studentI
+ D and any other info you wish to communicate to the grader/me. </p>\n<p>5. 
+ Any extra credit files. </p>\n<p> </p>\n<p>Place all these files in  zip fi
+ le. Follow naming conventions and other instructions from previous homework
+ . Submit the zip file. Please do not include any package declaration in you
+ r files. </p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 4\, exercise #47 on page 132\n\n* Convert the given C code 
+ segment to PIC24 assembly.  Assume u8_i has starting value of 0xE2.\n\nShow
+  memory dump of u8_i\, u8_j\, and u8_k after execution is completed.
+DTEND;VALUE=DATE:20171009
+DTSTAMP:20171004T060000Z
+DTSTART;VALUE=DATE:20171009
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Bit Counter [FA17: CMPE-102 Sec 02 - Assembly Language Programming]
+UID:event-assignment-4550853
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=10&year=2017#assignment_4550853
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 4\, exercise #47 on page 132</p>\n<ul>\
+ n<li>Convert the given C code segment to PIC24 assembly.  Assume <strong>u8
+ _i</strong> has starting value of <strong>0xE2</strong>.</li>\n</ul>\n<p>Sh
+ ow memory dump of <strong>u8_i</strong>\, <strong>u8_j</strong>\, and <stro
+ ng>u8_k</strong> after execution is completed.</p>
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Ch. 4 Exercises:\n\n* Even exercises from 2 - 34.  (HINT:  use 
+ MPLAB simulator to validate your answer.)
+DTEND;VALUE=DATE:20171009
+DTSTAMP:20171005T001900Z
+DTSTART;VALUE=DATE:20171009
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:Ch. 4 Exercises (Part II) [FA17: CMPE-102 Sec 02 - Assembly Languag
+ e Programming]
+UID:event-assignment-4550850
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1244638&mo
+ nth=10&year=2017#assignment_4550850
+X-ALT-DESC;FMTTYPE=text/html:<p>Ch. 4 Exercises:</p>\n<ul>\n<li>Even exerci
+ ses from 2 - 34.  (HINT:  use MPLAB simulator to validate your answer.)</li
+ >\n</ul>
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171011T004500Z
+DTSTAMP:20171002T130600Z
+DTSTART:20171010T233000Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CMPE 131 Midterm (Review Slides)
+UID:event-calendar-event-1212809
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1212809
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171011T034500Z
+DTSTAMP:20171002T130700Z
+DTSTART:20171011T010000Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CMPE 102 Midterm (Ch. 1-4)
+UID:event-calendar-event-1213193
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1213193
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171013T065800Z
+DTSTAMP:20171003T203900Z
+DTSTART:20171013T065800Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:HW 5 CMPE 120
+UID:event-calendar-event-1213532
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1213532
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20171012
+DTSTAMP:20170927T134200Z
+DTSTART;VALUE=DATE:20171012
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:SDD [FA17: CMPE-131 Sec 05 - Software Engr I]
+UID:event-assignment-4483934
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240227&mo
+ nth=10&year=2017#assignment_4483934
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DTEND:20171019T184500Z
+DTSTAMP:20171002T130700Z
+DTSTART:20171019T173000Z
+CLASS:PUBLIC
+LOCATION:
+SEQUENCE:0
+SUMMARY:CS151 Midterm
+UID:event-calendar-event-1212806
+URL:http://canvas.instructure.com/calendar?include_contexts=user_4309260&mo
+ nth=10&year=2017#calendar_event_1212806
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20171019
+DTSTAMP:20170927T134300Z
+DTSTART;VALUE=DATE:20171019
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:GitHub/schedule [FA17: CMPE-131 Sec 05 - Software Engr I]
+UID:event-assignment-4483935
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240227&mo
+ nth=10&year=2017#assignment_4483935
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20171109
+DTSTAMP:20170927T134500Z
+DTSTART;VALUE=DATE:20171109
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:test plan [FA17: CMPE-131 Sec 05 - Software Engr I]
+UID:event-assignment-4483939
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240227&mo
+ nth=11&year=2017#assignment_4483939
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:
+DTEND;VALUE=DATE:20171128
+DTSTAMP:20170927T134900Z
+DTSTART;VALUE=DATE:20171128
+CLASS:PUBLIC
+SEQUENCE:0
+SUMMARY:project report [FA17: CMPE-131 Sec 05 - Software Engr I]
+UID:event-assignment-4483940
+URL:http://sjsu.instructure.com/calendar?include_contexts=course_1240227&mo
+ nth=11&year=2017#assignment_4483940
+X-ALT-DESC;FMTTYPE=text/html:
+END:VEVENT
+END:VCALENDAR
