@@ -1,0 +1,58 @@
+
+
+{
+  "id": 4550850,
+  "description": "<p>Ch. 4 Exercises:<\/p>\r\n<ul>\r\n<li>Even exercises from 2 - 34.  (HINT:  use MPLAB simulator to validate your answer.)<\/li>\r\n<\/ul>",
+  "due_at": "2017-10-10T06:59:00Z",
+  "unlock_at": null,
+  "lock_at": "2017-10-10T06:59:00Z",
+  "points_possible": 170,
+  "grading_type": "points",
+  "assignment_group_id": 1762648,
+  "grading_standard_id": null,
+  "created_at": "2017-10-04T05:47:04Z",
+  "updated_at": "2017-10-05T00:19:22Z",
+  "peer_reviews": false,
+  "automatic_peer_reviews": false,
+  "position": 8,
+  "grade_group_students_individually": false,
+  "anonymous_peer_reviews": false,
+  "group_category_id": null,
+  "post_to_sis": false,
+  "moderated_grading": false,
+  "omit_from_final_grade": false,
+  "intra_group_peer_reviews": false,
+  "secure_params": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsdGlfYXNzaWdubWVudF9pZCI6ImQ0M2Y0ZTFlLTFhM2YtNDY4MC05NjRlLWViZTc0YzlkMzQwMyJ9.ptrvgHntnc2Dsey9zZxyeM3RkdvmCEAMODauljgX3q4",
+  "course_id": 1244638,
+  "name": "Ch. 4 Exercises (Part II)",
+  "submission_types": [
+    "online_upload"
+  ],
+  "has_submitted_submissions": true,
+  "due_date_required": false,
+  "max_name_length": 255,
+  "in_closed_grading_period": false,
+  "turnitin_enabled": false,
+  "turnitin_settings": {
+    "originality_report_visibility": "immediate",
+    "s_paper_check": true,
+    "internet_check": true,
+    "journal_check": true,
+    "exclude_biblio": true,
+    "exclude_quoted": true,
+    "exclude_small_matches_type": null,
+    "exclude_small_matches_value": null,
+    "submit_papers_to": true
+  },
+  "is_quiz_assignment": false,
+  "muted": false,
+  "html_url": "https:\/\/sjsu.instructure.com\/courses\/1244638\/assignments\/4550850",
+  "allowed_extensions": [
+    "pdf"
+  ],
+  "published": true,
+  "only_visible_to_overrides": false,
+  "locked_for_user": false,
+  "submissions_download_url": "https:\/\/sjsu.instructure.com\/courses\/1244638\/assignments\/4550850\/submissions?zip=1"
+}
+

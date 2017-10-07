@@ -8,13 +8,16 @@ headers = {
 	"Authorization": ("Bearer %s" % (ACCESS_TOKEN)),
 }
 
-courses_url = CANVAS % ("courses")
+courses_url = CANVAS % ("courses/1244638/assignments.json")
 courses = requests.get(courses_url, headers=headers)
-courses_json = courses.json()
-for c in courses_json:
+courses_json = courses.text
+print(courses_json)
+
+
+'''for c in courses_json:
 	with open("%s.calendar" % (c['id']), 'w') as f:
 		c_url
-
+'''
 '''calendar_url = CANVAS % ("courses.json")
 calendar = requests.get(calendar_url, headers=headers)
 print(calendar.text)'''
