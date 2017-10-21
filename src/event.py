@@ -1,5 +1,10 @@
 import datetime
 import sqlite3
+'''
+    event.py
+    
+    definitions for every type of event
+'''
 
 class Event:
     '''
@@ -14,6 +19,7 @@ class Event:
         start (datetime.datetime): start datetime for event
         end (datetime.datetime): end datetime for event
     '''
+    total = 0
     def __init__(self
                     , name: str=""
                     , desc: str=""
@@ -21,17 +27,27 @@ class Event:
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                 ):
+        # set a unique ID for this Event based on how many events have been created        
+        self.id = Event.total 
+        Event.total += 1
+        # initialize class members
         self.priority = priority
         self.start = start
         self.end = end
-    
+
 class TaskEvent(Event):
     '''
     Event with a "done" flag
     the Scheduler will generate TaskEvents until self.done has been set to True
     '''
     def __init__(self
-                    , 
+                    , name: str=""
+                    , desc: str=""
+                    , priority: int=1
+                    , done: bool=False
+                ):
+        Event.__init__(self, name, desc, priority, None, None)
+        self.done = done
     
 class DueEvent(TaskEvent):
     '''
@@ -49,11 +65,10 @@ class DueEvent(TaskEvent):
                     , name: str=""
                     , desc: str=""
                     , priority: int=1
+                    , done: bool=False
                     , due: datetime.datetime
-                    , start: datetime.datetime=None
-                    , end: datetime.datetime=None
                 ):
-       Event.__init__(self, name, desc, priority, start, end)
+       TaskEvent.__init__(self, name, desc, priority, done)
        self.due = due
        
 
