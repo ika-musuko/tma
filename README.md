@@ -6,3 +6,8 @@ Team Members:
   
 dependencies:
   python3, requests, bottle
+  
+how to install dependencies:
+```
+python3 -m pip install bottle requests
+```
