@@ -1,10 +1,10 @@
-## tma
+# tma
 Time Management Assistant
 
-# Team Members:
+## Team Members:
 Sherwyn Sen, Steven Vuong, Lusine Chibukhchyan, Sricharan Bonda
 
-# Abstract:
+## Abstract:
 While there are current systems and calendars which also can accomplish this task, in actuality, those systems are inconvenient to use for the average student. Many students have trouble with diligently checking which assignments they have to do by what date and what time, and how to organize the time to accomplish all their tasks on time. Adding calendar events to a mobile device can be quite inconvenient to a person, and it is hard enough to maintain a schedule on its own, let alone remembering to add an event to the schedule.
 
 This elicits the need for a Time Management Assistant. The primary objectives of Time Management Assistant are the following:
@@ -15,7 +15,7 @@ This elicits the need for a Time Management Assistant. The primary objectives of
 - To generate suggested meal, break, and sleep schedules for the user
 
 
-# Dependencies:
+## Dependencies:
 ```
 python3, requests, bottle
 ``` 
