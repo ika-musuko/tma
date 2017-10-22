@@ -70,7 +70,6 @@ class DueEvent(TaskEvent):
                 ):
        TaskEvent.__init__(self, name, desc, priority, done)
        self.due = due
-       
 
 class RecurringEvent(Event):
     '''
@@ -80,6 +79,17 @@ class RecurringEvent(Event):
     if self.period_end is None, this Event will be scheduled to the end of time
     self.priority will be set to 0 because these events will unconditionally be scheduled
     
+    the daystr parameter will specify which days of the week this event will be scheduled. 
+        legend:
+            N - sunday
+            M - monday
+            T - tuesday
+            W - wednesday
+            H - thursday
+            F - friday
+            S - saturday
+        example: "THF" -> schedule this event on tuesday, thursday, and friday
+
     examples:
         classes, work
     Parent:
@@ -87,14 +97,38 @@ class RecurringEvent(Event):
     Attributes:
         period_start (datetime.datetime): when to start generating events 
         period_end  (datetime.datetime): when to stop generating events
+        start_time (datetime.time): starting time of Event
+        end_time (datetime.time): end time of Event   
+        
     '''
+    fulldays = {
+                "N" : "Sunday",
+                "M" : "Monday",
+                "T" : "Tuesday",
+                "W" : "Wednesday",
+                "H" : "Thursday",
+                "F" : "Friday",
+                "S" : "Saturday"
+               }
     def __init__(self
                     , name: str=""
                     , desc: str=""
+                    , start_time: datetime.time
+                    , end_time: datetime.time
                     , period_start: datetime.datetime=None
                     , period_end: datetime.datetime=None
+                    , daystr: str=""
                 ):
         Event.__init__(self, name, desc, priority=0, start=None, end=None)
         self.period_start = period_start
         self.period_end = period_end
+        self.start_time = start_time
+        self.end_time = end_time
+        
+        # initialize recurrence days
+        self.days = {d: v for d, v in zip("NMTWHFS", [False]*7)}
+        self.whatdays = ""
+        for d in daystr:
+            self.days[d] = True
+            self.whatdays = " ".join(self.whatdays, RecurringEvent.fulldays[d])
     
