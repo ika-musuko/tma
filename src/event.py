@@ -72,11 +72,11 @@ class DueEvent(TaskEvent):
         due (datetime.datetime): the due date and time for this event
     '''
     def __init__(self
+                    , due: datetime.datetime
                     , name: str=""
                     , desc: str=""
                     , priority: int=1
                     , done: bool=False
-                    , due: datetime.datetime
                     , duration: float=2.0
                 ):
        TaskEvent.__init__(self, name, desc, priority, done, duration)
@@ -122,10 +122,10 @@ class RecurringEvent(Event):
                 "N" : "Sunday"
                }
     def __init__(self
-                    , name: str=""
-                    , desc: str=""
                     , start_time: datetime.time
                     , end_time: datetime.time
+                    , name: str=""
+                    , desc: str=""
                     , period_start: datetime.datetime=None
                     , period_end: datetime.datetime=None
                     , daystr: str=""

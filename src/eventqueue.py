@@ -10,11 +10,13 @@ class EventQueue:
         latest_due (event.DueEvent): the latest DueEvent (the DueEvent with the latest due date)
     '''
     def __init__(self                
-                    , events: list=[]
+                    , events: list=None
                 ):
         self.q = []
         self.latest_due = None
         EventQueue.lastpriority = 0
+        if events is None:
+            events = []
         self.push_list(events)
      
     def delete_by_id(id: int) -> bool:
