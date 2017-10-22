@@ -42,15 +42,22 @@ class TaskEvent(Event):
     '''
     Event with a "done" flag
     the Scheduler will generate TaskEvents until self.done has been set to True
+    examples:
+        personal projects, errands, chores
+    
+    Parent:
+        Event
     '''
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=1
+                    , priority: int=2
                     , done: bool=False
+                    , duration: float=2.0
                 ):
         Event.__init__(self, name, desc, priority, None, None)
         self.done = done
+        self.duration = duration
     
 class DueEvent(TaskEvent):
     '''
@@ -60,7 +67,7 @@ class DueEvent(TaskEvent):
     examples: 
         homework, projects
     Parent: 
-        Event
+        TaskEvent
     Attributes:
         due (datetime.datetime): the due date and time for this event
     '''
@@ -70,8 +77,9 @@ class DueEvent(TaskEvent):
                     , priority: int=1
                     , done: bool=False
                     , due: datetime.datetime
+                    , duration: float=2.0
                 ):
-       TaskEvent.__init__(self, name, desc, priority, done)
+       TaskEvent.__init__(self, name, desc, priority, done, duration)
        self.due = due
 
 class RecurringEvent(Event):
@@ -104,7 +112,7 @@ class RecurringEvent(Event):
         end_time (datetime.time): end time of Event   
         
     '''
-    fulldays = {
+    DAY_NAMES = {
                 "M" : "Monday",
                 "T" : "Tuesday",
                 "W" : "Wednesday",
@@ -128,10 +136,23 @@ class RecurringEvent(Event):
         self.start_time = start_time
         self.end_time = end_time
         
+        
         # initialize recurrence days
+        self.days = daystr
+        self.day_names = " ".join(RecurringEvent.DAY_NAMES.get(c, "") for c in self.days)
+        '''
         self.days = {d: v for d, v in zip("MTWHFSN", [False]*7)}
         self.whatdays = ""
         for d in daystr:
             self.days[d] = True
             self.whatdays = " ".join(self.whatdays, RecurringEvent.fulldays[d])
-    
+        '''
+        
+class SleepEvent(RecurringEvent):
+    def __init__(self
+                    , start_time: datetime.time
+                    , end_time: datetime.time
+                ):
+        RecurringEvent.__init__(self, name="Sleep", desc="Sleep", start_time=start_time, end_time=end_time, daystr="MTWHFSN")
+        
+        

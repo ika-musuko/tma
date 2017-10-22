@@ -1,87 +1,19 @@
 import event
+from eventqueue import EventQueue
 import datetime
 import sqlite3
 import heapq
+import operator
+from Collections import deque
 
 '''
     schedule.py
 '''
-        
-class EventQueue:
-    '''
-    Priority Queue of ScheduleEvent
-    constructor converts a list of event.Event into an EventQueue
-    Attributes:
-        q (list of ScheduleEvent): priority queue of ScheduleEvent
-        latest_due (event.DueEvent): the latest DueEvent (the DueEvent with the latest due date)
-    '''
-    def __init__(self                
-                    , events: list=[]
-                ):
-        self.q = []
-        self.latest_due = None
-        EventQueue.lastpriority = 0
-        self.push_list(events)
-     
-    def delete_by_id(id: int) -> bool:
-        '''
-        delete event by id
-        return value:
-            True -> found and deleted
-            False -> not found, nothing deleted
-        '''
-        for i, e in enumerate(self.q):
-            if e.id == id:
-                self.q.pop(i)
-                return False
-        else:
-            return True
-    
-    def peek() -> event.Event:
-        '''
-        peek topmost Event
-        '''
-        return self.q[0] if len(q) > 0 else None
-    
-    def pop() -> event.Event:
-        '''
-        remove and return topmost Event
-        '''
-        top = self.peek()
-        try:
-            heapq.heappop(self.q)
-        return top
-              
-    def push(e: event.Event):
-        '''
-        push with priority (key is e.priority)
-        '''
-        # don't push a TaskEvent which is already done
-        if isinstance(e, TaskEvent) and e.done:
-            return
-        # if a DueEvent is being pushed, update self.latest_due
-        elif isinstance(e, event.DueEvent):
-            if self.latest_due is None or e.due > self.latest_due.due:
-                self.latest_due = e
-        # if pushing an event which is not a DueEvent, make sure DueEvents are above everything except RecurringEvents    
-        elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
-            e.priority = self.latest_due.priority + 1           
-        heappq.heappush(self.q, e)
-        
-    def push_list(events: list):
-        '''
-        push a list of event.Event into an EventQueue
-        '''
-        for e in events:
-            self.push(e)
-    
-    def empty():
-        return self.q is None or len(self.q) <= 0
-
        
 class Region:
     DEFAULT_START = datetime.datetime(2017, 1, 1, 0, 0, 0)
     DEFAULT_END = datetime.datetime(2099, 1, 1, 0, 0, 0)
+    DEFAULT_DURATION = datetime.timedelta(hours=2)
     '''
     the start and end boundaries of a Schedule (for viewing)
     Attributes:
@@ -89,18 +21,36 @@ class Region:
         end (datetime.datetime): ending datetime
     '''
     def __init__(self
-                    , start: datetime.datetime=Region.DEFAULT_START
-                    , end: datetime.datetime=Region.DEFAULT_END
+                    , start: datetime.datetime=None
+                    , end: datetime.datetime=None
+                    , duration: datetime.timedelta=None
                 ):
+        if duration is not None:
+            
+        
         # verify that start is chronologically before end
-        if start > end:
+        elif start > end:
             start = Region.DEFAULT_START 
-            end = Region.DEFAULT_END
+            end = start + Region.DEFAULT_DURATION
             
         self.start = start
         self.end = end
         
+    def fill(self)
+        '''
+        make this Region DEFAULT_DURATION long if either the start or end members are None
+        '''
+        # only fill of start xor end is None
+        if not (bool(start is None) ^ bool(end is None)):
+            return
+
+        if end is None:
+            end = start + Region.DEFAULT_DURATION
         
+        elif start is None:
+            start = end - Region.DEFAULT_DURATION
+            
+  
 class ScheduleEvent(event.Event):
     '''
     Schedule will convert every element in its user_events into this type of event
@@ -123,23 +73,21 @@ class ScheduleEvent(event.Event):
     event.Event.__init__(name, desc, priority, start, end)
     self.extra_info = extra_info
 
-def weeklydays(region: Region, dayofweek: str) -> list:
+def weeklydays(region: Region, dayofweek: str) -> "generator of datetime.date":
     '''
     generator of list of days in week from dayofweek in region
     ex:
         weeklydays(r, "T") -> generates every Tuesday in r 
-    return value:
-        list of datetime.date
+
     '''
     current_date = region.start
     next_day_increment = ({d: i for i, d in enumerate("MTWHFSN")}[dayofweek] - region.start.weekday()) % 7
     current_date += datetime.timedelta(days=next_day_increment) # go to the next day that matches dayofweek
     while current_date < region.end:
         yield current_date
-        d += datetime.timedelta(days=7) # go to next week
+        current_date += datetime.timedelta(days=7) # go to next week
     
 class Schedule:
-
     def __init__(self
                     , events: list=[],
                     , region: Region=Region()
@@ -161,18 +109,52 @@ class Schedule:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
         '''
-        self.actual_events = []
-        se = []
+        self.actual_events = [] # add events to this
+        generated_events = []  # all of the generated events
+        earliest_free_region = Region(Region.DEFAULT_START)
+        earliest_free_region.fill()
+        
         for e in self.event_queue:
             extra_info = ""
             # generate corresponding events in region 
+            ## if the event is an event.RecurringEvent, generate all recurring events in self.region
             if isinstance(e, event.RecurringEvent):
+                # generate ScheduleEvents per weekday
+                for day in e.days:
+                    for date in weekdays(self.region, day):
+                        # make a date for the new ScheduleEvent
+                        start_datetime = datetime.datetime.combine(date, e.start_time)
+                        end_datetime = datetime.datetime.combine(date, e.end_time)
+                        # only add events in the period of the recurring event
+                        if((e.period_start is None or start_datetime >= e.period_start) and (e.period_end is None or end_datetime =< e.period_end)):
+                            # convert the event into a ScheduleEvent and append
+                            extra_info = "Recurring Event: %s start: %s:%s end: %s:%s" % (   e.day_names
+                                                                                           , start_datetime.hour
+                                                                                           , start_datetime.minute
+                                                                                           , end_datetime.hour
+                                                                                           , end_datetime.minute
+                                                                                         )
+                            se = ScheduleEvent(e.name, e.desc, e.priority, start_datetime, end_datetime, extra_info)
+                            heapq.heappush(generated_events, (se.start, se)) # push in sorted order, by start time
+                            self_actual_events.append(se)
+            
+            ## if the event is an event.TaskEvent, generate events according to earliest_free_region          
+            if isinstance(e, event.TaskEvent):
+                # 1. find the earliest event's end time and second earliest's start time
+                # 2. compare to previously pushed TaskEvent, figure out the later event
+                # 3. create a region using the current TaskEvent's duration
+                # 4. use the region to add to self.actual_events and generated_events
+                earliest_event = None
+                second_earliest_event = None
+                if(len(generated_events) > 0):
+                    earliest_event = heapq.heappop(generated_events)[1]
+                if(len(generated_events) > 0):
+                    second_earliest_event = heapq.heappop(generated_events)[1]
                 
+            ## this is a simple Event so just map it 1 to 1 to a Schedule
             else:
-                se = (ScheduleEvent(e.name, e.desc, e.priority, e.start, e.end, extra_info),)
-            # append every generated event to self.actual_events
-            self.actual_events.extend(se)
-    
+                self.actual_events.append(ScheduleEvent(e.name, e.desc, e.priority, e.start, e.end, extra_info))
+
     def add_event(e: event.Event):
         '''
         add event
