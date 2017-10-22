@@ -23,7 +23,7 @@ class Event:
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=1
+                    , priority: int=127
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                 ):
@@ -34,6 +34,9 @@ class Event:
         self.priority = priority
         self.start = start
         self.end = end
+        
+    def __lt__(self, other):
+        return self.priority < other.priority
 
 class TaskEvent(Event):
     '''
@@ -80,14 +83,14 @@ class RecurringEvent(Event):
     self.priority will be set to 0 because these events will unconditionally be scheduled
     
     the daystr parameter will specify which days of the week this event will be scheduled. 
-        legend:
-            N - sunday
+        legend:     
             M - monday
             T - tuesday
             W - wednesday
             H - thursday
             F - friday
             S - saturday
+            N - sunday
         example: "THF" -> schedule this event on tuesday, thursday, and friday
 
     examples:
@@ -102,13 +105,13 @@ class RecurringEvent(Event):
         
     '''
     fulldays = {
-                "N" : "Sunday",
                 "M" : "Monday",
                 "T" : "Tuesday",
                 "W" : "Wednesday",
                 "H" : "Thursday",
                 "F" : "Friday",
-                "S" : "Saturday"
+                "S" : "Saturday",
+                "N" : "Sunday"
                }
     def __init__(self
                     , name: str=""
@@ -126,7 +129,7 @@ class RecurringEvent(Event):
         self.end_time = end_time
         
         # initialize recurrence days
-        self.days = {d: v for d, v in zip("NMTWHFS", [False]*7)}
+        self.days = {d: v for d, v in zip("MTWHFSN", [False]*7)}
         self.whatdays = ""
         for d in daystr:
             self.days[d] = True
