@@ -33,6 +33,17 @@ for x in parsed_courses:
         c_asnmt_json = c_asnmt.text
         parsed_c_asnmt = json.loads(c_asnmt_json)
         print("Assignments for course id", str(x['id']), x['name'])
-        for x in parsed_c_asnmt:
-            print(x)
-        asnmt.append(parsed_c_asnmt)
+        for y in parsed_c_asnmt:
+            print(y)
+            asnmt.append(y)
+
+print("asnmt:")
+for x in asnmt:
+    print(x)
+
+# calendar events
+calev = json.loads(requests.get("https://sjsu.instructure.com/api/v1/calendar_events", headers=headers).text)
+
+print("calev:")
+for x in calev:
+    print(calev)

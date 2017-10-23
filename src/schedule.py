@@ -1,9 +1,12 @@
 import event
 from eventqueue import EventQueue
 import datetime
+import dateutil.parser
 import sqlite3
 import heapq
 import operator
+import json
+import requests
 from collections import deque
 
 '''
@@ -125,7 +128,28 @@ class Schedule:
         self.region.fill()
         self.event_queue = EventQueue(events)
         self.update()
-      
+
+    def get_from_canvas(self, access_token: str=""):
+        """
+        gets the assignments from the courses and creates a list of DueEvents
+        :param access_token: An access token, or API key, of the Canvas API
+        :return: an unsorted list of DueEvents
+        """
+        canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+        headers = {
+            "Authorization": ("Bearer %s" % (access_token)),
+        }
+        asnmt=list()
+        parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
+        for x in parsed_courses:
+            if 'name' in x:
+                a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
+                parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
+                for y in parsed_c_asnmt:
+                    asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+        return asnmt
+
+
     def update(self):
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
