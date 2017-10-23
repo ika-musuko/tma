@@ -19,7 +19,10 @@ class EventQueue:
             events = []
         self.push_list(events)
      
-    def delete_by_id(id: int) -> bool:
+    def __iter__(self):
+        return iter(self.q)
+    
+    def delete_by_id(self, id: int) -> bool:
         '''
         delete event by id
         return value:
@@ -33,13 +36,13 @@ class EventQueue:
         else:
             return True
     
-    def peek() -> event.Event:
+    def peek(self) -> event.Event:
         '''
         peek topmost Event
         '''
         return self.q[0] if len(self.q) > 0 else None
     
-    def pop() -> event.Event:
+    def pop(self) -> event.Event:
         '''
         remove and return topmost Event
         '''
@@ -48,12 +51,12 @@ class EventQueue:
             heapq.heappop(self.q)
         return top
               
-    def push(e: event.Event):
+    def push(self, e: event.Event):
         '''
         push with priority (key is e.priority)
         '''
         # don't push a TaskEvent which is already done
-        if isinstance(e, TaskEvent) and e.done:
+        if isinstance(e, event.TaskEvent) and e.done:
             return
         # if a DueEvent is being pushed, update self.latest_due
         elif isinstance(e, event.DueEvent):
@@ -62,14 +65,14 @@ class EventQueue:
         # if pushing an event which is not a DueEvent, make sure DueEvents are above everything except RecurringEvents    
         elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
             e.priority = self.latest_due.priority + 1           
-        heappq.heappush(self.q, e)
+        heapq.heappush(self.q, e)
         
-    def push_list(events: list):
+    def push_list(self, events: list):
         '''
         push a list of event.Event into an EventQueue
         '''
         for e in events:
             self.push(e)
     
-    def empty():
+    def empty(self):
         return self.q is None or len(self.q) <= 0

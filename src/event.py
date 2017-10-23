@@ -27,10 +27,12 @@ class Event:
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                 ):
-        # set a unique ID for this Event based on how many events have been created        
+        # set a unique ID for this Event based on how many events have been created          
         self.id = Event.total 
         Event.total += 1
         # initialize class members
+        self.name = name
+        self.desc = desc
         self.priority = priority
         self.start = start
         self.end = end
