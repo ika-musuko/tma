@@ -1,5 +1,6 @@
 import datetime
 import sqlite3
+from util import *
 '''
     event.py
     
@@ -27,6 +28,7 @@ class Event:
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                 ):
+        if priority < 1: priority = 1
         # set a unique ID for this Event based on how many events have been created          
         self.id = Event.total 
         Event.total += 1
@@ -35,10 +37,21 @@ class Event:
         self.desc = desc
         self.priority = priority
         self.start = start
-        self.end = end
-        
+        self.end = start+datetime.timedelta(hours=1) if start is not None and end is None else end
+    
+    def __eq__(self, other):
+        return self.priority == other.priority
+    
     def __lt__(self, other):
-        return self.priority < other.priority
+        if self.priority != other.priority:
+            return self.priority < other.priority
+        if other.start is None:
+            return self.start is None
+        return self.start < other.start
+        
+    def __repr__(self):
+        return "EVENT: Priority: %i id: %i name: %s start: %s end: %s" % (self.priority, self.id, self.name, self.start, self.end)
+
 
 class TaskEvent(Event):
     '''
@@ -57,6 +70,7 @@ class TaskEvent(Event):
                     , done: bool=False
                     , duration: float=2.0
                 ):
+        if priority < 1: priority = 1
         Event.__init__(self, name, desc, priority, None, None)
         self.done = done
         self.duration = duration
@@ -81,9 +95,18 @@ class DueEvent(TaskEvent):
                     , done: bool=False
                     , duration: float=2.0
                 ):
+       if priority < 1: priority = 1
        TaskEvent.__init__(self, name, desc, priority, done, duration)
        self.due = due
 
+    def __lt__(self, other):
+        if self.priority != other.priority:
+            return self.priority < other.priority
+        return self.due < other.due
+    def __repr__(self):
+        return "DUEEVENT: Priority: %i id: %i name: %s due: %s" % (self.priority, self.id, self.name, self.due) 
+
+     
 class RecurringEvent(Event):
     '''
     Event which recurs from period_start to period_end
@@ -149,6 +172,8 @@ class RecurringEvent(Event):
             self.days[d] = True
             self.whatdays = " ".join(self.whatdays, RecurringEvent.fulldays[d])
         '''
+    def __repr__(self):
+        return "RECURRINGEVENT: Priority: %i id: %i name: %s start: %s end: %s   %s" % (self.priority, self.id, self.name, self.start_time, self.end_time, self.days)
         
 class SleepEvent(RecurringEvent):
     def __init__(self
@@ -156,5 +181,6 @@ class SleepEvent(RecurringEvent):
                     , end_time: datetime.time
                 ):
         RecurringEvent.__init__(self, name="Sleep", desc="Sleep", start_time=start_time, end_time=end_time, daystr="MTWHFSN")
+        self.different_days = self.start_time > self.end_time
         
         
