@@ -139,7 +139,6 @@ class Schedule:
         self.region.fill()
         self.event_queue = EventQueue(events)
         self.update()
-<<<<<<< HEAD
 
     def get_from_canvas(self, access_token: str=""):
         '''
