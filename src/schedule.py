@@ -1,9 +1,12 @@
 import event
 from eventqueue import EventQueue
 import datetime
+import dateutil.parser
 import sqlite3
 from sortedcontainers import SortedList, SortedListWithKey
 import operator
+import json
+import requests
 from collections import deque
 from util import *
 
@@ -17,9 +20,8 @@ class Region:
     DEFAULT_DURATION = datetime.timedelta(hours=2)
     '''
     the start and end boundaries of a Schedule (for viewing)
-    Attributes:
-        start (datetime.datetime): starting datetime
-        end (datetime.datetime): ending datetime
+    :param start: starting datetime
+    :param end: ending datetime
     '''
     def __init__(self
                     , start: datetime.datetime=None
@@ -125,11 +127,11 @@ class Schedule:
                     , end: datetime.datetime=None
                 ):
         '''
+        Schedule constructor
         create a schedule from a list of Event
-        Attributes:
-            actual_events (list of ScheduleEvent): every user_event will get converted into a ScheduleEvent and scheduled according to the current 
-            event_queue (EventQueue): every event
-            region (Region): the start and end dates to push actual_events in
+        :param actual_events (list of ScheduleEvent): every user_event will get converted into a ScheduleEvent and scheduled according to the current 
+        :param event_queue (EventQueue): every event
+        :param region (Region): the start and end dates to push actual_events in
         '''
         # initialize arguments
         self.actual_events = []
@@ -137,7 +139,28 @@ class Schedule:
         self.region.fill()
         self.event_queue = EventQueue(events)
         self.update()
-      
+<<<<<<< HEAD
+
+    def get_from_canvas(self, access_token: str=""):
+        '''
+        gets the assignments from the courses and creates a list of DueEvents
+        :param access_token: An access token, or API key, of the Canvas API
+        :return: an unsorted list of DueEvents
+        '''
+        canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+        headers = {
+            "Authorization": ("Bearer %s" % (access_token)),
+        }
+        asnmt=list()
+        parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
+        for x in parsed_courses:
+            if 'name' in x:
+                a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
+                parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
+                for y in parsed_c_asnmt:
+                    asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+        return asnmt
+
     def update(self) -> None:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
@@ -165,20 +188,24 @@ class Schedule:
         convert a RecurringEvent into a bunch of ScheduleEvents from re.period_start to re.period_end
         if re.period_start is None, use self.region.start as the beginning period
         generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
+        :param re: the RecurringEvent to generate from
         '''
-        pass
+        pass # delete this pass after implementing
+        
 
     def task_events_gen(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
         '''
         convert a TaskEvent into a bunch of ScheduleEvents
+        :param te: the TaskEvent to generate from
         '''    
-        pass
+        pass # delete this pass after implementing
     
     
     
     def add_event(self, e: event.Event) -> None:
         '''
         add event
+        :param e: the Event to add
         '''
         self.event_queue.push(e)
     
@@ -197,16 +224,28 @@ class Schedule:
     def delete_event(self, id: int) -> bool:
         '''
         delete Event by id
+        :param id: look for the event with this id to delete
+        todo - after the UI is properly conceptualized, these params might have to be changed?
         '''
         self.event_queue.delete_by_id(id)
     
-    def get_events_in_region(self, start, end) -> 'generator of ScheduleEvent':
+    def get_events_in_region(self, start: datetime.datetime, end: datetime.datetime) -> 'generator of ScheduleEvent':
+        '''
+        return a generator of every actual event from start to end
+        :param start: start generator from here
+        :param end: end generator here
+        '''
         return (se for se in self.actual_events if start <= se.start and end >= se.end)
         
     def print_schedule(self
                             , start: datetime.datetime=None
                             , end: datetime.datetime=None
                        ) -> None:
+        '''
+        print out the schedule to the terminal from start to end
+        :param start: start printing from here
+        :param end: end printing here
+        '''
         if start is None:
             start = self.region.start
         if end is None:
