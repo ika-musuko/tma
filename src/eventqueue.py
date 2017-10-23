@@ -1,4 +1,4 @@
-import heapq
+import bisect
 import event
 
 class EventQueue:
@@ -48,7 +48,7 @@ class EventQueue:
         '''
         top = self.peek()
         if(len(self.q) > 0):
-            heapq.heappop(self.q)
+            self.q.pop(0)
         return top
               
     def push(self, e: event.Event):
@@ -64,8 +64,9 @@ class EventQueue:
                 self.latest_due = e
         # if pushing an event which is not a DueEvent, make sure DueEvents are above everything except RecurringEvents    
         elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
-            e.priority = self.latest_due.priority + 1           
-        heapq.heappush(self.q, e)
+            e.priority = self.latest_due.priority + 1 
+        print(e)
+        bisect.insort(self.q, e)
         
     def push_list(self, events: list):
         '''
@@ -76,3 +77,6 @@ class EventQueue:
     
     def empty(self):
         return self.q is None or len(self.q) <= 0
+        
+    def __repr__(self):
+        return ''.join(("EventQueue", '\n'.join(str(qe) for qe in self.q)))
