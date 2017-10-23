@@ -9,7 +9,12 @@ from collections import deque
 '''
     schedule.py
 '''
-       
+def combine(date: datetime.date, time: datetime.time) -> datetime.datetime:
+    '''
+    wrapper around datetime.datetime.combine()
+    '''
+    return datetime.datetime.combine(date, time)
+    
 class Region:
     DEFAULT_START = datetime.datetime(2017, 1, 1, 0, 0, 0)
     DEFAULT_END = datetime.datetime(2099, 1, 1, 0, 0, 0)
@@ -36,11 +41,15 @@ class Region:
         self.start = start
         self.end = end
         
+    def empty(self):
+        return self.start is None and self.end is None
+        
+        
     def fill(self):
         '''
         make this Region DEFAULT_DURATION long if either the start or end members are None
         '''
-        if self.start is None and self.end is None:
+        if self.empty():
             self.start = Region.DEFAULT_START
             self.end = Region.DEFAULT_END
 
@@ -70,6 +79,15 @@ class ScheduleEvent(event.Event):
     Attributes:
         extra_info: other information such as due date for DueEvents and recurrence for RecurringEvents
     '''
+    DAY_NAMES = {
+            0 : "Monday",
+            1 : "Tuesday",
+            2 : "Wednesday",
+            3 : "Thursday",
+            4 : "Friday",
+            5 : "Saturday",
+            6 : "Sunday"
+    }
     def __init__(self
                     , name: str=""
                     , desc: str=""
@@ -84,30 +102,41 @@ class ScheduleEvent(event.Event):
     def __str__(self):
         return '''{name}
         {desc}
+        {dow}
         {start}
         {end}
         {ei}
-        '''.format(name=self.name, desc=self.desc, start=self.start, end=self.end, ei=self.extra_info)
+        '''.format(name=self.name, desc=self.desc, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
     
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
 
-def weeklydays(region: Region, dayofweek: str) -> "generator of datetime.date":
+def hm(dt: datetime.datetime) -> str:
+    '''
+    removes seconds from datetime.datetime print
+    '''
+    return "{y}-{m:02d}-{d:02d} {h:02d}:{min:02d}".format(y=dt.year, m=dt.month, d=dt.day, h=dt.hour, min=dt.minute)
+    
+def weeklydays(start: datetime.date, end: datetime.date=None, dayofweek: str="") -> "generator of datetime.date":
     '''
     generator of list of days in week from dayofweek in region
     ex:
         weeklydays(r, "T") -> generates every Tuesday in r 
 
     '''
-    #print(region)
-    current_date = region.start
-    next_day_increment = ({d: i for i, d in enumerate("MTWHFSN")}[dayofweek] - region.start.weekday()) % 7
+    current_date = start
+    next_day_increment = ({d: i for i, d in enumerate("MTWHFSN")}[dayofweek] - start.weekday()) % 7
     current_date += datetime.timedelta(days=next_day_increment) # go to the next day that matches dayofweek
-    while current_date < region.end:
-        yield current_date.date()
+    if end is None:
+        yield current_date
         current_date += datetime.timedelta(days=7) # go to next week
+    else:
+        while current_date < end:
+            yield current_date
+            current_date += datetime.timedelta(days=7) # go to next week
     
 class Schedule:
+    zerotime = datetime.time()
     def __init__(self
                     , events: list=[]
                     , region: Region=Region()
@@ -142,34 +171,28 @@ class Schedule:
             extra_info = ""
             # generate corresponding events in region 
             ## if the event is an event.RecurringEvent, generate all recurring events in self.region
-            print("%s %s %s id: %s" % (date, start_datetime, end_datetime, e.id))
+           # print("%s %s %s id: %s" % (date, start_datetime, end_datetime, e.id))
             if isinstance(e, event.RecurringEvent):
                 # generate ScheduleEvents per weekday
                 for day in e.days:
-                    #print(e.days)
-                    for date in weeklydays(self.region, day): #### make the region e.period_start and e.period_end!!!!
-                        # only add events in the period of the recurring event
-                        if((e.period_start is None or date >= e.period_start) and (e.period_end is None or date <= e.period_end)):
-                            # make a date for the new ScheduleEvent
-                            start_datetime = datetime.datetime.combine(date, e.start_time)
-                            end_datetime = datetime.datetime.combine(date, e.end_time)
-                            
-                            # convert the event into a ScheduleEvent and append
-                            extra_info = "Recurring Event: %s start: %02d:%02d end: %02d:%02d" % (   e.day_names
-                                                                                           , start_datetime.hour
-                                                                                           , start_datetime.minute
-                                                                                           , end_datetime.hour
-                                                                                           , end_datetime.minute
-                                                                                         )
-                            
-                            se = ScheduleEvent(e.name, e.desc, e.priority, start_datetime, end_datetime, extra_info)
-                            print("     %s %s id: %s" % (se.start, se.end, se.id))
-                            #print(se.__dict__)
-                            heapq.heappush(generated_events, (se.start, se)) # push in sorted order, by start time
-                            self.actual_events.append(se)
+                    for date in weeklydays(e.period_start, e.period_end, day): # the region is only e.period_start and e.period_end
+                        # make a date for the new ScheduleEvent
+                        start_datetime = combine(date, e.start_time)
+                        end_datetime = combine(date, e.end_time)   
+                        # convert the event into a ScheduleEvent and append
+                        extra_info = "Recurring Event: %s start: %02d:%02d end: %02d:%02d" % (   e.day_names
+                                                                                       , start_datetime.hour
+                                                                                       , start_datetime.minute
+                                                                                       , end_datetime.hour
+                                                                                       , end_datetime.minute
+                                                                                     )
+                        
+                        se = ScheduleEvent(e.name, e.desc, e.priority, start_datetime, end_datetime, extra_info)
+                        heapq.heappush(generated_events, (se.start, se)) # push in sorted order, by start time
+                        self.actual_events.append(se)
             
             ## if the event is an event.TaskEvent, generate events according to earliest_free_region          
-            if isinstance(e, event.TaskEvent):
+            elif isinstance(e, event.TaskEvent):
                 # 1. find the earliest event's end time and second earliest's start time
                 # 2. figure out whether current earliest region or event free region is earlier and use the earliest one of the two
                 # 3. create a region using earliest free region and the current TaskEvent's duration
@@ -213,8 +236,6 @@ class Schedule:
                 self.actual_events.append(ScheduleEvent(e.name, e.desc, e.priority, e.start, e.end, extra_info))
             
         # sort actual_events by ScheduleEvent.start
-       # print(self.actual_events)
-        #print(type(self.actual_events[0].start))
         self.actual_events.sort(key=operator.attrgetter("start"))
         
     def add_event(self, e: event.Event):
@@ -235,8 +256,6 @@ class Schedule:
         # execstr = ("SELECT * FROM %s" % table)
         # for row in c.execute(execstr):
             
-            
-    
     def delete_event(self, id: int) -> bool:
         '''
         delete Event by id

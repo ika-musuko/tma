@@ -7,11 +7,11 @@ import datetime
 
 # create some classes
 classlist = [
-             ('0','CMPE102', 'Assembly Language Programming',       'T', '2017-08-22','2017-12-23', '18:00', '20:45')
-            ,('0','CMPE120', 'Computer Hardware and Architecture',  'TH','2017-08-22','2017-12-23', '13:30', '14:45')
-            ,('0','CMPE131', 'Software Engineering I',              'TH','2017-08-22','2017-12-23', '16:30', '17:45')
-            ,('0','CS146',   'Data Structures and Algorithms',      'MW','2017-08-22','2017-12-23', '15:00', '16:15')
-            ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-23', '10:30', '11:45')      
+             ('0','CMPE102', 'Assembly Language Programming',       'T', '2017-08-22','2017-12-13', '18:00', '20:45')
+            ,('0','CMPE120', 'Computer Hardware and Architecture',  'TH','2017-08-22','2017-12-13', '13:30', '14:45')
+            ,('0','CMPE131', 'Software Engineering I',              'TH','2017-08-22','2017-12-13', '16:30', '17:45')
+            ,('0','CS146',   'Data Structures and Algorithms',      'MW','2017-08-22','2017-12-13', '15:00', '16:15')
+            ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-13', '10:30', '11:45')      
           ]      
 
 
@@ -56,4 +56,5 @@ classevents = [event.RecurringEvent( start_time=totime(cl[6])
                               ) for cl in classlist]
     
 schedule = schedule.Schedule(events=classevents)
-schedule.print_schedule()
+today = datetime.datetime.today()
+schedule.print_schedule(today, today+datetime.timedelta(days=4))
