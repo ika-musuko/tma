@@ -1,4 +1,4 @@
-import bisect
+from sortedcontainers import SortedList
 import event
 
 class EventQueue:
@@ -12,12 +12,13 @@ class EventQueue:
     def __init__(self                
                     , events: list=None
                 ):
-        self.q = []
+        self.q = SortedList()
         self.latest_due = None
         EventQueue.lastpriority = 0
         if events is None:
             events = []
         self.push_list(events)
+        print(str(self))
      
     def __iter__(self):
         return iter(self.q)
@@ -64,9 +65,9 @@ class EventQueue:
                 self.latest_due = e
         # if pushing an event which is not a DueEvent, make sure DueEvents are above everything except RecurringEvents    
         elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
-            e.priority = self.latest_due.priority + 1 
-        print(e)
-        bisect.insort(self.q, e)
+           e.priority = self.latest_due.priority + 1 
+           pass
+        self.q.add(e)
         
     def push_list(self, events: list):
         '''
@@ -79,4 +80,4 @@ class EventQueue:
         return self.q is None or len(self.q) <= 0
         
     def __repr__(self):
-        return ''.join(("EventQueue", '\n'.join(str(qe) for qe in self.q)))
+        return ''.join(("~~ EventQueue ~~\n", '\n'.join(str(qe) for qe in self.q)))
