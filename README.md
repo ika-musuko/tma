@@ -21,5 +21,5 @@ python3, requests, bottle, sortedcontainers
 ``` 
 how to install dependencies:
 ```
-python3 -m pip install bottle requests, sortedcontainers
+python3 -m pip install bottle requests sortedcontainers
 ```
