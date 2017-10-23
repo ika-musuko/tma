@@ -18,7 +18,6 @@ class EventQueue:
         if events is None:
             events = []
         self.push_list(events)
-        print(str(self))
      
     def __iter__(self):
         return iter(self.q)

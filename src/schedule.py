@@ -12,7 +12,7 @@ from util import *
 '''
 
 class Region:
-    DEFAULT_START = datetime.datetime(2017, 1, 1, 0, 0, 0)
+    DEFAULT_START = datetime.datetime(2017, 10, 1, 0, 0, 0)
     DEFAULT_END = datetime.datetime(2099, 1, 1, 0, 0, 0)
     DEFAULT_DURATION = datetime.timedelta(hours=2)
     '''
@@ -69,6 +69,10 @@ class Region:
         
     def __str__(self):
         return "Region: start %s end %s" % (self.start, self.end)
+
+
+    
+
         
 class ScheduleEvent(event.Event):
     '''
@@ -134,21 +138,52 @@ class Schedule:
         self.event_queue = EventQueue(events)
         self.update()
       
-    def update(self):
+    def update(self) -> None:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
         '''
-        print(self.region)
+        # if the current region.start is earlier than today, make the earliest free region's start earlier than today. else, maintain the current region.start for earliest free region
+        today = datetime.datetime.today()
+        self.earliest_free_region = Region(today if self.region.start < today else self.region.start, self.region.end)
+        self.generated_events = SortedList()
         
+        # go through all of the events on the queue...
+        for e in self.event_queue:
+            # se is an iterable of ScheduleEvent
+            if isinstance(e, event.RecurringEvent):
+                se = self.recurring_events_gen(e)
+                generated_events.add(se)
+            elif isinstance(e, event.TaskEvent):
+                se = self.task_events_gen(e)
+                generated_events.add(se)
+            else:
+                se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
+            self.actual_events.extend(se) # add all of the ScheduleEvents
         
-    def add_event(self, e: event.Event):
+    def recurring_events_gen(self, re: event.RecurringEvent) -> 'generator of event.RecurringEvent':
+        '''
+        convert a RecurringEvent into a bunch of ScheduleEvents from re.period_start to re.period_end
+        if re.period_start is None, use self.region.start as the beginning period
+        generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
+        '''
+        pass
+
+    def task_events_gen(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
+        '''
+        convert a TaskEvent into a bunch of ScheduleEvents
+        '''    
+        pass
+    
+    
+    
+    def add_event(self, e: event.Event) -> None:
         '''
         add event
         '''
         self.event_queue.push(e)
     
     
-    # def add_from_sql(self, conn: sqlite3.Connection, table: str):
+    # def add_from_sql(self, conn: sqlite3.Connection, table: str) -> None:
         # '''
         # add events from sql table to the event queue
         # table is the table name
@@ -165,13 +200,13 @@ class Schedule:
         '''
         self.event_queue.delete_by_id(id)
     
-    def get_events_in_region(self, start, end):
-        return [se for se in self.actual_events if start <= se.start and end >= se.end]
+    def get_events_in_region(self, start, end) -> 'generator of ScheduleEvent':
+        return (se for se in self.actual_events if start <= se.start and end >= se.end)
         
     def print_schedule(self
                             , start: datetime.datetime=None
                             , end: datetime.datetime=None
-                       ):
+                       ) -> None:
         if start is None:
             start = self.region.start
         if end is None:
