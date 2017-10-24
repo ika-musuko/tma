@@ -1,7 +1,6 @@
 import requests
 import json
-import schedule
-
+import util
 '''
 I don't know how to split this up among the modules
 But this should work
@@ -11,8 +10,7 @@ and for each course id finds assignments
 which may not be all the assignments?? for some reason??
 '''
 
-
-for x in schedule.Schedule.get_from_canvas(access_token="12~ctFQBI3R4WVBmhQi2rV1PbTabRtXkCDwRjv1sM2ZHD5DXzoQBXlZL6NRn8ZXLx8e"):
+for x in util.get_from_canvas(access_token="12~ctFQBI3R4WVBmhQi2rV1PbTabRtXkCDwRjv1sM2ZHD5DXzoQBXlZL6NRn8ZXLx8e"):
     print(x)
 
 
@@ -53,9 +51,5 @@ calev = json.loads(requests.get("https://sjsu.instructure.com/api/v1/calendar_ev
 
 print("calev:")
 for x in calev:
-
     print(calev)
-=======
-    print(calev)
-    '''
-
+'''
