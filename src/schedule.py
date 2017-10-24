@@ -141,7 +141,7 @@ class Schedule:
         self.update()
 
 
-    def get_from_canvas(self, access_token: str=""):
+    def get_from_canvas(access_token: str=""):
         '''
         gets the assignments from the courses and creates a list of DueEvents
         :param access_token: An access token, or API key, of the Canvas API
@@ -158,7 +158,10 @@ class Schedule:
                 a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
                 parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
                 for y in parsed_c_asnmt:
-                    asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+                    due_at = y['due_at']
+                    if due_at is not None:
+                        due_at = dateutil.parser.parse(y['due_at'])
+                    asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
         return asnmt
       
 
