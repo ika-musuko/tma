@@ -140,6 +140,7 @@ class Schedule:
         self.event_queue = EventQueue(events)
         self.update()
 
+
     def update(self) -> None:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
