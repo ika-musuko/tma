@@ -53,6 +53,8 @@ def hm(dt: datetime.datetime) -> str:
     removes seconds from datetime.datetime string
     ex:
         2017-10-22 21:21
+    :param dt: the datetime to convert
+    :return type: string of the datetime without the seconds
     '''
     return "{y}-{m:02d}-{d:02d} {h:02d}:{min:02d}".format(y=dt.year, m=dt.month, d=dt.day, h=dt.hour, min=dt.minute)
 
@@ -90,7 +92,11 @@ def get_from_canvas(access_token: str="") -> 'list of DueEvent':
     return asnmt
 
 
-def append_to_sorted(sl: SortedList, things: 'iterable') -> SortedList:
+def sort_extend(sl: SortedList, things: iter) -> None
     '''
-
+    add all things to sl in place
+    :param sl: the SortedList to add to
+    :param things: iterable of things to add
     '''
+    for t in things:
+        sl.add(t)
