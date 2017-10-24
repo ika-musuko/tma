@@ -92,7 +92,7 @@ def get_from_canvas(access_token: str="") -> 'list of DueEvent':
     return asnmt
 
 
-def sort_extend(sl: SortedList, things: iter) -> None
+def sort_extend(sl: SortedList, things: iter) -> None:
     '''
     add all things to sl in place
     :param sl: the SortedList to add to

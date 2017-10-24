@@ -138,6 +138,7 @@ class Schedule:
         self.region = Region(start, end)
         self.region.fill()
         self.event_queue = EventQueue(events)
+        print(self.event_queue)
         self.update()
 
     def update(self) -> None:
@@ -148,38 +149,49 @@ class Schedule:
         today = datetime.datetime.today()
         self.earliest_free_region = Region(today if self.region.start < today else self.region.start, self.region.end)
         self.generated_events = SortedList()
+        self.actual_events = SortedList()
         
         # go through all of the events on the queue...
         for e in self.event_queue:
             # se is an iterable of ScheduleEvent
             if isinstance(e, event.RecurringEvent):
-                se = self.recurring_events_gen(e)
+                se = self.generate_recurring_events(e)
                 sort_extend(self.generated_events, se)
             elif isinstance(e, event.TaskEvent):
-                se = self.task_events_gen(e)
+                se = self.generate_task_events(e)
                 sort_extend(self.generated_events, se)
             # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
-            self.actual_events.extend(se) # add all of the ScheduleEvents
+            sort_extend(self.actual_events, se) # add all of the ScheduleEvents
         
-    def recurring_events_gen(self, re: event.RecurringEvent) -> 'generator of event.RecurringEvent':
+    def generate_recurring_events(self, re: event.RecurringEvent) -> 'SortedList of event.RecurringEvent':
         '''
         convert a RecurringEvent into a bunch of ScheduleEvents from re.period_start to re.period_end
         if re.period_start is None, use self.region.start as the beginning period
         generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
         :param re: the RecurringEvent to generate from
         '''
-        for day in weeklydays(self.region.start if re.period_start is None else re.period_start, re.period_end, re.days):
-            # make dates from the RecurringEvent's start_time and end_time
-            start_datetime = combine(day, re.start_time)
-            # if re is a SleepEvent and the start_time is after the end_time, advance to the next day
-            end_datetime = combine(day+datetime.timedelta(day=int(isinstance(re, event.SleepEvent) and re.start_time > re.end_time)), re.start_time)
-            # generate a ScheduleEvent
-            yield ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info)
-        
+        se = SortedList()
+        for d in re.days:
+            for day in weeklydays(self.region.start if re.period_start is None else re.period_start, re.period_end, d):
+                # make dates from the RecurringEvent's start_time and end_time
+                start_datetime = combine(day, re.start_time)
+                # if re is a SleepEvent and the start_time is after the end_time, advance to the next day
+                end_datetime = combine(day+datetime.timedelta(days=int(isinstance(re, event.SleepEvent) and re.start_time > re.end_time)), re.end_time)
+                
+                re_extra_info =  "Recurring Event: %s start: %02d:%02d end: %02d:%02d" % (   re.day_names
+                                                                                       , start_datetime.hour
+                                                                                       , start_datetime.minute
+                                                                                       , end_datetime.hour
+                                                                                       , end_datetime.minute
+                                                                                     )
+                # generate a ScheduleEvent
+                new_se = ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info)
+                se.add(new_se)
+        return se
 
-    def task_events_gen(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
+    def generate_task_events(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
         '''
         convert a TaskEvent into a bunch of ScheduleEvents
         :param te: the TaskEvent to generate from
@@ -236,8 +248,8 @@ class Schedule:
             start = self.region.start
         if end is None:
             end = self.region.end    
-        
+       
         getactual = self.get_events_in_region(start, end)
         for se in getactual:
-            print(se)
+            print(str(se))
     
