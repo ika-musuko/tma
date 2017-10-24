@@ -1,4 +1,5 @@
 import datetime
+from sortedcontainers import SortedList
 
 '''
     util.py
@@ -58,7 +59,7 @@ def hm(dt: datetime.datetime) -> str:
 def none(things: 'iterable') -> bool:
     return None in things    
  
-def comp(x, y) -> bool:
+def comp(x, y) -> None:
     '''
     shows the results of <. =. and >
     '''
@@ -66,3 +67,30 @@ def comp(x, y) -> bool:
     print("<<<<: %s" % (x < y))           
     print("=== : %s" % (x == y))
     print(">>>>: %s" % (x > y))    
+
+
+def get_from_canvas(access_token: str="") -> 'list of DueEvent':
+    '''
+    gets the assignments from the courses and creates a list of DueEvents
+    :param access_token: An access token, or API key, of the Canvas API
+    :return: an unsorted list of DueEvents
+    '''
+    canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+    headers = {
+        "Authorization": ("Bearer %s" % (access_token)),
+    }
+    asnmt=list()
+    parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
+    for x in parsed_courses:
+        if 'name' in x:
+            a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
+            parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
+            for y in parsed_c_asnmt:
+                asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+    return asnmt
+
+
+def append_to_sorted(sl: SortedList, things: 'iterable') -> SortedList:
+    '''
+
+    '''

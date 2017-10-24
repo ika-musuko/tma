@@ -194,7 +194,8 @@ class Schedule:
         generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
         :param re: the RecurringEvent to generate from
         '''
-        pass # delete this pass after implementing
+for day in weeklydays(self.region.start if re.period_start is None else re.period_start, re.period_end, re.days):
+        
         
 
     def task_events_gen(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
