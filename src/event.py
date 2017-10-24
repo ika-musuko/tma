@@ -73,7 +73,7 @@ class TaskEvent(Event):
         if priority < 1: priority = 1
         Event.__init__(self, name, desc, priority, None, None)
         self.done = done
-        self.duration = duration
+        self.duration = datetime.timedelta(hours=duration)
     
 class DueEvent(TaskEvent):
     '''

@@ -16,7 +16,7 @@ from util import *
 
 class Region:
     DEFAULT_START = datetime.datetime(2017, 10, 1, 0, 0, 0)
-    DEFAULT_END = datetime.datetime(2099, 1, 1, 0, 0, 0)
+    DEFAULT_END = datetime.datetime(2018, 1, 1, 0, 0, 0)
     DEFAULT_DURATION = datetime.timedelta(hours=2)
     '''
     the start and end boundaries of a Schedule (for viewing)
@@ -204,26 +204,25 @@ class Schedule:
         convert a TaskEvent into a bunch of ScheduleEvents
         :param te: the TaskEvent to generate from
         '''    
-        # get the two most recent events
-        earliest_event = self.generated_events.pop(0) if len(self.generated_events) > 0 else None 
-        second_event   = self.generated_events.pop(0) if len(self.generated_events) > 0 else None
-        second_bound   = self.region.end if second_event is None else second_event.start # the boundary of the second earliest event (or the Schedule's region if it doesn't exist)
-    
-        #print("pre: %s" % self.earliest_free_region)
         start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
-        end_datetime = start_datetime+te.duration
-        # if there is an earliest event...
-        if earliest_event is not None:
-            # ... and the earliest free region is after or at the same time as the the earliest event
-            if self.earliest_free_region.start >= earliest_event.start:
-                # reassign the earliest free region to the free area in between the earliest and second earliest event
-                self.earliest_free_region = Region(start=earliest_event.end, end=second_bound)
+        # fix conflicts
+        for ge in self.generated_events:
+            if ge.start > start_datetime:
+                # self.generated_events is sorted so we can break out early if we go too far
+                break
+            # if there's a conflict set the new start to the end of the 
+            elif ge.start <= start_datetime < ge.end:
+                start_datetime = ge.end
+                break
 
-                # set the start and end regions
-                if earliest_event.start < end_datetime: 
-                # truncate the end datetime to the earliest event's start if the earliest event's start is before the end_datetime
-                    end_datetime = earliest_event.start
-          
+        end_datetime = start_datetime+te.duration
+        # future optimization: stuff the start and end checker into one for loop?
+        for ge in self.generated_events:
+            if ge.start > end_datetime:
+                break
+            elif ge.start <= end_datetime < ge.end:
+                end_datetime = ge.start
+        
         te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
         new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info) 
         self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
