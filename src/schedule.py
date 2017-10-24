@@ -141,30 +141,6 @@ class Schedule:
         self.update()
 
 
-    def get_from_canvas(access_token: str=""):
-        '''
-        gets the assignments from the courses and creates a list of DueEvents
-        :param access_token: An access token, or API key, of the Canvas API
-        :return: an unsorted list of DueEvents
-        '''
-        canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
-        headers = {
-            "Authorization": ("Bearer %s" % (access_token)),
-        }
-        asnmt=list()
-        parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
-        for x in parsed_courses:
-            if 'name' in x:
-                a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
-                parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
-                for y in parsed_c_asnmt:
-                    due_at = y['due_at']
-                    if due_at is not None:
-                        due_at = dateutil.parser.parse(y['due_at'])
-                    asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
-        return asnmt
-      
-
     def update(self) -> None:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
@@ -179,10 +155,11 @@ class Schedule:
             # se is an iterable of ScheduleEvent
             if isinstance(e, event.RecurringEvent):
                 se = self.recurring_events_gen(e)
-                generated_events.add(se)
+                sort_extend(self.generated_events, se)
             elif isinstance(e, event.TaskEvent):
                 se = self.task_events_gen(e)
-                generated_events.add(se)
+                sort_extend(self.generated_events, se)
+            # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
             self.actual_events.extend(se) # add all of the ScheduleEvents
@@ -194,8 +171,13 @@ class Schedule:
         generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
         :param re: the RecurringEvent to generate from
         '''
-for day in weeklydays(self.region.start if re.period_start is None else re.period_start, re.period_end, re.days):
-        
+        for day in weeklydays(self.region.start if re.period_start is None else re.period_start, re.period_end, re.days):
+            # make dates from the RecurringEvent's start_time and end_time
+            start_datetime = combine(day, re.start_time)
+            # if re is a SleepEvent and the start_time is after the end_time, advance to the next day
+            end_datetime = combine(day+datetime.timedelta(day=int(isinstance(re, event.SleepEvent) and re.start_time > re.end_time)), re.start_time)
+            # generate a ScheduleEvent
+            yield ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info)
         
 
     def task_events_gen(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
