@@ -1,4 +1,8 @@
 import datetime
+import dateutil.parser
+import json
+import requests
+import event
 from sortedcontainers import SortedList
 
 '''
@@ -88,7 +92,10 @@ def get_from_canvas(access_token: str="") -> 'list of DueEvent':
             a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
             parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
             for y in parsed_c_asnmt:
-                asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+                due_at = y['due_at']
+                if due_at is not None:
+                    due_at = dateutil.parser.parse(y['due_at'])
+                asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
     return asnmt
 
 
