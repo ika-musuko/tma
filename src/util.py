@@ -1,4 +1,5 @@
 import datetime
+from sortedcontainers import SortedList
 
 '''
     util.py
@@ -52,13 +53,15 @@ def hm(dt: datetime.datetime) -> str:
     removes seconds from datetime.datetime string
     ex:
         2017-10-22 21:21
+    :param dt: the datetime to convert
+    :return type: string of the datetime without the seconds
     '''
     return "{y}-{m:02d}-{d:02d} {h:02d}:{min:02d}".format(y=dt.year, m=dt.month, d=dt.day, h=dt.hour, min=dt.minute)
 
 def none(things: 'iterable') -> bool:
     return None in things    
  
-def comp(x, y) -> bool:
+def comp(x, y) -> None:
     '''
     shows the results of <. =. and >
     '''
@@ -66,3 +69,34 @@ def comp(x, y) -> bool:
     print("<<<<: %s" % (x < y))           
     print("=== : %s" % (x == y))
     print(">>>>: %s" % (x > y))    
+
+
+def get_from_canvas(access_token: str="") -> 'list of DueEvent':
+    '''
+    gets the assignments from the courses and creates a list of DueEvents
+    :param access_token: An access token, or API key, of the Canvas API
+    :return: an unsorted list of DueEvents
+    '''
+    canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+    headers = {
+        "Authorization": ("Bearer %s" % (access_token)),
+    }
+    asnmt=list()
+    parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
+    for x in parsed_courses:
+        if 'name' in x:
+            a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
+            parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
+            for y in parsed_c_asnmt:
+                asnmt.append(event.DueEvent(dateutil.parser.parse(y['due_at']), y['name'], y['description']))
+    return asnmt
+
+
+def sort_extend(sl: SortedList, things: iter) -> None:
+    '''
+    add all things to sl in place
+    :param sl: the SortedList to add to
+    :param things: iterable of things to add
+    '''
+    for t in things:
+        sl.add(t)
