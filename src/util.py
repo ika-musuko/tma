@@ -29,12 +29,25 @@ def totime(s: str) -> datetime.time:
     '''
     return datetime.datetime.strptime(s, "%H:%M").time()
     
+def tohours(td: datetime.timedelta) -> float:
+    '''
+    converts a timedelta into hours as a float
+    '''
+    return td / datetime.timedelta(hours=1)
+
+def tominutes(td: datetime.timedelta) -> int:
+    '''
+    converts a timedelta into minutes as an int
+    '''
+    return td // datetime.timedelta(minutes=1)
+    
 def combine(date: datetime.date, time: datetime.time) -> datetime.datetime:
     '''
     wrapper around datetime.datetime.combine()
     '''
     return datetime.datetime.combine(date, time)
-    
+
+
 def weeklydays(start: datetime.date, end: datetime.date=None, dayofweek: str="") -> 'generator of datetime.date':
     '''
     generator of list of days in week from dayofweek in region

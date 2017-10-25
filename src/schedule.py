@@ -1,13 +1,10 @@
 import event
 from eventqueue import EventQueue
 import datetime
-import dateutil.parser
 import sqlite3
-from sortedcontainers import SortedList, SortedListWithKey
+from sortedcontainers import SortedList
 import operator
-import json
-import requests
-from collections import deque
+import math
 from util import *
 
 '''
@@ -73,9 +70,6 @@ class Region:
         return "Region: start %s end %s" % (self.start, self.end)
 
 
-    
-
-        
 class ScheduleEvent(event.Event):
     '''
     Schedule will convert every element in its user_events into this type of event
@@ -204,33 +198,49 @@ class Schedule:
         '''    
 
         ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
-        ## fix conflicts between events by checking if the start and end datetimes are inside another existing event, and readjusting the start and end times to match the boundaries of the conflicting events
-        ## future optimization: stuff the start and end checker into one for loop?
-        # set the start time
-        start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
-        for ge in self.generated_events:
-            if ge.start > start_datetime:
-                # self.generated_events is sorted so we can break out early if we go too far
-                break
-            # if there's a conflict, set the new start to the end of the conflicting event
-            elif ge.start <= start_datetime < ge.end:
-                start_datetime = ge.end
-                break
-        # set the end time
-        end_datetime = start_datetime+te.duration # the event will end according to the duration of the event specified in the class
-        for ge in self.generated_events:
-            if ge.start > end_datetime:
-                break
-            # if there's a conflict, set the new end to the start of the conflicting event
-            elif ge.start <= end_datetime < ge.end:
-                end_datetime = ge.start
-         
-        te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
-        new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info) 
-        self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
-        #print("post: %s" % self.earliest_free_region)
-        return [new_se]
+        ## fix conflicts between events by checking if the start and end datetimes are inside another existing event or if they engulf another event, and readjusting the start and end times to match the boundaries of the conflicting events
+        remaining_duration = te.duration
+        se = SortedList()
+        # break up into multiple events until the event's entire duration has passed
+        while remaining_duration > 0 : 
+            # set the start time 
+            start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
+            conflict = self.check_inside_any(start_datetime)
+            if conflict is not None:
+                start_datetime = conflict.end
+            # set the end time
+            end_datetime = start_datetime + datetime.timedelta(minutes=remaining_duration)
+            conflict = self.check_inside_any(end_datetime)
+            if conflict is not None:
+                end_datetime = conflict.start
+            
+            # if the event encapuslates an already existing event, set the free region to after the existing event and start over
+            # todo
+
+            # get the current remaining duration
+            remaining_duration -= tominutes(end_datetime - start_datetime)
+
+            # create the new event
+            te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
+            new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info)
+            self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
+            se.add(new_se)
+            
+        return se
     
+    def check_inside_any(self, dt: datetime.datetime) -> ScheduleEvent:
+        '''
+        check if a datetime.datetime is inside any generated events
+        :param dt: the datetime to check
+        :return value: the conflicting event or None if there are no conflicting events
+        '''
+        for ge in self.generated_events:
+            if ge.start > dt:
+                    return None # return early if we have gone past the dt since self.generate_events is sorted
+            if ge.start <= dt < ge.end:
+                    return ge
+        return None
+
     def add_event(self, e: event.Event) -> None:
         '''
         add event

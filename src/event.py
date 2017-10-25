@@ -62,18 +62,20 @@ class TaskEvent(Event):
     
     Parent:
         Event
+    Attributes:
+        duration (int): how long in minutes
     '''
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=120
+                    , priority: int=128
                     , done: bool=False
-                    , duration: float=2.0
+                    , duration: int=120
                 ):
         if priority < 1: priority = 1
         Event.__init__(self, name, desc, priority, None, None)
         self.done = done
-        self.duration = datetime.timedelta(hours=duration)
+        self.duration = duration
     
 class DueEvent(TaskEvent):
     '''
@@ -93,7 +95,7 @@ class DueEvent(TaskEvent):
                     , desc: str=""
                     , priority: int=3
                     , done: bool=False
-                    , duration: float=2.0
+                    , duration: int=120
                 ):
        if priority < 1: priority = 1
        TaskEvent.__init__(self, name, desc, priority, done, duration)
