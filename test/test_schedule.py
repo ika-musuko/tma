@@ -19,7 +19,7 @@ classlist = [
 
 # define sleep schedule
 # user id, start_time, end_time
-sleeplist = [ ('0', '01:30', '09:30') ]
+sleeplist = [ ('0', '22:30', '07:30') ]
 # create some things to do
 # user id, name, desc, due, priority, done
 duelist = [ 
@@ -30,7 +30,7 @@ duelist = [
           ]
 # user id, name, desc, start   
 userlist = [
-             ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-24 22:00')
+             ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-24 21:00')
             ,('0', 'computer history museum', 'go to the computer history museum because you can', '2017-10-29 11:30')
             ,('0', 'some other thing', 'blah blah', '2017-10-24 23:30')
            ]

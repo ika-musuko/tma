@@ -139,13 +139,13 @@ class Schedule:
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
         '''
         # if the current region.start is earlier than today, make the earliest free region's start earlier than today. else, maintain the current region.start for earliest free region
-        #today = datetime.datetime.today()
-        today = datetime.datetime(2017,10,24,16,30)
+        today = datetime.datetime.today()
         self.earliest_free_region = Region(today if self.region.start < today else self.region.start, self.region.end)
         self.generated_events = SortedList()
         self.actual_events = SortedList()
 
         # go through all of the events on the queue...
+        print("~~~ PROCESSING EVENT QUEUE ~~~")
         for e in self.event_queue:
             print(e)
             # se is an iterable of ScheduleEvent
@@ -159,6 +159,7 @@ class Schedule:
             self.push_generated_events(se, today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
     
+    ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
     def push_generated_events(self, se: list, today: datetime.datetime) -> None:
         '''
         push generated events only if they happened after today
@@ -166,7 +167,7 @@ class Schedule:
         :param today: what is today???
         '''
         sort_extend(self.generated_events, [s for s in se if s.start >= today])
-
+    
     def generate_recurring_events(self, re: event.RecurringEvent) -> 'SortedList of ScheduleEvent':
         '''
         convert a RecurringEvent into a bunch of ScheduleEvents from re.period_start to re.period_end
@@ -196,12 +197,11 @@ class Schedule:
 
     def generate_task_events(self, te: event.TaskEvent) -> 'SortedList of ScheduleEvent':
         '''
-        convert a TaskEvent into a bunch of ScheduleEvents
+        convert a TaskEvent into a bunch of ScheduleEvents by fixing conflicts between events by checking if the start and end datetimes are inside another existing event or if they engulf another event, and readjusting the start and end times to match the boundaries of the conflicting events
         :param te: the TaskEvent to generate from
         :return value: the generated ScheduleEvents
         '''    
-        ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
-        ## fix conflicts between events by checking if the start and end datetimes are inside another existing event or if they engulf another event, and readjusting the start and end times to match the boundaries of the conflicting events
+        print("\tconverting & generating: %r" % te)
         remaining_duration = te.duration
         se = SortedList()
         # break up into multiple events until the event's entire duration has passed
@@ -226,6 +226,7 @@ class Schedule:
             new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info)
             self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
             se.add(new_se)
+            print("\t\tstart: %s end: %s" %(new_se.start, new_se.end))
             
         return se
     

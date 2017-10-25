@@ -19,33 +19,42 @@ classlist = [
             ,('0','CMPE120', 'Computer Hardware and Architecture',  'TH','2017-08-22','2017-12-13', '13:30', '14:45')
             ,('0','CMPE131', 'Software Engineering I',              'TH','2017-08-22','2017-12-13', '16:30', '17:45')
             ,('0','CS146',   'Data Structures and Algorithms',      'MW','2017-08-22','2017-12-13', '15:00', '16:15')
-            ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-13', '10:30', '11:45')      
-          ]  
+            ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-13', '10:30', '11:45')
+            ]  
+            
 
-# define sleep schedule
+# define sleep schedule (also meals are the same i guess lol)
 # user id, start_time, end_time
-sleeplist = [ ('0', '01:30', '09:30') ]
+sleeplist = [ ('0', '22:30', '07:30', 'Sleep')
+             ,('0', '08:00', '08:30', 'Breakfast')
+             ,('0', '12:00', '12:30', 'Lunch')
+             ,('0', '21:00', '21:30', 'Dinner')
+            ]
 # user id, name, desc, start   
 userlist = [
-             ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-24 22:00')
+             ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-26 21:00')
             ,('0', 'computer history museum', 'go to the computer history museum because you can', '2017-10-29 11:30')
-            ,('0', 'some other thing', 'blah blah', '2017-10-24 23:30')
+            ,('0', 'some other thing', 'blah blah', '2017-10-27 2:30')
            ]
 
 ## schedule test code 
-classevents = [event.RecurringEvent( start_time=totime(cl[6])
+def convert_recur(elist: list):
+    return [event.RecurringEvent( start_time=totime(cl[6])
                               ,end_time=totime(cl[7])
                               ,name=cl[1]
                               ,desc=cl[2]
                               ,period_start=todate(cl[4])
                               ,period_end=todate(cl[5])
                               ,daystr=cl[3]
-                              ) for cl in classlist]
+                              ) for cl in elist]
+
+classevents = convert_recur(classlist)
     
 dueevents = get_from_canvas(API_KEY)
 
 sleepevents = [event.SleepEvent( start_time=totime(sl[1])
                                 ,end_time=totime(sl[2])
+                                ,name=sl[3]
                                ) for sl in sleeplist]
 
 userevents = [event.Event( name=ul[1]
