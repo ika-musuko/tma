@@ -4,7 +4,7 @@ import sqlite3
 import event
 import schedule
 import datetime
-from canvas import *
+import canvas
 from util import *
 
 
@@ -49,9 +49,6 @@ def convert_recur(elist: list):
                               ) for cl in elist]
 
 classevents = convert_recur(classlist)
-    
-dueevents = get_from_canvas(API_KEY)
-
 sleepevents = [event.SleepEvent( start_time=totime(sl[1])
                                 ,end_time=totime(sl[2])
                                 ,name=sl[3]
@@ -64,7 +61,8 @@ userevents = [event.Event( name=ul[1]
                            
 today = datetime.datetime.today()
 next_day = datetime.timedelta(days=2)  
-end = today+datetime.timedelta(days=2)                      
-#schedule = schedule.Schedule(events=classevents+dueevents+sleepevents, start=today+next_day, end=end)
-schedule = schedule.Schedule(events=classevents+dueevents+sleepevents+userevents)
+end = today+datetime.timedelta(days=2)
+                      
+schedule = schedule.Schedule(events=classevents+sleepevents+userevents)
+schedule.add_from_canvas(API_KEY)
 schedule.print_schedule(today, end)

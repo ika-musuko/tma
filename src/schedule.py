@@ -6,6 +6,7 @@ from sortedcontainers import SortedList
 import operator
 import math
 from util import *
+import canvas
 
 '''
     schedule.py
@@ -158,7 +159,8 @@ class Schedule:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
             self.push_generated_events(se, today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
-    
+        print("~~~PROCESSING FINISHED ~~~")
+        
     ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
     def push_generated_events(self, se: list, today: datetime.datetime) -> None:
         '''
@@ -264,8 +266,8 @@ class Schedule:
         :param e: the Event to add
         '''
         self.event_queue.push(e)
-    
-    
+        self.update()
+
     # def add_from_sql(self, conn: sqlite3.Connection, table: str) -> None:
         # '''
         # add events from sql table to the event queue
@@ -276,7 +278,20 @@ class Schedule:
         # c = conn.cursor()
         # execstr = ("SELECT * FROM %s" % table)
         # for row in c.execute(execstr):
-            
+    
+    def add_from_canvas(self, api_key: str) -> bool:
+        '''
+        adds assignments from canvas into Schedule
+        :param api_key: the canvas api_key
+        :return value: whether it was successful or not
+        '''
+        try:
+            self.event_queue.push_list(canvas.get_assignments(api_key))
+            self.update()
+            return True
+        except:
+            return False
+    
     def delete_event(self, id: int) -> bool:
         '''
         delete Event by id

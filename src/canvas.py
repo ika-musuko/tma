@@ -3,6 +3,7 @@ import json
 import event
 import requests
 import datetime
+import dateutil.parser
 
 '''
 canvas.py
@@ -10,7 +11,7 @@ canvas.py
 functions to interact with canvas and convert data into the model's representation
 '''
 
-def get_from_canvas(access_token: str="") -> 'list of DueEvent':
+def get_assignments(access_token: str="") -> 'list of DueEvent':
     '''
     gets the assignments from the courses and creates a list of DueEvents
     :param access_token: An access token, or API key, of the Canvas API
@@ -39,4 +40,3 @@ def get_from_canvas(access_token: str="") -> 'list of DueEvent':
                     asnmt.append(event.TaskEvent(name=y['name'], desc=y['description']))
     print("all done...! : )")
     return asnmt
-
