@@ -3,7 +3,6 @@ import json
 import event
 import requests
 import datetime
-import dateutil.parser
 
 '''
 canvas.py
