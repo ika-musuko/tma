@@ -131,7 +131,6 @@ class Schedule:
         self.region = Region(start, end)
         self.region.fill()
         self.event_queue = EventQueue(events)
-        print(self.event_queue)
         self.update()
 
 
@@ -140,14 +139,15 @@ class Schedule:
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
         '''
         # if the current region.start is earlier than today, make the earliest free region's start earlier than today. else, maintain the current region.start for earliest free region
-        today = datetime.datetime.today()
+        #today = datetime.datetime.today()
+        today = datetime.datetime(2017,10,24,16,30)
         self.earliest_free_region = Region(today if self.region.start < today else self.region.start, self.region.end)
-        print(self.earliest_free_region)
         self.generated_events = SortedList()
         self.actual_events = SortedList()
 
         # go through all of the events on the queue...
         for e in self.event_queue:
+            print(e)
             # se is an iterable of ScheduleEvent
             if isinstance(e, event.RecurringEvent):
                 se = self.generate_recurring_events(e)
@@ -162,15 +162,18 @@ class Schedule:
     def push_generated_events(self, se: list, today: datetime.datetime) -> None:
         '''
         push generated events only if they happened after today
+        :param se: the list of events to push
+        :param today: what is today???
         '''
         sort_extend(self.generated_events, [s for s in se if s.start >= today])
 
-    def generate_recurring_events(self, re: event.RecurringEvent) -> 'SortedList of event.RecurringEvent':
+    def generate_recurring_events(self, re: event.RecurringEvent) -> 'SortedList of ScheduleEvent':
         '''
         convert a RecurringEvent into a bunch of ScheduleEvents from re.period_start to re.period_end
         if re.period_start is None, use self.region.start as the beginning period
         generate ScheduleEvent.start and ScheduleEvent.end using util.weeklydays()
         :param re: the RecurringEvent to generate from
+        :return value: the generated ScheduleEvents
         '''
         se = SortedList()
         for d in re.days:
@@ -191,12 +194,12 @@ class Schedule:
                 se.add(new_se)
         return se
 
-    def generate_task_events(self, te: event.TaskEvent) -> ('generator of event.TaskEvent', Region, 'SortedList of ScheduleEvent'):
+    def generate_task_events(self, te: event.TaskEvent) -> 'SortedList of ScheduleEvent':
         '''
         convert a TaskEvent into a bunch of ScheduleEvents
         :param te: the TaskEvent to generate from
+        :return value: the generated ScheduleEvents
         '''    
-
         ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
         ## fix conflicts between events by checking if the start and end datetimes are inside another existing event or if they engulf another event, and readjusting the start and end times to match the boundaries of the conflicting events
         remaining_duration = te.duration
@@ -205,17 +208,15 @@ class Schedule:
         while remaining_duration > 0 : 
             # set the start time 
             start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
-            conflict = self.check_inside_any(start_datetime)
+            conflict = self.check_start(start_datetime)
             if conflict is not None:
                 start_datetime = conflict.end
+            
             # set the end time
             end_datetime = start_datetime + datetime.timedelta(minutes=remaining_duration)
-            conflict = self.check_inside_any(end_datetime)
+            conflict = self.check_end(start_datetime, end_datetime)
             if conflict is not None:
                 end_datetime = conflict.start
-            
-            # if the event encapuslates an already existing event, set the free region to after the existing event and start over
-            # todo
 
             # get the current remaining duration
             remaining_duration -= tominutes(end_datetime - start_datetime)
@@ -228,7 +229,7 @@ class Schedule:
             
         return se
     
-    def check_inside_any(self, dt: datetime.datetime) -> ScheduleEvent:
+    def check_start(self, dt: datetime.datetime) -> ScheduleEvent:
         '''
         check if a datetime.datetime is inside any generated events
         :param dt: the datetime to check
@@ -240,6 +241,21 @@ class Schedule:
             if ge.start <= dt < ge.end:
                     return ge
         return None
+    
+    def check_end(self, start: datetime.datetime, end: datetime.datetime) -> ScheduleEvent:
+        '''
+        check if a datetime.datetime is inside any generated events and start and end are not encapsulating any event
+        :param start: the start datetime to check
+        :param end: the end datetime to check
+        :return value: the conflicting event or None if there are no conflicting events
+        '''
+        for ge in self.generated_events:
+            if ge.start > end:
+                    return None # return early if we have gone past the dt since self.generate_events is sorted
+            if ge.start <= end <= ge.end or (ge.start >= start and ge.end <= end):
+                    return ge
+        return None        
+        
 
     def add_event(self, e: event.Event) -> None:
         '''
@@ -264,6 +280,7 @@ class Schedule:
         '''
         delete Event by id
         :param id: look for the event with this id to delete
+        :return value: if the delete was successful
         todo - after the UI is properly conceptualized, these params might have to be changed?
         '''
         self.event_queue.delete_by_id(id)
@@ -273,6 +290,7 @@ class Schedule:
         return a generator of every actual event from start to end
         :param start: start generator from here
         :param end: end generator here
+        :return value: the events in the region
         '''
         return (se for se in self.actual_events if start <= se.start <= end)
         
@@ -293,4 +311,3 @@ class Schedule:
         getactual = self.get_events_in_region(start, end)
         for se in getactual:
             print(str(se))
-    

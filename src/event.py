@@ -51,6 +51,19 @@ class Event:
         
     def __repr__(self):
         return "EVENT: Priority: %i id: %i name: %s start: %s end: %s" % (self.priority, self.id, self.name, self.start, self.end)
+    
+    def __eq__(self, other):
+        return self.priority == other.priority
+    
+    def __lt__(self, other):
+        if self.priority != other.priority:
+            return self.priority < other.priority
+        if other.start is None:
+            return self.start is None
+        return self.start < other.start
+        
+    def __repr__(self):
+        return "EVENT: Priority: %i id: %i name: %s start: %s end: %s" % (self.priority, self.id, self.name, self.start, self.end)
 
 
 class TaskEvent(Event):
@@ -76,6 +89,10 @@ class TaskEvent(Event):
         Event.__init__(self, name, desc, priority, None, None)
         self.done = done
         self.duration = duration
+        
+    def __repr__(self):
+        return "TASKEVENT: Priority: %i id: %i name: %s done: %s" % (self.priority, self.id, self.name, self.done)
+
     
 class DueEvent(TaskEvent):
     '''
@@ -93,7 +110,7 @@ class DueEvent(TaskEvent):
                     , due: datetime.datetime
                     , name: str=""
                     , desc: str=""
-                    , priority: int=3
+                    , priority: int=64
                     , done: bool=False
                     , duration: int=120
                 ):
@@ -106,7 +123,7 @@ class DueEvent(TaskEvent):
             return self.priority < other.priority
         return self.due < other.due
     def __repr__(self):
-        return "DUEEVENT: Priority: %i id: %i name: %s due: %s" % (self.priority, self.id, self.name, self.due) 
+        return "DUEEVENT: Priority: %i id: %i name: %s due: %s done: %s" % (self.priority, self.id, self.name, self.due, self.done) 
 
      
 class RecurringEvent(Event):
@@ -184,5 +201,3 @@ class SleepEvent(RecurringEvent):
                 ):
         RecurringEvent.__init__(self, name="Sleep", desc="Sleep", start_time=start_time, end_time=end_time, daystr="MTWHFSN")
         self.different_days = self.start_time > self.end_time
-        
-        
