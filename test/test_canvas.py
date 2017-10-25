@@ -7,8 +7,13 @@ import datetime
 from canvas import *
 from util import *
 
+
+with open("sherwyn_key.txt", "r") as f:
+    API_KEY = f.readline().strip()
+
 # create some classes
 # user id, name, desc, daystr, period_start, period_end, start_time, end_time
+
 classlist = [
              ('0','CMPE102', 'Assembly Language Programming',       'T', '2017-08-22','2017-12-13', '18:00', '20:45')
             ,('0','CMPE120', 'Computer Hardware and Architecture',  'TH','2017-08-22','2017-12-13', '13:30', '14:45')
@@ -20,14 +25,6 @@ classlist = [
 # define sleep schedule
 # user id, start_time, end_time
 sleeplist = [ ('0', '01:30', '09:30') ]
-# create some things to do
-# user id, name, desc, due, priority, done
-duelist = [ 
-             ('0', 'software engineering demo', 'show a demo of project on the 24th', '2017-10-24 16:30', 2, False)
-            ,('0', 'hardware project', 'write abstract for project', '2017-10-26 13:30', 2, False)
-            ,('0', 'cs 151 homework 4', 'battleship', '2017-10-29 23:59', 2, False)
-            ,('0', 'cs 146 homework 5', '', '2017-10-29 23:59', 5, False)
-          ]
 # user id, name, desc, start   
 userlist = [
              ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-24 22:00')
@@ -45,12 +42,8 @@ classevents = [event.RecurringEvent( start_time=totime(cl[6])
                               ,daystr=cl[3]
                               ) for cl in classlist]
     
-dueevents = [event.DueEvent( name=dl[1]
-                            ,desc=dl[2]
-                            ,due=todatetime(dl[3])
-                            ,priority=dl[4]
-                            ,done=dl[5] 
-                           ) for dl in duelist]
+dueevents = get_from_canvas(API_KEY)
+
 sleepevents = [event.SleepEvent( start_time=totime(sl[1])
                                 ,end_time=totime(sl[2])
                                ) for sl in sleeplist]

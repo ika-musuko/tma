@@ -59,13 +59,13 @@ class EventQueue:
         if isinstance(e, event.TaskEvent) and e.done:
             return
         # if a DueEvent is being pushed, update self.latest_due
-        elif isinstance(e, event.DueEvent):
-            if self.latest_due is None or e.due > self.latest_due.due:
-                self.latest_due = e
+        #elif isinstance(e, event.DueEvent):
+        #    if self.latest_due is None or e.due > self.latest_due.due:
+        #        self.latest_due = e
         # if pushing an event which is not a DueEvent, make sure DueEvents are above everything except RecurringEvents    
-        elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
-           e.priority = self.latest_due.priority + 1 
-           pass
+        #elif (not isinstance(e, event.RecurringEvent)) and (self.latest_due is not None) and (e.priority < self.latest_due.priority):
+        #   e.priority = self.latest_due.priority + 1 
+        #   pass
         self.q.add(e)
         
     def push_list(self, events: list):

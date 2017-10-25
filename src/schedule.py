@@ -109,12 +109,11 @@ class ScheduleEvent(event.Event):
         
     def __str__(self):
         return '''{name}
-        {desc}
         {dow}
         {start}
         {end}
         {ei}
-        '''.format(name=self.name, desc=self.desc, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
+        '''.format(name=self.name, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
     
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
@@ -158,13 +157,12 @@ class Schedule:
             # se is an iterable of ScheduleEvent
             if isinstance(e, event.RecurringEvent):
                 se = self.generate_recurring_events(e)
-                self.push_generated_events(se, today)
             elif isinstance(e, event.TaskEvent):
                 se = self.generate_task_events(e)
-                self.push_generated_events(se, today)
             # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
+            self.push_generated_events(se, today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
     
     def push_generated_events(self, se: list, today: datetime.datetime) -> None:
@@ -204,25 +202,29 @@ class Schedule:
         convert a TaskEvent into a bunch of ScheduleEvents
         :param te: the TaskEvent to generate from
         '''    
+
+        ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
+        ## fix conflicts between events by checking if the start and end datetimes are inside another existing event, and readjusting the start and end times to match the boundaries of the conflicting events
+        ## future optimization: stuff the start and end checker into one for loop?
+        # set the start time
         start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
-        # fix conflicts
         for ge in self.generated_events:
             if ge.start > start_datetime:
                 # self.generated_events is sorted so we can break out early if we go too far
                 break
-            # if there's a conflict set the new start to the end of the 
+            # if there's a conflict, set the new start to the end of the conflicting event
             elif ge.start <= start_datetime < ge.end:
                 start_datetime = ge.end
                 break
-
-        end_datetime = start_datetime+te.duration
-        # future optimization: stuff the start and end checker into one for loop?
+        # set the end time
+        end_datetime = start_datetime+te.duration # the event will end according to the duration of the event specified in the class
         for ge in self.generated_events:
             if ge.start > end_datetime:
                 break
+            # if there's a conflict, set the new end to the start of the conflicting event
             elif ge.start <= end_datetime < ge.end:
                 end_datetime = ge.start
-        
+         
         te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
         new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info) 
         self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
@@ -262,7 +264,7 @@ class Schedule:
         :param start: start generator from here
         :param end: end generator here
         '''
-        return (se for se in self.actual_events if start <= se.start and end >= se.end)
+        return (se for se in self.actual_events if start <= se.start <= end)
         
     def print_schedule(self
                             , start: datetime.datetime=None

@@ -24,7 +24,7 @@ class Event:
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=127
+                    , priority: int=0
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                 ):
@@ -66,7 +66,7 @@ class TaskEvent(Event):
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=2
+                    , priority: int=120
                     , done: bool=False
                     , duration: float=2.0
                 ):
@@ -91,7 +91,7 @@ class DueEvent(TaskEvent):
                     , due: datetime.datetime
                     , name: str=""
                     , desc: str=""
-                    , priority: int=1
+                    , priority: int=3
                     , done: bool=False
                     , duration: float=2.0
                 ):
