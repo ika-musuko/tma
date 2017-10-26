@@ -5,6 +5,7 @@ import sqlite3
 from sortedcontainers import SortedList
 import operator
 import math
+import txt
 from util import *
 import canvas
 
@@ -115,6 +116,11 @@ class ScheduleEvent(event.Event):
     
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
+
+    def short_print(self):
+        today = datetime.datetime.now()
+        dow = "Today" if self.start.weekday() == today.weekday() else "Tomorrow" if (self.start.weekday() - today.weekday())%7 == 1 else ScheduleEvent.DAY_NAMES[self.start.weekday()]
+        return "{name}\n{dow}\nstart: {start}\nend: {end}\n".format(name=self.name, dow=dow, start=hm(self.start), end=hm(self.end))
 
 class Schedule:
     '''
@@ -386,8 +392,21 @@ class Schedule:
         :param end: end generator here
         :return value: the events in the region
         '''
+        if start is None:
+            start = self.region.start
+        if end is None:
+            end = self.region.end    
         return (se for se in self.actual_events if start <= se.start <= end)
-        
+    
+    def send_message(self, address: str, start: datetime.datetime=None, end: datetime.datetime=None):
+        '''
+        sends an email or text message (via multimedia message) of the schedule in a more abbreviated way
+        '''
+        getactual = self.get_events_in_region(start, end)
+        event_list = [se.short_print() for se in getactual]
+        message = "Schedule:\n\n"+'\n'.join(event_list)
+        txt.send_email(message, address)
+
     def print_schedule(self
                             , start: datetime.datetime=None
                             , end: datetime.datetime=None
@@ -397,18 +416,15 @@ class Schedule:
         :param start: start printing from here
         :param end: end printing here
         '''
-        if start is None:
-            start = self.region.start
-        if end is None:
-            end = self.region.end    
+        getactual = self.get_events_in_region(start, end)
         
+        print("--------------")
+        print("schedule:")
         print("CURRENT EVENT:")
         if self.current_event is None:
             print("Nothing going on right now!")
         else:
             print(str(self.current_event))
-        print("--------------")
-        print("schedule:")
-        getactual = self.get_events_in_region(start, end)
+        
         for se in getactual:
             print(str(se))

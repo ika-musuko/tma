@@ -12,4 +12,5 @@ def send_email(message: str, address: str):
     server.sendmail(username, address, message)
     server.quit()
 
-send_email("hello", "7206337812@vzwpix.com")
+if __name__ == "__main__":
+    send_email("hello", "7206337812@vzwpix.com")
