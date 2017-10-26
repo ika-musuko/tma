@@ -23,7 +23,7 @@ classlist = [
             ,('0','Dinner',   'Dinner',                         'MWHFSN', None       , None       , '19:00', '19:30')
             ,('0','Dinner',   'Dinner Tuesday',                      'T', None       , None       , '21:30', '22:00')
             ,('0','drive to school', 'monday/wednesday commute',    'MW','2017-08-22','2017-12-13', '14:00', '15:00')
-            ,('0','drive home', 'tuesday/thursday commute',         'TH','2017-08-22','2017-12-13', '21:30', '22:30')
+            ,('0','drive home', 'tuesday/thursday commute',         'TH','2017-08-22','2017-12-13', '21:00', '21:45')
                 
             ]  
             
@@ -36,7 +36,7 @@ sleeplist = [ ('0', '23:30', '08:30', 'Sleep')
             ]
 # user id, name, desc, start   
 userlist = [
-             ('0', 'movie with mark', 'see a movie with mark', '2017-10-26 21:00')
+             ('0', 'movie with mark', 'see a movie with mark', '2017-10-26 20:00')
             ,('0', 'computer history museum', 'go to the computer history museum because you can', '2017-10-29 11:30')
             ,('0', 'some other thing', 'blah blah', '2017-10-27 2:30')
            ]
@@ -68,6 +68,6 @@ end = today+datetime.timedelta(days=2)
                       
 schedule = schedule.Schedule(events=classevents+sleepevents+userevents)
 schedule.add_canvas_assignments(API_KEY)
-schedule.add_canvas_calendar(API_KEY)
+#schedule.add_canvas_calendar(API_KEY)
 schedule.print_schedule(today, end)
 print(canvas.get_courses(API_KEY))

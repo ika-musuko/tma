@@ -217,7 +217,6 @@ class Schedule:
                 if not self.current_event is None and new_se.start <= self.today < new_se.end:
                     self.earliest_free_region.start = new_se.end
                     self.current_event = new_se
-                    print("CCCCurrent %s" % self.current_event)
 
                 se.add(new_se)
         return se
@@ -240,23 +239,24 @@ class Schedule:
             start_datetime, end_datetime = self.set_event_times(self.work_time if allocate_break else remaining_duration)
 
             # get the current remaining duration
-            remaining_duration -= tominutes(end_datetime - start_datetime)
+            event_length = tominutes(end_datetime - start_datetime)
+            remaining_duration -= event_length
+            self.earliest_free_region = Region(end_datetime, self.region.end) # set the free region to after the new event was created
+            if(event_length > 0): # hack fix for ignoring "microevents" (less than one minute)
+                # create the new event
+                te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
+                new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info=te_extra_info)
+                se.add(new_se)
+                print("\t\tstart: %s end: %s" %(new_se.start, new_se.end))
 
-            # create the new event
-            te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
-            new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info=te_extra_info)
-            self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
-            se.add(new_se)
-            print("\t\tstart: %s end: %s" %(new_se.start, new_se.end))
-
-            # set a break event
-            if allocate_break:
-                start_break, end_break = self.set_event_times(self.break_time)
-                new_break = ScheduleEvent(name="Break", desc="", start=start_break, end=end_break, extra_info="generated break event")
-                se.add(new_break)
-                self.earliest_free_region = Region(new_break.end, self.region.end)
-                print("\t\tgenerated break: start %s end %s" % (new_break.start, new_break.end))
-            
+                # set a break event
+                if allocate_break:
+                    start_break, end_break = self.set_event_times(self.break_time)
+                    if start_break == new_se.end: # don't allocate unnecessary breaks after other events
+                        new_break = ScheduleEvent(name="Break", desc="", start=start_break, end=end_break, extra_info="generated break event")
+                        se.add(new_break)
+                        self.earliest_free_region = Region(new_break.end, self.region.end)
+                        print("\t\tgenerated break: start %s end %s" % (new_break.start, new_break.end))
         return se
     
     def set_event_times(self, duration: int) -> '(start=datetime.datetime, end=datetime.datetime)':
