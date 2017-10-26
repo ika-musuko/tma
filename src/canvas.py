@@ -50,6 +50,7 @@ def get_assignments(access_token: str="", all_events: bool=False) -> 'list of Du
 def get_calendar_events(access_token: str="") -> 'list of Event':
     '''
     gets a list of calendar events from the calendar_events API endpoint
+    doesn't work sometimes (???)
     :param access_token: An access token, or API key, of the Canvas API
     :return: a list of Events
     '''
@@ -58,7 +59,7 @@ def get_calendar_events(access_token: str="") -> 'list of Event':
     print("making request...")
     parsed_cal = json.loads(requests.get(canvas_url % "/calendar_events", headers=get_headers(access_token)).text)
     print("request result: ")
-    print(parsed_cal)
+    #print(parsed_cal)
     for x in parsed_cal:
         desc = remove_tags(x['description'])
         cal_evs.append(event.Event(name=x['name']
@@ -82,6 +83,7 @@ def get_courses(access_token: str="")-> 'list of dict':
         if 'name' in x:
             crs = {'id': str(x['id']), 'name': x['name']}
             course_list.append(crs)
+    #print(course_list)
     return course_list
 
 
