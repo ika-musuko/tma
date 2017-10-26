@@ -131,6 +131,8 @@ class Schedule:
         self.actual_events = []
         self.region = Region(start, end)
         self.region.fill()
+        self.work_time = 90 # how long doing one stretch of work is in minutes
+        self.break_time = 15 # how long a break is in minutes
         self.event_queue = EventQueue(events)
         self.update()
 
@@ -206,32 +208,53 @@ class Schedule:
         print("\tconverting & generating: %r" % te)
         remaining_duration = te.duration
         se = SortedList()
+        allocate_break = False
         # break up into multiple events until the event's entire duration has passed
         while remaining_duration > 0 : 
-            # set the start time 
-            start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
-            conflict = self.check_start(start_datetime)
-            if conflict is not None:
-                start_datetime = conflict.end
-            
-            # set the end time
-            end_datetime = start_datetime + datetime.timedelta(minutes=remaining_duration)
-            conflict = self.check_end(start_datetime, end_datetime)
-            if conflict is not None:
-                end_datetime = conflict.start
+            # allocate a break if the remaining duration is longer than the user's desired work time
+            allocate_break = remaining_duration > self.work_time
+            # assign start and end datetime for event
+            start_datetime, end_datetime = self.set_event_times(self.work_time if allocate_break else remaining_duration)
 
             # get the current remaining duration
             remaining_duration -= tominutes(end_datetime - start_datetime)
 
             # create the new event
             te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
-            new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info = te_extra_info)
+            new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info=te_extra_info)
             self.earliest_free_region = Region(new_se.end, self.region.end) # set the free region to after the new event was created
             se.add(new_se)
             print("\t\tstart: %s end: %s" %(new_se.start, new_se.end))
+
+            # set a break event
+            if allocate_break:
+                start_break, end_break = self.set_event_times(self.break_time)
+                new_break = ScheduleEvent(name="Break", desc="", start=start_break, end=end_break, extra_info="generated break event")
+                se.add(new_break)
+                self.earliest_free_region = Region(new_break.end, self.region.end)
+                print("\t\tgenerated break: start %s end %s" % (new_break.start, new_break.end))
             
         return se
     
+    def set_event_times(self, duration: int) -> '(start=datetime.datetime, end=datetime.datetime)':
+        '''
+        helper method for setting event start and end datetimes
+        :param duration: duration in minutes
+        '''
+        # set the start time 
+        start_datetime = self.earliest_free_region.start # use the start of the earliest_free_region
+        conflict = self.check_start(start_datetime)
+        if conflict is not None:
+            start_datetime = conflict.end
+        
+        # set the end time
+        end_datetime = start_datetime + datetime.timedelta(minutes=duration)
+        conflict = self.check_end(start_datetime, end_datetime)
+        if conflict is not None:
+            end_datetime = conflict.start
+
+        return (start_datetime, end_datetime)
+
     def check_start(self, dt: datetime.datetime) -> ScheduleEvent:
         '''
         check if a datetime.datetime is inside any generated events

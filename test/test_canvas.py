@@ -20,15 +20,16 @@ classlist = [
             ,('0','CMPE131', 'Software Engineering I',              'TH','2017-08-22','2017-12-13', '16:30', '17:45')
             ,('0','CS146',   'Data Structures and Algorithms',      'MW','2017-08-22','2017-12-13', '15:00', '16:15')
             ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-13', '10:30', '11:45')
+            ,('0','Dinner',   'Dinner',                         'MWHFSN', None       , None       , '19:00', '19:30')
+            ,('0','Dinner',   'Dinner Tuesday',                      'T', None       , None       , '21:30', '22:00')
             ]  
             
 
 # define sleep schedule (also meals are the same i guess lol)
 # user id, start_time, end_time
-sleeplist = [ ('0', '22:30', '07:30', 'Sleep')
-             ,('0', '08:00', '08:30', 'Breakfast')
+sleeplist = [ ('0', '23:30', '08:30', 'Sleep')
+             ,('0', '09:45', '10:15', 'Breakfast')
              ,('0', '12:00', '12:30', 'Lunch')
-             ,('0', '21:00', '21:30', 'Dinner')
             ]
 # user id, name, desc, start   
 userlist = [
@@ -43,8 +44,8 @@ def convert_recur(elist: list):
                               ,end_time=totime(cl[7])
                               ,name=cl[1]
                               ,desc=cl[2]
-                              ,period_start=todate(cl[4])
-                              ,period_end=todate(cl[5])
+                              ,period_start=(None if cl[4] is None else todate(cl[4]))
+                              ,period_end=(None if cl[5] is None else todate(cl[5]))
                               ,daystr=cl[3]
                               ) for cl in elist]
 
