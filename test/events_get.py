@@ -12,8 +12,8 @@ This code finds the course ids taken by Steven
 and for each course id finds assignments
 which may not be all the assignments?? for some reason??
 '''
-
-for x in canvas.get_from_canvas(access_token="12~ctFQBI3R4WVBmhQi2rV1PbTabRtXkCDwRjv1sM2ZHD5DXzoQBXlZL6NRn8ZXLx8e"):
+#12~euEvlRyP4Jssa5G6xmq8ke1hp9GC9YtHZUEKM7LOC2hCwWbmfDCYb7yGaDbILYlO <- Sherwyn
+for x in canvas.get_courses(access_token="12~ctFQBI3R4WVBmhQi2rV1PbTabRtXkCDwRjv1sM2ZHD5DXzoQBXlZL6NRn8ZXLx8e"):
     print(x)
 
 
