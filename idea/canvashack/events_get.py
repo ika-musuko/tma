@@ -47,7 +47,7 @@ for x in asnmt:
     print(x)
 
 # calendar events
-calev = json.loads(requests.get("https://sjsu.instructure.com/api/v1/calendar_events", headers=headers).text)
+calev = json.loads(requests.get("https://sjsu.instructure.com/api/v1/calendar_events?type=assignment?all_events", headers=headers).text)
 
 print("calev:")
 for x in calev:
