@@ -68,6 +68,7 @@ end = today+datetime.timedelta(days=2)
                       
 schedule = schedule.Schedule(events=classevents+sleepevents+userevents)
 schedule.add_canvas_assignments(API_KEY)
+schedule.add_event(event.TaskEvent(name="Learn Python", desc="you have to learn python"))
 #schedule.add_canvas_calendar(API_KEY)
 schedule.print_schedule(today, end)
 schedule.send_message("7206337812@vzwpix.com", today, end)
