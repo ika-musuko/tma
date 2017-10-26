@@ -10,6 +10,8 @@ import canvas
 
 '''
     schedule.py
+
+    the main scheduling system and automatic schedule generator
 '''
 
 class Region:
@@ -105,8 +107,8 @@ class ScheduleEvent(event.Event):
     def __str__(self):
         return '''{name}
         {dow}
-        {start}
-        {end}
+        start: {start}
+        end: {end}
         {ei}
         '''.format(name=self.name, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
     
@@ -114,26 +116,30 @@ class ScheduleEvent(event.Event):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
 
 class Schedule:
+    '''
+    Schedule constructor
+    create a schedule from a list of Event
+    Attributes:
+    actual_events (list of ScheduleEvent): every user_event will get converted into a ScheduleEvent and scheduled according to the current 
+    param event_queue (EventQueue): every event
+    param region (Region): the start and end dates to push actual_events in
+    '''
     zerotime = datetime.time()
     def __init__(self
                     , events: list=[]
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
+                    , desired_courses: list=None
                 ):
-        '''
-        Schedule constructor
-        create a schedule from a list of Event
-        :param actual_events (list of ScheduleEvent): every user_event will get converted into a ScheduleEvent and scheduled according to the current 
-        :param event_queue (EventQueue): every event
-        :param region (Region): the start and end dates to push actual_events in
-        '''
         # initialize arguments
         self.actual_events = []
+        self.desired_courses = desired_courses
         self.region = Region(start, end)
         self.region.fill()
         self.work_time = 90 # how long doing one stretch of work is in minutes
         self.break_time = 15 # how long a break is in minutes
         self.event_queue = EventQueue(events)
+        self.current_event = None
         self.update()
 
 
@@ -142,8 +148,9 @@ class Schedule:
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
         '''
         # if the current region.start is earlier than today, make the earliest free region's start earlier than today. else, maintain the current region.start for earliest free region
-        today = datetime.datetime.today()
-        self.earliest_free_region = Region(today if self.region.start < today else self.region.start, self.region.end)
+        self.today = datetime.datetime.today()
+        self.earliest_free_region = Region(self.today if self.region.start < self.today else self.region.start, self.region.end)
+        self.found_current_event = False
         self.generated_events = SortedList()
         self.actual_events = SortedList()
 
@@ -159,10 +166,18 @@ class Schedule:
             # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
-            self.push_generated_events(se, today)
+            self.push_generated_events(se, self.today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
+
+        # get the current event
+        if self.current_event is None:
+            for ae in self.actual_events:
+                if ae.start <= self.today <= ae.end:
+                    self.current_event = ae
+                    break
+
         print("~~~PROCESSING FINISHED ~~~")
-        
+    
     ### AUTOMATIC SCHEDULE GENERATING ALGORITHM
     def push_generated_events(self, se: list, today: datetime.datetime) -> None:
         '''
@@ -196,6 +211,13 @@ class Schedule:
                                                                                      ) 
                 # generate a ScheduleEvent
                 new_se = ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info)
+                
+                # if self.earliest_free_region is inside an event happening right now, move it and make it the current event
+                if not self.current_event is None and new_se.start <= self.today < new_se.end:
+                    self.earliest_free_region.start = new_se.end
+                    self.current_event = new_se
+                    print("CCCCurrent %s" % self.current_event)
+
                 se.add(new_se)
         return se
 
@@ -282,7 +304,6 @@ class Schedule:
                     return ge
         return None        
         
-
     def add_event(self, e: event.Event) -> None:
         '''
         add event
@@ -302,19 +323,38 @@ class Schedule:
         # execstr = ("SELECT * FROM %s" % table)
         # for row in c.execute(execstr):
     
-    def add_from_canvas(self, api_key: str) -> bool:
+    def add_from_canvas(self, login: str) -> bool:
         '''
         adds assignments from canvas into Schedule
-        :param api_key: the canvas api_key
+        :param login: the canvas api_key (todo, use real authentication with a user and password)
         :return value: whether it was successful or not
         '''
         try:
-            self.event_queue.push_list(canvas.get_assignments(api_key))
+            self.event_queue.push_list(canvas.get_assignments(login))
             self.update()
             return True
         except:
             return False
     
+    def desired_course_check(e: event.Event) -> bool:
+        '''
+        checks if an AssignmentEvent is in the desired classes
+        '''
+        return (self.desired_course is None) or (not isinstance(e, event.AssignmentEvent)) or (e.course_id in self.desired_course)
+    
+    def get_courses(self, login: str) -> bool:
+        '''
+        get course list from canvas and store to Schedule
+        :param login: the canvas api_key (todo, use real authentication with a user and password)
+        :return value: whether it was successful or not
+        '''
+        try:
+            self.canvas_courses = canvas.get_courses(login)
+            return True
+        except:
+            self.canvas_courses = None
+            return False
+
     def delete_event(self, id: int) -> bool:
         '''
         delete Event by id
@@ -346,7 +386,14 @@ class Schedule:
             start = self.region.start
         if end is None:
             end = self.region.end    
-       
+        
+        print("CURRENT EVENT:")
+        if self.current_event is None:
+            print("Nothing going on right now!")
+        else:
+            print(str(self.current_event))
+        print("--------------")
+        print("schedule:")
         getactual = self.get_events_in_region(start, end)
         for se in getactual:
             print(str(se))

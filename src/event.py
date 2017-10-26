@@ -125,6 +125,28 @@ class DueEvent(TaskEvent):
     def __repr__(self):
         return "DUEEVENT: Priority: %i id: %i name: %s due: %s done: %s" % (self.priority, self.id, self.name, self.due, self.done) 
 
+class AssignmentEvent(DueEvent):
+    '''
+    DueEvent with a course ID
+    use these for canvas assignments
+    '''
+    
+    def __init__(self
+                    , due: datetime.datetime
+                    , course_id: str
+                    , course_name: str
+                    , name: str=""
+                    , desc: str=""
+                    , priority: int=57
+                    , done: bool=False
+                    , duration: int=120
+                ):
+        DueEvent.__init__(self, due, name, desc, priority, done, duration)
+        self.course_id = course_id
+        self.course_name = course_name
+
+    def __repr__(self):
+        return "ASSIGNMENTEVENT: Priority %i id: %i name: %s due: %s done: %s course_name: %s" % (self.priority, self.id, self.name, self.due, self.course_name)
      
 class RecurringEvent(Event):
     '''

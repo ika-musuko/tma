@@ -12,11 +12,12 @@ functions to interact with canvas and convert data into the model's representati
 
 canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
 
-def get_assignments(access_token: str="") -> 'list of DueEvent':
+def get_assignments(access_token: str="", all_events: bool=False) -> 'list of DueEvent':
     '''
     gets the assignments from the courses and creates a list of DueEvents
     relies on get_courses() and get_headers()
     :param access_token: An access token, or API key, of the Canvas API
+    :param all_events: flag to get events without a due date
     :return: an unsorted list of DueEvents
     '''
     print("getting schedule from canvas...")
@@ -28,17 +29,20 @@ def get_assignments(access_token: str="") -> 'list of DueEvent':
         a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments?include[]=submission?include[]=assignment_visibility?include[]=all_dates?include[]=overrides?include[]=observed_users")
         parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=get_headers(access_token)).text)
         for y in parsed_c_asnmt:
+            # hack fix for not loading transfer orientation plus (todo: actual course selector)
+            if y['course_id'] == 1237818 or y['has_submitted_submissions'] == True:
+                continue
             due_at = y['due_at']
-            if due_at is not None and y['has_submitted_submissions'] == False:
+            if due_at is not None:
                 due_at = dateutil.parser.parse(y['due_at'], ignoretz=True)
                 if due_at >= today:
                     asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
-            else:
+            elif all_events:
                 asnmt.append(event.TaskEvent(name=y['name'], desc=y['description']))
     print("all done...! : )")
     return asnmt
 
-def get_courses(access_token: str=""):
+def get_courses(access_token: str="") -> 'list of dict with id and name fields':
     '''
     :param access_token: An access token, or API key, of the Canvas API
     :return: a list of dictionaries, with 'id' and 'name' fields

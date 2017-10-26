@@ -33,7 +33,7 @@ sleeplist = [ ('0', '23:30', '08:30', 'Sleep')
             ]
 # user id, name, desc, start   
 userlist = [
-             ('0', 'dinner with mark', 'eat dinner with mark at in-n-out', '2017-10-26 21:00')
+             ('0', 'movie with mark', 'see a movie with mark', '2017-10-26 21:00')
             ,('0', 'computer history museum', 'go to the computer history museum because you can', '2017-10-29 11:30')
             ,('0', 'some other thing', 'blah blah', '2017-10-27 2:30')
            ]
@@ -67,3 +67,4 @@ end = today+datetime.timedelta(days=2)
 schedule = schedule.Schedule(events=classevents+sleepevents+userevents)
 schedule.add_from_canvas(API_KEY)
 schedule.print_schedule(today, end)
+print(canvas.get_courses(API_KEY))
