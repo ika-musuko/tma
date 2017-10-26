@@ -17,7 +17,7 @@ This elicits the need for a Time Management Assistant. The primary objectives of
 
 ## Dependencies:
 ```
-python3, requests, bottle, sortedcontainers, dateutil, beautiifulsoup4
+python3, requests, bottle, sortedcontainers, dateutil, beautifulsoup4
 ``` 
 how to install dependencies:
 ```
