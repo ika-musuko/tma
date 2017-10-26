@@ -13,29 +13,46 @@ functions to interact with canvas and convert data into the model's representati
 def get_assignments(access_token: str="") -> 'list of DueEvent':
     '''
     gets the assignments from the courses and creates a list of DueEvents
+    relies on get_courses() and get_headers()
     :param access_token: An access token, or API key, of the Canvas API
     :return: an unsorted list of DueEvents
     '''
     print("getting schedule from canvas...")
     today = datetime.datetime.today()
     canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+    asnmt=list()
+    print("making the request...")
+    parsed_courses = get_courses(access_token)
+    for x in parsed_courses:
+        a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments?include[]=submission?include[]=assignment_visibility?include[]=all_dates?include[]=overrides?include[]=observed_users")
+        parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=get_headers(access_token)).text)
+        for y in parsed_c_asnmt:
+            due_at = y['due_at']
+            if due_at is not None and y['has_submitted_submissions'] == False:
+                due_at = dateutil.parser.parse(y['due_at'], ignoretz=True)
+                if due_at >= today:
+                    asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
+            else:
+                asnmt.append(event.TaskEvent(name=y['name'], desc=y['description']))
+    print("all done...! : )")
+    return asnmt
+
+def get_courses(access_token: str=""):
+    '''
+    :param access_token: An access token, or API key, of the Canvas API
+    :return: a list of dictionaries, with 'id' and 'name' fields
+    '''
+    course_list=list()
+    canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+    parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=get_headers(access_token)).text)
+    for x in parsed_courses:
+        if 'name' in x:
+            crs = {'id' : str(x['id']), 'name' : x['name']}
+            course_list.append(crs)
+    return course_list
+
+def get_headers(access_token: str=""):
     headers = {
         "Authorization": ("Bearer %s" % (access_token)),
     }
-    asnmt=list()
-    print("making the request...")
-    parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=headers).text)
-    for x in parsed_courses:
-        if 'name' in x:
-            a_course_url = canvas_url % ("/" + str(x['id']) + "/assignments.json")
-            parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=headers).text)
-            for y in parsed_c_asnmt:
-                due_at = y['due_at']
-                if due_at is not None and y['has_submitted_submissions'] == False:
-                    due_at = dateutil.parser.parse(y['due_at'], ignoretz=True)
-                    if due_at >= today:
-                        asnmt.append(event.DueEvent(due=due_at, name=y['name'], desc=y['description']))
-                else:
-                    asnmt.append(event.TaskEvent(name=y['name'], desc=y['description']))
-    print("all done...! : )")
-    return asnmt
+    return headers
