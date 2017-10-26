@@ -1,1 +1,0 @@
-while(1);{"id":4309260,"name":"Sherwyn Sen","sortable_name":"Sen, Sherwyn","short_name":"Sherwyn Sen","avatar_url":"https://secure.gravatar.com/avatar/3143bc7a0bfc23c96101ac024fa511c1?s=50\u0026d=https%3A%2F%2Fsjsu.instructure.com%2Fimages%2Fmessages%2Favatar-50.png","locale":"ja","permissions":{"can_update_name":false,"can_update_avatar":true}}
