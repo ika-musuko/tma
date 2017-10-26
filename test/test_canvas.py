@@ -22,6 +22,9 @@ classlist = [
             ,('0','CS151',   'Object-Oriented Programming',         'TH','2017-08-22','2017-12-13', '10:30', '11:45')
             ,('0','Dinner',   'Dinner',                         'MWHFSN', None       , None       , '19:00', '19:30')
             ,('0','Dinner',   'Dinner Tuesday',                      'T', None       , None       , '21:30', '22:00')
+            ,('0','drive to school', 'monday/wednesday commute',    'MW','2017-08-22','2017-12-13', '14:00', '15:00')
+            ,('0','drive home', 'tuesday/thursday commute',         'TH','2017-08-22','2017-12-13', '21:30', '22:30')
+                
             ]  
             
 
@@ -61,10 +64,10 @@ userevents = [event.Event( name=ul[1]
                          ) for ul in userlist]
                            
 today = datetime.datetime.today()
-next_day = datetime.timedelta(days=2)  
 end = today+datetime.timedelta(days=2)
                       
 schedule = schedule.Schedule(events=classevents+sleepevents+userevents)
-schedule.add_from_canvas(API_KEY)
+schedule.add_canvas_assignments(API_KEY)
+schedule.add_canvas_calendar(API_KEY)
 schedule.print_schedule(today, end)
 print(canvas.get_courses(API_KEY))

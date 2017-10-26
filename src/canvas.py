@@ -54,7 +54,11 @@ def get_calendar_events(access_token: str="") -> 'list of Event':
     :return: a list of Events
     '''
     cal_evs = list()
+    print("getting calendar events from canvas....")
+    print("making request...")
     parsed_cal = json.loads(requests.get(canvas_url % "/calendar_events", headers=get_headers(access_token)).text)
+    print("request result: ")
+    print(parsed_cal)
     for x in parsed_cal:
         desc = remove_tags(x['description'])
         cal_evs.append(event.Event(name=x['name']
@@ -63,6 +67,7 @@ def get_calendar_events(access_token: str="") -> 'list of Event':
                                     , end=convert_timestr(x['end_at'])
                                   )
                       )
+    print(cal_evs)
     return cal_evs
 
 
@@ -89,7 +94,7 @@ def get_headers(access_token: str=""):
 def convert_timestr(timestr: None):
     if timestr is None:
         return timestr
-    return dateutil.parser.parse(timestr, ignoretz=True)
+    return dateutil.parser.parse(timestr, ignoretz=True)-datetime.timedelta(hours=7) # todo, implement actual timezone support instead of this hack
 
 def remove_tags(text: None):
     if text is None:

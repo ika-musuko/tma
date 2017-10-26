@@ -106,11 +106,12 @@ class ScheduleEvent(event.Event):
         
     def __str__(self):
         return '''{name}
+        {desc}
         {dow}
         start: {start}
         end: {end}
         {ei}
-        '''.format(name=self.name, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
+        '''.format(name=self.name, desc=self.desc, dow=ScheduleEvent.DAY_NAMES[self.start.weekday()], start=hm(self.start), end=hm(self.end), ei=self.extra_info)
     
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
@@ -323,7 +324,7 @@ class Schedule:
         # execstr = ("SELECT * FROM %s" % table)
         # for row in c.execute(execstr):
     
-    def add_from_canvas(self, login: str) -> bool:
+    def add_canvas_assignments(self, login: str) -> bool:
         '''
         adds assignments from canvas into Schedule
         :param login: the canvas api_key (todo, use real authentication with a user and password)
@@ -335,6 +336,20 @@ class Schedule:
             return True
         except:
             return False
+    
+    def add_canvas_calendar(self, login: str) -> bool:
+        '''
+        adds canvas calendar events into schedule as normal events
+        :param login: the canvas api_key (todo, use real authentication with a suer and password)
+        :return value: whether it was successful or not
+        '''
+        try:
+            self.event_queue.push_list(canvas.get_calendar_events(login))
+            self.update()
+            return True
+        except:
+            return False
+    
     
     def desired_course_check(e: event.Event) -> bool:
         '''
