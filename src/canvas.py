@@ -10,6 +10,8 @@ canvas.py
 functions to interact with canvas and convert data into the model's representation
 '''
 
+canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
+
 def get_assignments(access_token: str="") -> 'list of DueEvent':
     '''
     gets the assignments from the courses and creates a list of DueEvents
@@ -19,7 +21,6 @@ def get_assignments(access_token: str="") -> 'list of DueEvent':
     '''
     print("getting schedule from canvas...")
     today = datetime.datetime.today()
-    canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
     asnmt=list()
     print("making the request...")
     parsed_courses = get_courses(access_token)
@@ -43,7 +44,6 @@ def get_courses(access_token: str=""):
     :return: a list of dictionaries, with 'id' and 'name' fields
     '''
     course_list=list()
-    canvas_url = "https://sjsu.instructure.com/api/v1/courses%s"
     parsed_courses = json.loads(requests.get(canvas_url % ".json", headers=get_headers(access_token)).text)
     for x in parsed_courses:
         if 'name' in x:
