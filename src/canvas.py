@@ -36,7 +36,7 @@ def get_assignments(access_token: str="", all_events: bool=False) -> 'list of Du
         parsed_c_asnmt = json.loads(requests.get(a_course_url, headers=get_headers(access_token)).text)
         for y in parsed_c_asnmt:
             # hack fix for not loading transfer orientation plus (todo: actual course selector)
-            if y['course_id'] == 1237818 or y['has_submitted_submissions'] == True:
+            if y['course_id'] == 1237818:
                 continue
             due_at = convert_timestr(y['due_at'])
             desc = remove_tags(y['description'])
