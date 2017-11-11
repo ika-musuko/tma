@@ -372,7 +372,8 @@ class Schedule:
         try:
             self.canvas_courses = canvas.get_courses(login)
             return True
-        except:
+        except HTTPError as e:
+            print(e)
             self.canvas_courses = None
             return False
 
@@ -418,13 +419,16 @@ class Schedule:
         '''
         getactual = self.get_events_in_region(start, end)
         
-        print("--------------")
+        print("-------------------------")
         print("schedule:")
+        print("--------------")
         print("CURRENT EVENT:")
         if self.current_event is None:
             print("Nothing going on right now!")
         else:
-            print(str(self.current_event))
-        
+            print(str(self.current_event)) 
+        print("--------------")
+        print("upcoming events: ")
+        print("--------------")
         for se in getactual:
             print(str(se))

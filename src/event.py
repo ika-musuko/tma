@@ -27,9 +27,12 @@ class Event:
                     , priority: int=0
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
+                    , reset_id: bool=False
                 ):
         if priority < 1: priority = 1
         # set a unique ID for this Event based on how many events have been created          
+        if reset_id:
+            Event.total = 0
         self.id = Event.total 
         Event.total += 1
         # initialize class members
@@ -47,24 +50,13 @@ class Event:
             return self.priority < other.priority
         if other.start is None:
             return self.start is None
+        if self.start is None:
+            return other.start is None
         return self.start < other.start
         
     def __repr__(self):
         return "EVENT: Priority: %i id: %i name: %s start: %s end: %s" % (self.priority, self.id, self.name, self.start, self.end)
     
-    def __eq__(self, other):
-        return self.priority == other.priority
-    
-    def __lt__(self, other):
-        if self.priority != other.priority:
-            return self.priority < other.priority
-        if other.start is None:
-            return self.start is None
-        return self.start < other.start
-        
-    def __repr__(self):
-        return "EVENT: Priority: %i id: %i name: %s start: %s end: %s" % (self.priority, self.id, self.name, self.start, self.end)
-
 
 class TaskEvent(Event):
     '''
@@ -81,7 +73,7 @@ class TaskEvent(Event):
     def __init__(self
                     , name: str=""
                     , desc: str=""
-                    , priority: int=128
+                    , priority: int=200
                     , done: bool=False
                     , duration: int=120
                 ):
