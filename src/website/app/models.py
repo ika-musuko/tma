@@ -1,9 +1,9 @@
-from app import db, lm
-from flask_login import LoginManager, UserMixin
 import sys
-sys.append("../../src")
-import event
-import schedule
+sys.path.append("../../src")
+from src import event, schedule
+
+from app import db, login_manager
+from flask_login import LoginManager, UserMixin
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -52,13 +52,14 @@ class User(UserMixin, db.Model):
         
 class UserSchedule(db.Model):
     __tablename__ = 'schedules'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     id = db.Column(db.Integer, primary_key=True)
     events = db.relationship('UserEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserEvent.id')
     calendarevents = db.relationship('UserCalendarEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserCalendarEvent.id')
     
-    def __init__(self, schedule -> schedule.Schedule):
+    def __init__(self, schedule:schedule.Schedule):
         # init this with Schedule data from src
+        pass
         
     def __repr__(self):
         return "<UserSchedule: %r>" % self.user_id
@@ -68,7 +69,7 @@ class UserCalendarEvent(db.Model):
         these events get written to the calendar
     '''
     __tablename__ = 'calendarevents'
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id')  
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id')) 
     id = db.Column(db.Integer, primary_key=True)
     
     name = db.Column(db.String(128), nullable=True, index=True, unique=False)
@@ -78,7 +79,7 @@ class UserCalendarEvent(db.Model):
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
     
-    def __init__(self, se -> schedule.ScheduleEvent):
+    def __init__(self, se: schedule.ScheduleEvent):
         '''
         convert an schedule.ScheduleEvent into a calendar event
         '''
@@ -93,7 +94,7 @@ class UserEvent(db.Model):
         these get converted into schedule events by the algorithm
     '''
     __tablename__ = 'events'
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id')
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id'))
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(128), nullable=True, index=True, unique=False) # Event, RecurringEvent, TaskEvent, etc
     
@@ -117,7 +118,7 @@ class UserEvent(db.Model):
     recEvent_end_time = db.Column(db.Time)
     recEvent_daystr = db.Column(db.String(64), nullable=True, unique=False)
     
-    def __init__(self, e -> event.Event):
+    def __init__(self, e: event.Event):
         '''
         convert an event.Event into a database entry
         '''

@@ -5,8 +5,12 @@
     {{form.hidden_tag()}}
     <table>
         <tr>
-            <td>Current Name</td>
+            <img src='static/imgs/nickname.png'><td>Current Name</td>
             <td>{{ form.nickname(size=24) }}</td>
+            <img src='static/imgs/email.png'><td>Current E-mail</td>
+            <td>{{ form.email(size=120) }}</td>
+            <img src='static/imgs/phone.png'><td>Current Phone</td>
+            <td>{{ form.phone(size=24) }}</td>
             {% for error in form.errors.nickname %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}

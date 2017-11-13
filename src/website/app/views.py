@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, session, make_response, request
-from app import app, db, lm
+from app import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn, GoogleSignIn
 from .forms import EditForm
