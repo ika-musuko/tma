@@ -11,7 +11,7 @@ from .models import User
 @app.route('/index')
 def index():
     # todo: get the user's current events and display them here
-    return render_template("index.html", title="Time Management Assistant | Home")
+    return render_template('index.html')
 
 ### LOGIN PAGES ###
 # standard google login
@@ -56,7 +56,6 @@ def oauth_callback_google():
         flash('Authentication failed.')
         return redirect(url_for('index'))
     nickname = email.split("@")[0]
-    nickname = User.make_unique_nickname(nickname)
     # get the user info
     user = User.query.filter_by(social_id=social_id).first()
     # if it's a new user, create it
@@ -85,10 +84,10 @@ def edit():
         db.session.add(current_user)
         db.session.commit()
         flash("change success!")
-        return redirect(url_for("edit"))
+        return redirect(url_for('edit'))
     else:
         form.nickname.data = current_user.nickname
-    return render_template("edit.html", form=form)
+    return render_template('edit.html', form=form)
  
 ### ERROR PAGES  
 @app.errorhandler(404)

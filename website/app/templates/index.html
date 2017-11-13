@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <div class="container-fluid">
+            <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item"><p><a class="btn btn-secondary" href="#" role="button">Add Event &raquo;</a></p></li>
+                    <li class="nav-item"><p><a class="btn btn-secondary" href="#" role="button">Delete Event &raquo;</a></p></li>
+                    <li class="nav-item"><p><a class="btn btn-secondary" href="#" role="button">View Calendar &raquo;</a></p></li>
+                    <li class="nav-item"><p><a class="btn btn-secondary" href="#" role="button">Update from Canvas &raquo;</a></p></li>
+                    <li class="nav-item"><p><a class="btn btn-secondary" href="#" role="button">Send Reminders &raquo;</a></p></li>
+                </ul>
+            </nav>
+        </div>
+        <script type="text/javascript">
+            var dayarray=new Array("Sunday","Monday","Tuesday","Wednesday","Thursday",
+                                    "Friday","Saturday")
+            var montharray=new Array("January","February","March","April","May","June",
+                                    "July","August","September","October","November","December")
+
+            document.getElementById('ctime').innerHTML =h+":"+m+":"+s+" "+dayarray[day]+", "+montharray[month]+" "+daym+", "+year;
+            var t = setTimeout(function(){startTime()},500);
+        </script>
+        <div class="row">
+            <div class="col-md-6"><h2>Hello, {{ current_user.nickname }}.</h2></div>
+            <div class="col-md-6"><h3><span class="pull-right"><span onload="startTime()" id="ctime"></span></span></div>
+        </div>
+        <h4>Here are your tasks for now.</h4>
+        <div class="row">
+            <div class='col-md-4'>
+                <h3>All Classes</h3>
+            </div>
+            <div class='col-md-4'>
+                <h3>Things to Do</h3>
+            </div>
+        </div>
+    {% else %}
+        <div class='jumbotron'>
+            <h1 class="display-3">Welcome to your new Time Management Assistant.</h2>
+            <p>Login with Google</p>
+            <p><a class="btn btn-primary btn-lg" href="{{ url_for('login') }}">login &raquo;</a></p>
+        </div>  
+    {% endif %}
+    <footer>
+        <p>San Jose State University 2017</p>
+    </footer>
+{% endblock %}
