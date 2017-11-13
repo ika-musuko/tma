@@ -1,0 +1,25 @@
+.content {
+    padding: 0px 75px;
+}
+
+.container{
+    background-color: #414141;
+    border-color: #212121;
+    color: #dfdfdf;
+    border-radius: 6px;
+    padding: 0px;
+}
+
+
+.navbar a:link {color: #dfdfdf; text-decoration: none;}
+.navbar a:visited {color: #dfdfdf; text-decoration: none;}
+.navbar a:hover {
+    color: #f2f2f2; 
+    text-decoration: none; 
+    -moz-transition:.15s; 
+    -ms-transition:.15s; 
+    -webkit-transition:.15s;
+    background-color: #7733ee;
+    border-radius: 6px;
+}
+.navbar a:active {color: #efefef; text-decoration: none;}
