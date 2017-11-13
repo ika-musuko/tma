@@ -15,7 +15,7 @@ else:
 
 ### GOOGLE CONFIG ###
 # dynamically load google authorization from file
-with open("gconf", "r") as gconf:
+with open("gconf.keys", "r") as gconf:
     GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET = gconf.readlines().split()
 
 ### OAUTH CONFIG ###
