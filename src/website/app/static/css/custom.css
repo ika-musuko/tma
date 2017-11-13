@@ -1,13 +1,20 @@
 .content {
-    padding: 0px 75px;
+    padding: 0px 0px;
 }
 
 .container{
-    background-color: #414141;
-    border-color: #212121;
-    color: #dfdfdf;
     border-radius: 6px;
     padding: 0px;
+}
+
+.footer {
+    padding-bottom: 10px;
+    bottom: 0;
+    position: absolute;
+}
+
+.editform{
+    display: block;
 }
 
 
@@ -23,3 +30,25 @@
     border-radius: 6px;
 }
 .navbar a:active {color: #efefef; text-decoration: none;}
+
+/* Sidebar navigation */
+.sidebar {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar .nav {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+  width: 140%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+}

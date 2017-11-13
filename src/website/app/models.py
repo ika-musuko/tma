@@ -1,9 +1,7 @@
-import sys
-sys.path.append("../../src")
-from src import event, schedule
+from app.scheduler import event, schedule
 
-from app import db, login_manager
-from flask_login import LoginManager, UserMixin
+from app import db
+from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -12,7 +10,7 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64), nullable=False, index=True, unique=False)
     email = db.Column(db.String(256), nullable=True,index=True, unique=False)
     phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
-    schedule = db.relationship('UserSchedule', uselist=False, back_populates='users')
+    schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')
     # figure out how to store canvas info???
     
     # return True unless there is some reason the user should not be authenticated
@@ -53,9 +51,10 @@ class User(UserMixin, db.Model):
 class UserSchedule(db.Model):
     __tablename__ = 'schedules'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    users = db.relationship('User', back_populates='schedules')
     id = db.Column(db.Integer, primary_key=True)
-    events = db.relationship('UserEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserEvent.id')
-    calendarevents = db.relationship('UserCalendarEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserCalendarEvent.id')
+    events = db.relationship('UserEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserEvent.schedule_id')
+    calendarevents = db.relationship('UserCalendarEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserCalendarEvent.schedule_id')
     
     def __init__(self, schedule:schedule.Schedule):
         # init this with Schedule data from src

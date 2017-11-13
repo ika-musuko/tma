@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Settings</h1>
-<form action="" method="post" name="edit">
+<form action="" method="post" name="edit" class="editform">
     {{form.hidden_tag()}}
-    <table>
-        <tr>
-            <img src='static/imgs/nickname.png'><td>Current Name</td>
-            <td>{{ form.nickname(size=24) }}</td>
-            <img src='static/imgs/email.png'><td>Current E-mail</td>
-            <td>{{ form.email(size=120) }}</td>
-            <img src='static/imgs/phone.png'><td>Current Phone</td>
-            <td>{{ form.phone(size=24) }}</td>
+    <div class="form-group">
+        <table>
+            <tr>
+                <td><img src='static/imgs/nickname.png'>Current Name</td>
+                <td>{{ form.nickname(size=24) }}</td>
+            </tr>
+            <tr>
+                <td><img src='static/imgs/email.png'>Current E-mail</td>
+                <td>{{ form.email(size=24) }}</td>
+            </tr>
+            <tr>
+                <td><img src='static/imgs/phone.png'>Current Phone</td>
+                <td>{{ form.phone(size=24) }}</td>
+            </tr>
             {% for error in form.errors.nickname %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </tr>
-        <tr>
-            <td><input type="submit" value="save changes"></td>
-        </tr>
-    </table>
+            <tr>
+                <td><input type="submit" value="save changes"></td>
+            </tr>
+        </table>
+   </div>
 </form>
 {% endblock %}

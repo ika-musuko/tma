@@ -53,6 +53,7 @@ class EventQueueTest(unittest.TestCase):
     def test_peek(self):
         eq = event_pusher()
         test_event = eq.peek()
+        print(eq)
         for e in eq.q[1:]:
             self.assertLessEqual(test_event.priority, e.priority)
         

@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, session, make_response, request
 from app import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
-from .auth import OAuthSignIn, GoogleSignIn
+from .auth import OAuthSignIn
 from .forms import EditForm
-from .models import User
+from .models import User, UserSchedule, UserEvent
 
 
 ### HOME PAGE ###
@@ -15,8 +15,8 @@ def index():
 
 ### LOGIN PAGES ###
 # standard google login
-@app.route('/login/')
-def login(provider):
+@app.route('/login')
+def login():
     return oauth_authorize('google')
 
 @app.route("/logout")
@@ -49,7 +49,7 @@ def oauth_callback_base(provider):
 def oauth_callback_google():
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
-    callback_crap = oauth.callback_base("google")
+    callback_crap = oauth_callback_base("google")
     print(str(callback_crap))
     social_id, email = callback_crap
     if social_id is None:
@@ -57,7 +57,8 @@ def oauth_callback_google():
         return redirect(url_for('index'))
     nickname = email.split("@")[0]
     # get the user info
-    user = User.query.filter_by(social_id=social_id).first()
+    print("user config: %s %s" % (social_id, nickname))
+    user = User.query.filter_by(email=email).first()
     # if it's a new user, create it
     if user is None:
         user = User(social_id=social_id, nickname=nickname, email=email)

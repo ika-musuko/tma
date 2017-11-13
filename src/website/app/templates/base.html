@@ -18,7 +18,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-dark">
                 <a class='nav-link' href="{{ url_for('index') }}">home</a>
                 {% if current_user.is_authenticated %}
-                <a class='nav-link' href="{{ url_for('edit'}}">settings</a>
+                <a class='nav-link' href="{{ url_for('edit') }}">settings</a>
                 <a class='nav-link' href="{{ url_for('logout') }}">logout</a>
                 {% else %}
                 <a class='nav-link' href="{{ url_for('login') }}">login</a>
@@ -35,11 +35,18 @@
                 {% endfor %}
             </ul>
         </div>
+        {% endif %}
+        {% endwith %} 
         <div class="container">
             <div class="content">
                 {% block content %}
                 {% endblock %}
             </div>
         </div>
+    
+    <div class="footer container-fluid bg-dark text-light">
+    <hr>
+        <p>San Jose State University 2017</p>
+    </div>
     </body>
 </html>

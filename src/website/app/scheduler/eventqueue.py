@@ -1,5 +1,5 @@
 from sortedcontainers import SortedList
-import event
+from app.scheduler import event
 
 class EventQueue:
     '''

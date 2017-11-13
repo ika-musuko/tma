@@ -16,7 +16,9 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, "db_repository") # store SQLAlch
 ### GOOGLE CONFIG ###
 # dynamically load google authorization from file
 with open("gconf.keys", "r") as gconf:
-    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET = gconf.readlines()
+    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET = gconf.read().splitlines()
+    
+print("GOOGLE CRAP %s\n%s" % (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET))
 
 ### OAUTH CONFIG ###
 # canvas would be included here as well when that is implemented
@@ -29,3 +31,7 @@ OAUTH_CREDENTIALS = {
 
 ### WTFORMS CONFIG ###
 WTF_CSRF_ENABLED = True
+
+
+### what is this ###
+SECRET_KEY = "iguessineedthis..."

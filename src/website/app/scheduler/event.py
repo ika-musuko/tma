@@ -1,6 +1,6 @@
 import datetime
 import sqlite3
-from util import *
+from app.scheduler.util import *
 '''
     event.py
     

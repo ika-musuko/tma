@@ -1,13 +1,13 @@
-import event
-from eventqueue import EventQueue
+from app.scheduler import event
+from app.scheduler.eventqueue import EventQueue
 import datetime
 import sqlite3
 from sortedcontainers import SortedList
 import operator
 import math
-import txt
-from util import *
-import canvas
+from app.scheduler import txt
+from app.scheduler.util import *
+from app.scheduler import canvas
 
 '''
     schedule.py

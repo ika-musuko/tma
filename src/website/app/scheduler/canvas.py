@@ -1,6 +1,6 @@
 import dateutil.parser
 import json
-import event
+from app.scheduler import event
 import requests
 import datetime
 from bs4 import BeautifulSoup
