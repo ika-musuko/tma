@@ -1,7 +1,7 @@
 # create the flask app object
 
 from flask import Flask
-from flask sql_alchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
 
 app = Flask(__name__)
