@@ -1,0 +1,15 @@
+Region: start 2017-10-23 12:25:15.807682 end 2099-01-01 00:00:00
+~~ EventQueue ~~
+RECURRINGEVENT: Priority: 1 id: 9 name: Sleep start: 06:30:00 end: 09:30:00   MTWHFSN
+RECURRINGEVENT: Priority: 1 id: 4 name: CS151 start: 10:30:00 end: 11:45:00   TH
+RECURRINGEVENT: Priority: 1 id: 3 name: CS146 start: 15:00:00 end: 16:15:00   MW
+RECURRINGEVENT: Priority: 1 id: 2 name: CMPE131 start: 16:30:00 end: 17:45:00   TH
+RECURRINGEVENT: Priority: 1 id: 1 name: CMPE120 start: 13:30:00 end: 14:45:00   TH
+RECURRINGEVENT: Priority: 1 id: 0 name: CMPE102 start: 18:00:00 end: 20:45:00   T
+DUEEVENT: Priority: 2 id: 7 name: study for 151 test due: 2017-10-24 10:30:00
+DUEEVENT: Priority: 2 id: 6 name: hardware project due: 2017-10-24 13:30:00
+DUEEVENT: Priority: 2 id: 5 name: software engineering demo due: 2017-10-24 16:30:00
+DUEEVENT: Priority: 5 id: 8 name: cs 146 homework 4 due: 2017-10-29 23:59:00
+EVENT: Priority: 127 id: 10 name: dinner with mark start: 2017-10-23 20:00:00 end: 2017-10-23 21:00:00
+EVENT: Priority: 127 id: 12 name: some other thing start: 2017-10-24 23:30:00 end: 2017-10-25 00:30:00
+EVENT: Priority: 127 id: 11 name: computer history museum start: 2017-10-29 11:30:00 end: 2017-10-29 12:30:00

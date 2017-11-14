@@ -1,0 +1,13 @@
+>>> import sqlite3
+>>> conn = sqlite3.connect("classtest.db")
+>>> c = conn.cursor()
+>>> for r in c.execute("SELECT * FROM classes"):
+...     print(r)
+...
+('CMPE102', 'Assembly Language Programming', 'T', '2017-08-22', '2017-12-23', '18:00', '20:45')
+('CMPE120', 'Computer Hardware and Architecture', 'TH', '2017-08-22', '2017-12-23', '13:30', '14:45')
+('CMPE131', 'Software Engineering I', 'TH', '2017-08-22', '2017-12-23', '16:30', '17:45')
+('CS146', 'Data Structures and Algorithms', 'MW', '2017-08-22', '2017-12-23', '15:00', '16:15')
+('CS151', 'Object-Oriented Programming', 'TH', '2017-08-22', '2017-12-23', '10:30', '11:45')
+>>> for r in c.execute("SELECT * FROM classes"):
+...     print(type(r))
