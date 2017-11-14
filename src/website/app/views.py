@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session, make_respo
 from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
-from .forms import EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm
+from .forms import EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
 from .models import init_db, User, UserSchedule, UserEvent, form_to_event
 
 
@@ -77,9 +77,6 @@ def load_user(id):
     return User.query.get(int(id))
     
 ### EDIT PROFILE PAGE ###
-def if_filled(data, userthing):
-    return userthing if data == "" else data
-
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
@@ -116,10 +113,11 @@ def add_event(event_type):
     }
     form = formdict[event_type]()
     if form.validate_on_submit():
-        current_user.add_event(form_to_event(form))
+        formed_event = form_to_event(form)
+        current_user.add_event(formed_event)
         db.session.add(current_user)
         db.session.commit()
-        flash("Event has been successfully added")
+        flash("%s has been successfully added" % (str(type(formed_event))))
 
 ### ERROR PAGES  
 @app.errorhandler(404)
