@@ -17,6 +17,25 @@ class User(UserMixin, db.Model):
     schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')
     # figure out how to store canvas info???
     
+    ### methods to handle schedule/event stuff ###
+    def __init__(self):
+        # todo:
+        # use schedules table to initialize current schedule
+        pass
+    
+    def add_event(self, e: event.Event):
+        # todo:
+        # 1. add an event to self.schedule
+        # 2. write new event to schedules->events
+        pass
+
+    def update(self):
+        # todo:
+        # 1. self.schedule.update()
+        # 2. write the generated ScheduleEvents to schedules->calendarevents
+        pass
+
+    ### user property methods ###
     # return True unless there is some reason the user should not be authenticated
     @property
     def is_authenticated(self):
@@ -47,6 +66,8 @@ class User(UserMixin, db.Model):
                 break
             version += 1
         return new_nickname
+    
+    
     
     def __repr__(self):
         return "<User: %r>" % self.nickname
