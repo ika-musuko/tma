@@ -24,16 +24,16 @@
                 <a class='nav-link' href="{{ url_for('login') }}">login</a>
                 {% endif %}
             </nav>
-        </div>
         <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="alerts">
-            <ul>
-                {% for message in messages %}
-                <li class="list-group-item"><span style="color:blue;">{{ message }}</span></li>
-                {% endfor %}
-            </ul>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alerts">
+                <ul>
+                    {% for message in messages %}
+                    <li class="list-group-item"><span style="color:blue;">{{ message }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         {% endif %}
         {% endwith %} 

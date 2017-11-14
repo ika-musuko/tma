@@ -4,18 +4,18 @@
     <h2 style="color:#29AA33;">Select Event Type</h2>
     <div class="row">
         <div class="col-sm">
-            <button class="btn btn-primary"><a href='{{ url_for('add_event/event') }}' role="button">Regular Event</a></button>
+            <a class="btn btn-primary btn-space btn-block" href='{{ url_for('add_event', event_type='regular') }}' role="button">Regular Event</a>
         </div>
         <div class="col-sm">
-            <button class="btn btn-sample"><a href='{{ url_for('add_event/sleep') }}'  role="button">Sleep Schedule</a></button>
+            <a class="btn btn-sample btn-space btn-block" href='{{ url_for('add_event', event_type='sleep') }}'  role="button">Sleep Schedule</a>
         </div>
     </div>
-    <div>
+    <div class="row">
         <div class="col-sm">
-            <button class="btn btn-primary"><a href='{{ url_for('add_event/recurring') }}' role="button">Recurring Event</a></button>
+            <a class="btn btn-primary btn-space btn-block" href='{{ url_for('add_event', event_type='recurring') }}' role="button">Recurring Event</a>
         </div>
         <div class="col-sm">
-            <button class="btn btn-primary"><a href='{{ url_for('add_event/task') }}' role="button">Task Event</a></button>
+            <a class="btn btn-primary btn-space btn-block" href='{{ url_for('add_event', event_type='task') }}' role="button">Task Event</a>
         </div>
     </div>
     <h6><b>Regular Event: </b>One-time, standard Calendar Event. (examples: meetings, parties)</h6>

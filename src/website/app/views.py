@@ -85,7 +85,7 @@ def edit():
         current_user.nickname           = if_filled(form.nickname.data, current_user.nickname)
         current_user.email              = if_filled(form.email.data, current_user.email)
         current_user.phone              = if_filled(''.join(c for c in form.phone.data if c.isdigit()), current_user.phone)
-        current_user.cellphone_provider = if_filled(form.cellphone_provider.data)
+        current_user.cellphone_provider = if_filled(form.cellphone_provider.data, current_user.cellphone_provider)
         db.session.add(current_user)
         db.session.commit()
         flash("Your settings have been updated.")
@@ -102,7 +102,7 @@ def add_selector():
     return render_template("add_selector.html")
 
 # event adder
-@app.route("/add_event/<event_type>")
+@app.route("/add_event/<event_type>", methods=["GET", "POST"])
 @login_required
 def add_event(event_type):
     formdict = {
@@ -115,9 +115,10 @@ def add_event(event_type):
     if form.validate_on_submit():
         formed_event = form_to_event(form)
         current_user.add_event(formed_event)
+        print(formed_event)
         db.session.add(current_user)
         db.session.commit()
-        flash("%s has been successfully added" % (str(type(formed_event))))
+        flash("%s has been successfully added" % (formed_event.__class__.__name__))
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
 

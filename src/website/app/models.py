@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     # figure out how to store canvas info???
     
     ### methods to handle schedule/event stuff ###
-    def __init__(self):
+    def init_schedule(self):
         # todo:
         # use schedules table to initialize current schedule
         pass

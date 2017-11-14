@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Add a {{ title(event_type) }} Event</h1>
+<h1>Add a {{ event_type.title() }} Event</h1>
 <form action="" method="post" name="edit" class="editform">
     {{form.hidden_tag()}}
     <div class="row">
@@ -10,10 +10,12 @@
             <tr>
                 <td>{{ field.name }}</td>
                 <td>{{ field() }}</td>
+                {% for error in field.errors %}
+                <td>
+                    <span style="color: red;">[{{ error }}]</span>
+                </td>
+                {% endfor %}
             </tr>
-            {% for error in field.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
             {% endfor %}
             <tr>
                 <td><input type="submit" value="Add Event"></td>
