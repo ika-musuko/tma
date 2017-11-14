@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for, session, make_respo
 from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
-from .forms import EditForm
-from .models import init_db, User, UserSchedule, UserEvent
+from .forms import EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm
+from .models import init_db, User, UserSchedule, UserEvent, form_to_event
 
 
 ### HOME PAGE ###
@@ -77,27 +77,50 @@ def load_user(id):
     return User.query.get(int(id))
     
 ### EDIT PROFILE PAGE ###
+def if_filled(data, userthing):
+    return userthing if data == "" else data
+
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
     form = EditForm(current_user.nickname)
     if form.validate_on_submit():
-        if form.nickname.data != "":
-            current_user.nickname = form.nickname.data
-        if form.email.data != "":    
-            current_user.email = form.email.data
-        if form.phone.data != "": 
-            current_user.phone = form.phone.data
-        if form.cellphone_provider.data != "":    
-            current_user.cellphone_provider = form.cellphone_provider.data
+        current_user.nickname           = if_filled(form.nickname.data, current_user.nickname)
+        current_user.email              = if_filled(form.email.data, current_user.email)
+        current_user.phone              = if_filled(''.join(c for c in form.phone.data if c.isdigit()), current_user.phone)
+        current_user.cellphone_provider = if_filled(form.cellphone_provider.data)
         db.session.add(current_user)
         db.session.commit()
-        flash("change success!")
+        flash("Your settings have been updated.")
         return redirect(url_for('edit'))
     else:
         form.nickname.data = current_user.nickname
     return render_template('edit.html', form=form)
- 
+
+### ADD EVENT PAGE ###
+# selector
+@app.route('/add_selector')
+@login_required
+def add_selector():
+    return render_template("add_selector.html")
+
+# event adder
+@app.route("/add_event/<event_type>")
+@login_required
+def add_event(event_type):
+    formdict = {
+            'event'     : EventForm 
+           ,'sleep'     : SleepScheduleForm
+           ,'recurring' : RecurringEventForm
+           ,'task'      : TaskEventForm
+    }
+    form = formdict[event_type]()
+    if form.validate_on_submit():
+        current_user.add_event(form_to_event(form))
+        db.session.add(current_user)
+        db.session.commit()
+        flash("Event has been successfully added")
+
 ### ERROR PAGES  
 @app.errorhandler(404)
 def not_found_error(error):
