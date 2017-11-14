@@ -16,7 +16,8 @@ login_manager.login_message = 'login required to view'
 
 
 CELLPHONE_PROVIDERS = {
-         'Alltel': 'mms.alltelwireless.com'
+         '' : ''
+        ,'Alltel': 'mms.alltelwireless.com'
         ,'AT&T': 'mms.att.net'
         ,'Boost Mobile' : 'myboostmobile.com'
         ,'Cricket Wireless': 'mms.att.net'

@@ -3,8 +3,9 @@
 <h1>Settings</h1>
 <form action="" method="post" name="edit" class="editform">
     {{form.hidden_tag()}}
+    <div class="row">
+    <div class="form-group col-sm rounded border-0">
     <h3>Change Settings</h3>
-    <div class="form-group">
         <table>
             <tr>
                 <td><img src='static/imgs/nickname.png'>Name</td>
@@ -20,8 +21,7 @@
             </tr>
             <tr>
                 <td><img src='static/imgs/provider.png'>Mobile Provider</td>
-                <td>{{ form.cellphone_provider(size=24) }}</td>
-                <td><h6>* Standard messaging rates apply for mobile services</h6></td>
+                <td>{{ form.cellphone_provider() }}</td>
             </tr>
             {% for error in form.errors.nickname %}
             <span style="color: red;">[{{ error }}]</span>
@@ -30,12 +30,15 @@
                 <td><input type="submit" value="save changes"></td>
             </tr>
         </table>
+        <h6>* Standard messaging rates apply for mobile services</h6>
    </div>
-   <div class="container-fluid">
+   <div class="container-fluid col-sm rounded border-0">
         <h3>Current Settings</h3>
-        <h4>Name: {{ current_user.nickname }}</h4>
-        <h4>E-mail: {{ current_user.email }}</h4>
-        <h4>Phone number: {{ current_user.phone }}
+        <h5>Name: {{ current_user.nickname }}</h5>
+        <h5>E-mail: {{ current_user.email }}</h5>
+        <h5>Phone number: {{ current_user.phone }}</h5>
+        <h5>Current Provider: {{ current_user.cellphone_provider }}</h5>
+   </div>
    </div>
 </form>
 {% endblock %}

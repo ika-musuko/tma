@@ -8,7 +8,7 @@ class EditForm(FlaskForm):
     nickname = StringField('nickname', validators=[DataRequired()])    
     email = StringField('email', validators=[DataRequired()])    
     phone = StringField('phone', validators=[DataRequired()])    
-    cellphone_provider = SelectField(label="Choose a provider", choices=CELLPHONE_PROVIDERS.keys())
+    cellphone_provider = SelectField(label="Choose a provider", choices=[(k, k) for k in sorted(CELLPHONE_PROVIDERS.keys())])
 
     def __init__(self, original_nickname, *args, **kwargs):
         FlaskForm.__init__(self, *args, **kwargs)

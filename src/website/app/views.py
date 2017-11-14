@@ -58,7 +58,8 @@ def oauth_callback_google():
     nickname = email.split("@")[0]
     # get the user info
     print("user config: %s %s" % (social_id, nickname))
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(social_id=social_id).first()
+    print("user existence: %s" % str(user))
     # if it's a new user, create it
     if user is None:
         user = User(social_id=social_id, nickname=nickname, email=email)
@@ -81,10 +82,14 @@ def load_user(id):
 def edit():
     form = EditForm(current_user.nickname)
     if form.validate_on_submit():
-        current_user.nickname = form.nickname.data
-        current_user.email = form.email.data
-        current_user.phone = form.phone.data
-        current_user.cellphone_provider = form.cellphone_provider.data
+        if form.nickname.data != "":
+            current_user.nickname = form.nickname.data
+        if form.email.data != "":    
+            current_user.email = form.email.data
+        if form.phone.data != "": 
+            current_user.phone = form.phone.data
+        if form.cellphone_provider.data != "":    
+            current_user.cellphone_provider = form.cellphone_provider.data
         db.session.add(current_user)
         db.session.commit()
         flash("change success!")
