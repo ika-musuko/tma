@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField, DateTimeField, DateField, TimeField, SelectMultipleField
+from wtforms import StringField, IntegerField, BooleanField, SelectField, DateTimeField, DateField, SelectMultipleField
+from wtforms_components import TimeField
 from wtforms.validators import DataRequired, Length
 from . import CELLPHONE_PROVIDERS
 from .models import User
@@ -47,7 +48,7 @@ class EventForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     desc = StringField('desc')
     start = DateTimeField('start', validators=[DataRequired()])
-    end = DatetimeField('end')
+    end = DateTimeField('end')
 
 class SleepScheduleForm(FlaskForm):
     sleep = TimeField('sleep', validators=[DataRequired()])
@@ -66,7 +67,7 @@ class TaskEventForm(FlaskForm):
     # for use with task or due events
     name = StringField('name', validators=[DataRequired()])
     desc = StringField('desc')
-    due = DatetimeField('due') # optional, for DueEvents
+    due = DateTimeField('due') # optional, for DueEvents
     finished = BooleanField('finished')
     duration = IntegerField('time')
 
@@ -111,12 +112,13 @@ def recurring_form_conv(form: RecurringEventForm) -> event.RecurringEvent:
                                )
 
 def task_form_conv(form: TaskEventForm) -> "event.TaskEvent or event.DueEvent":
-    return TaskEvent(
+    if form.due.data == "" or form.due.data is None:
+        return TaskEvent(
                           name     = form.name.data
                         , desc     = form.desc.data
                         , done     = form.finished.data
                         , duration = form.duration.data
-                    ) if form.due.data is None else 
+                    ) 
     return DueEvent (
                           due      = form.due.data
                         , name     = form.name.data

@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for, session, make_respo
 from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
-from .forms import EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
-from .models import init_db, User, UserSchedule, UserEvent, form_to_event
+from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
+from .models import init_db, User, UserSchedule, UserEvent
 
 
 ### HOME PAGE ###
@@ -106,8 +106,8 @@ def add_selector():
 @login_required
 def add_event(event_type):
     formdict = {
-            'event'     : EventForm 
-           ,'sleep'     : SleepScheduleForm
+            'regular'     : EventForm 
+           ,'sleep'     : SleepScheduleForm  # sleep should redirect to editing the sleep schedule but for now it is left here
            ,'recurring' : RecurringEventForm
            ,'task'      : TaskEventForm
     }
@@ -118,6 +118,8 @@ def add_event(event_type):
         db.session.add(current_user)
         db.session.commit()
         flash("%s has been successfully added" % (str(type(formed_event))))
+        return redirect(url_for('index'))
+    return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
 
 ### ERROR PAGES  
 @app.errorhandler(404)
