@@ -3,19 +3,25 @@
 <h1>Settings</h1>
 <form action="" method="post" name="edit" class="editform">
     {{form.hidden_tag()}}
+    <h3>Change Settings</h3>
     <div class="form-group">
         <table>
             <tr>
-                <td><img src='static/imgs/nickname.png'>Current Name</td>
+                <td><img src='static/imgs/nickname.png'>Name</td>
                 <td>{{ form.nickname(size=24) }}</td>
             </tr>
             <tr>
-                <td><img src='static/imgs/email.png'>Current E-mail</td>
+                <td><img src='static/imgs/email.png'>E-mail</td>
                 <td>{{ form.email(size=24) }}</td>
             </tr>
             <tr>
-                <td><img src='static/imgs/phone.png'>Current Phone</td>
+                <td><img src='static/imgs/phone.png'>Phone</td>
                 <td>{{ form.phone(size=24) }}</td>
+            </tr>
+            <tr>
+                <td><img src='static/imgs/provider.png'>Mobile Provider</td>
+                <td>{{ form.cellphone_provider(size=24) }}</td>
+                <td><h6>* Standard messaging rates apply for mobile services</h6></td>
             </tr>
             {% for error in form.errors.nickname %}
             <span style="color: red;">[{{ error }}]</span>
@@ -24,6 +30,12 @@
                 <td><input type="submit" value="save changes"></td>
             </tr>
         </table>
+   </div>
+   <div class="container-fluid">
+        <h3>Current Settings</h3>
+        <h4>Name: {{ current_user.nickname }}</h4>
+        <h4>E-mail: {{ current_user.email }}</h4>
+        <h4>Phone number: {{ current_user.phone }}
    </div>
 </form>
 {% endblock %}

@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, session, make_response, request
-from app import app, db, login_manager
+from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
 from .forms import EditForm
-from .models import User, UserSchedule, UserEvent
+from .models import init_db, User, UserSchedule, UserEvent
 
 
 ### HOME PAGE ###
@@ -82,6 +82,9 @@ def edit():
     form = EditForm(current_user.nickname)
     if form.validate_on_submit():
         current_user.nickname = form.nickname.data
+        current_user.email = form.email.data
+        current_user.phone = form.phone.data
+        current_user.cellphone_provider = form.cellphone_provider.data
         db.session.add(current_user)
         db.session.commit()
         flash("change success!")
@@ -100,3 +103,5 @@ def internal_error(error):
     db.session.rollback() # go back to working database
     return render_template('500.html'), 500
     
+if __name__ == "__main__":
+    init_db()

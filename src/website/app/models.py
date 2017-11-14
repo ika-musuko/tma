@@ -1,7 +1,10 @@
-from app.scheduler import event, schedule
+from .scheduler import event, schedule
 
-from app import db
+from . import db
 from flask_login import UserMixin
+
+def init_db():
+    db.create_all()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -10,6 +13,7 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64), nullable=False, index=True, unique=False)
     email = db.Column(db.String(256), nullable=True,index=True, unique=False)
     phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
+    cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
     schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')
     # figure out how to store canvas info???
     
@@ -125,3 +129,6 @@ class UserEvent(db.Model):
     
     def __repr__(self):
         return "<UserEvent: %r>" % self.name
+
+if __name__ == "__main__":
+    init_db()

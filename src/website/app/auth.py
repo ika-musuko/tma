@@ -32,8 +32,8 @@ class OAuthSignIn:
 class GoogleSignIn(OAuthSignIn):
     def __init__(self):
         super(GoogleSignIn, self).__init__('google')
-        googleinfo = urllib.request.urlopen('https://accounts.google.com/.well-known/openid-configuration')
-        google_params = json.load(googleinfo)
+        googleinfo = urllib.request.urlopen('https://accounts.google.com/.well-known/openid-configuration').read().decode('UTF-8')
+        google_params = json.loads(googleinfo)
         self.service = OAuth2Service(
                               name='google'
                             , client_id=self.consumer_id
@@ -58,7 +58,11 @@ class GoogleSignIn(OAuthSignIn):
                                                                 , 'grant_type': 'authorization_code'
                                                                 , 'redirect_uri': self.get_callback_url()
                                                                 }
-                                                       , decoder = json.loads
+                                                       , decoder = bytes_decoder
                                                       )
         me = oauth_session.get('').json()
         return (me['name'], me['email'])
+
+
+def bytes_decoder(bytes_object):
+    return json.loads(bytes_object.decode('UTF-8'))

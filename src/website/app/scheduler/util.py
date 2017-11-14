@@ -1,5 +1,5 @@
 import datetime
-from app.scheduler import event
+from . import event
 from sortedcontainers import SortedList
 
 '''

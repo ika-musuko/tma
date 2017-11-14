@@ -1,13 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField
+from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
+from . import CELLPHONE_PROVIDERS
 from .models import User
 
 class EditForm(FlaskForm):
     nickname = StringField('nickname', validators=[DataRequired()])    
     email = StringField('email', validators=[DataRequired()])    
     phone = StringField('phone', validators=[DataRequired()])    
-    
+    cellphone_provider = SelectField(label="Choose a provider", choices=CELLPHONE_PROVIDERS.keys())
+
     def __init__(self, original_nickname, *args, **kwargs):
         FlaskForm.__init__(self, *args, **kwargs)
         self.original_nickname = original_nickname

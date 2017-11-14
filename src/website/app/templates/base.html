@@ -14,7 +14,7 @@
     
     <body>
         <div class="container">
-            <center><h3>Time Management Assistant</h3></center>
+            <center><h3>{% if current_user.is_authenticated %}<span class="font-italic">{{ current_user.nickname }}'s </span>{% endif %}<span class="font-bold">Time Management Assistant</span></h3></center>
             <nav class="navbar navbar-expand-lg navbar-light bg-dark">
                 <a class='nav-link' href="{{ url_for('index') }}">home</a>
                 {% if current_user.is_authenticated %}
@@ -31,7 +31,7 @@
         <div class="alerts">
             <ul>
                 {% for message in messages %}
-                <li><span style="color:blue;">{{ message }}</span></li>
+                <li class="list-group-item"><span style="color:blue;">{{ message }}</span></li>
                 {% endfor %}
             </ul>
         </div>
@@ -45,8 +45,7 @@
         </div>
     
     <div class="footer container-fluid bg-dark text-light">
-    <hr>
-        <p>San Jose State University 2017</p>
+        <h6><font size="1">San Jose State University 2017</font></h6>
     </div>
     </body>
 </html>

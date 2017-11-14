@@ -2,15 +2,34 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_pyfile('../config.py')
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'login required to view'
+
+
+CELLPHONE_PROVIDERS = {
+         'Alltel': 'mms.alltelwireless.com'
+        ,'AT&T': 'mms.att.net'
+        ,'Boost Mobile' : 'myboostmobile.com'
+        ,'Cricket Wireless': 'mms.att.net'
+        ,'MetroPCS': 'mymetropcs.com'
+        ,'Project Fi': 'msg.fi.google.com'
+        ,'Republic Wireless': 'text.republicwireless.com'
+        ,'Sprint': 'pm.sprint.com'
+        ,'Ting': 'message.ting.com'
+        ,'T-Mobile': 'tmomail.net'
+        ,'US Cellular': 'mms.uscc.net'
+        ,'Verizon Wireless': 'vzwpix.com'
+        ,'Virgin Mobile': 'vmpix.com'
+}
 
 if not app.debug:
     import logging
@@ -29,5 +48,5 @@ if not app.debug:
     app.logger.addHandler(file_handler)
     app.logger.info('time management')  
 
-from app import views, models
-
+from . import views, models
+db.create_all()
