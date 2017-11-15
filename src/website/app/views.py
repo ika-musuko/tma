@@ -63,6 +63,7 @@ def oauth_callback_google():
     # if it's a new user, create it
     if user is None:
         user = User(social_id=social_id, nickname=nickname, email=email)
+        user.init_schedule()
         db.session.add(user)
         db.session.commit()
     # login the user
@@ -116,6 +117,7 @@ def add_event(event_type):
         formed_event = form_to_event(form)
         current_user.add_event(formed_event)
         print(formed_event)
+        current_user.add_event(formed_event)
         db.session.add(current_user)
         db.session.commit()
         flash("%s has been successfully added" % (formed_event.__class__.__name__))

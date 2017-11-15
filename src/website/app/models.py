@@ -15,25 +15,26 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
     cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
     schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')
+
     # figure out how to store canvas info???
     
     ### methods to handle schedule/event stuff ###
     def init_schedule(self):
-        # todo:
-        # use schedules table to initialize current schedule
+        # use schedules table to initialize current schedule (warning: calling this method will wipe out the existing schedule)
         pass
+        #schedules.__init__(schedule.Schedule())
     
     def add_event(self, e: event.Event):
-        # todo:
         # 1. add an event to self.schedule
         # 2. write new event to schedules->events
         pass
+        #schedules.add_event(e)
 
     def update(self):
-        # todo:
         # 1. self.schedule.update()
         # 2. write the generated ScheduleEvents to schedules->calendarevents
         pass
+        #schedules.update()
 
     ### user property methods ###
     # return True unless there is some reason the user should not be authenticated
@@ -81,10 +82,28 @@ class UserSchedule(db.Model):
     events = db.relationship('UserEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserEvent.schedule_id')
     calendarevents = db.relationship('UserCalendarEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserCalendarEvent.schedule_id')
     
-    def __init__(self, schedule:schedule.Schedule):
-        # init this with Schedule data from src
+    def __init__(self, s: schedule.Schedule):
         pass
-        
+        '''
+        self.schedule = s
+        '''
+
+    def add_event(self, e: event.Event):
+        pass
+        '''
+        self.schedule.add_event(e) # add to class
+        user_event =  # add to database
+        db.add(user_event)
+        '''
+
+    def update(self):
+        pass
+        '''
+        self.schedule.update()
+        # write to database
+        UserCalendarEvents.query.filter_by(UserSchedule.id == UserCalendarEvent.schedule_id).delete() # delete the old items
+        UserCalendarEvents.self.schedule.calendar_event_data:
+        '''  
     def __repr__(self):
         return "<UserSchedule: %r>" % self.user_id
  

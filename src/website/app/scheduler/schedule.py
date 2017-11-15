@@ -149,6 +149,13 @@ class Schedule:
         self.current_event = None
         self.update()
 
+    @property
+    def event_data(self):
+        return self.event_queue
+
+    @property
+    def calendar_event_data(self):
+        return self.actual_events
 
     def update(self) -> None:
         '''
