@@ -50,15 +50,15 @@ def oauth_callback_google():
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
     callback_crap = oauth_callback_base("google")
-    print(str(callback_crap))
+    print("google callback: %s" % str(callback_crap))
     social_id, email = callback_crap
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
     nickname = email.split("@")[0]
     # get the user info
-    print("user config: %s %s" % (social_id, nickname))
-    user = User.query.filter_by(social_id=social_id).first()
+    print("user config: social_id: %s nickname: %s email: %s" % (social_id, nickname, email))
+    user = User.query.filter_by(email=email).first()
     print("user existence: %s" % str(user))
     # if it's a new user, create it
     if user is None:
