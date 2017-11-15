@@ -9,7 +9,7 @@ def init_db():
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    social_id = db.Column(db.String(64), nullable=False, index=True unique=True)
+    social_id = db.Column(db.String(64), nullable=False, index=True, unique=True)
     nickname = db.Column(db.String(64), nullable=False, index=True, unique=False)
     email = db.Column(db.String(256), nullable=True, unique=True)
     phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
