@@ -7,8 +7,8 @@ from flask_login import UserMixin
 def init_db():
     db.create_all()
 
-TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol")
-TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.timedelta(hours=2), end=datetime.datetime.today()+datetime.timedelta(hours=5), name="test event 2", desc="description lol")
+TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!")
+TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.timedelta(hours=2), end=datetime.datetime.today()+datetime.timedelta(hours=5), name="test event 2", desc="description lol", extra_info="moar extra infoz")
     
 class User(UserMixin, db.Model):
     __tablename__ = 'users'

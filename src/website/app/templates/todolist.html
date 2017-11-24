@@ -6,20 +6,23 @@
     <thead>
         <th class="table-success">Start</th>
         <th class="table-danger" >End</th>
-        <th class="table-secondary"   >Name</th>
+        <th class="table-primary"   >Name</th>
+        <th class="table-secondary"   >Details</th>
         <th class="table-primary"   ></th>
         <th class="table-info"   ></th>
     </thead>
-    {% for e in todolist %}
+
     <tbody data-link="row" class="rowlink">
+        {% for e in todolist %}
         <tr>
-            <td class="col-sm-2 text-success">{{ e.start.replace(microsecond=0).replace(second=0) }}</td>
-            <td class="col-sm-2 text-danger">{{ e.end.replace(microsecond=0).replace(second=0) }}</td>
-            <td class="col-sm-6">{{ e.name }}</td>
-            <td class="col-sm-1"><a href="#" class="btn-sm btn btn-primary" role="button">View</a></td>
-            <td class="col-sm-1"><a href="#" class="btn-sm btn btn-info" role="button">Edit</a></td>
-        </tr>   
+            <td class="col-sm-1 text-success">{{ e.start.replace(microsecond=0).replace(second=0) }}</td>
+            <td class="col-sm-1 text-danger">{{ e.end.replace(microsecond=0).replace(second=0) }}</td>
+            <td class="col-sm-4">{{ e.name }}</td>
+            <td class="col-sm-4">{{ e.extra_info }}</td>
+            <td class="col-sm-1"><a href="#" class="btn-sm btn btn-primary" data-toggle="modal" data-target="#view" role="button">View</a></td>
+            <td class="col-sm-1"><a href="#" class="btn-sm btn btn-info" data-toggle="modal" data-target="#edit" role="button">Edit</a></td>
+        </tr> 
+        {% endfor %}
     </tbody>
-    {% endfor %}
 </table>
 {% endif %}
