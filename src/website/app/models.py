@@ -1,4 +1,5 @@
 from .scheduler import event, schedule
+import datetime
 
 from . import db
 from flask_login import UserMixin
@@ -6,6 +7,9 @@ from flask_login import UserMixin
 def init_db():
     db.create_all()
 
+TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol")
+TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.timedelta(hours=2), end=datetime.datetime.today()+datetime.timedelta(hours=5), name="test event 2", desc="description lol")
+    
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -35,6 +39,9 @@ class User(UserMixin, db.Model):
         # 2. write the generated ScheduleEvents to schedules->calendarevents
         pass
         #schedules.update()
+        
+    def get_events(self):
+        return [TEST_EVENT, TEST_EVENT_2]
 
     ### user property methods ###
     # return True unless there is some reason the user should not be authenticated

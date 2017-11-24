@@ -144,6 +144,7 @@ class Schedule:
         self.region = Region(start, end)
         self.region.fill()
         self.work_time = 90 # how long doing one stretch of work is in minutes
+        self.break_time = 15 # how long a break is in minutesScv
         self.break_time = 15 # how long a break is in minutes
         self.event_queue = EventQueue(events)
         self.current_event = None

@@ -33,11 +33,13 @@
                         <div class="row"><h4><span onload="startTime()" id="ctime"></span></h4></div>
                     </div>
                     <div class="row">
-                        <div class='col-md-4'>
+                        {# <div class='col-md-4'>
                             <h3>All Classes</h3>
-                        </div>
-                        <div class='col-md-8'>
+                            {% include 'classlist.html' %}
+                        </div> #}
+                        <div class='col-md-12'>
                             <h3>Things to Do</h3>
+                            {% include 'todolist.html' %}
                         </div>
                     </div>
                 </div>

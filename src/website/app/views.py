@@ -11,7 +11,7 @@ from .models import init_db, User, UserSchedule, UserEvent
 @app.route('/index')
 def index():
     # todo: get the user's current events and display them here
-    return render_template('index.html')
+    return render_template('index.html', todolist=current_user.get_events())
 
 ### LOGIN PAGES ###
 # standard google login
