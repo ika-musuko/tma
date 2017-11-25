@@ -7,15 +7,14 @@ from flask_login import UserMixin
 def init_db():
     db.create_all()
 
-TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!")
-TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.timedelta(hours=2), end=datetime.datetime.today()+datetime.timedelta(hours=5), name="test event 2", desc="description lol", extra_info="moar extra infoz")
+TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!", parent_id=1)
+TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.timedelta(hours=2), end=datetime.datetime.today()+datetime.timedelta(hours=5), name="test event 2", desc="description lol", extra_info="moar extra infoz", parent_id=2)
     
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    social_id = db.Column(db.String(64), nullable=False, index=True, unique=True)
-    nickname = db.Column(db.String(64), nullable=False, index=True, unique=False)
-    email = db.Column(db.String(256), nullable=True, unique=True)
+    nickname = db.Column(db.String(64), nullable=True, index=True, unique=False)
+    email = db.Column(db.String(256), nullable=False, unique=True)
     phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
     cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
     schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')

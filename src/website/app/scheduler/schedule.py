@@ -101,9 +101,11 @@ class ScheduleEvent(event.Event):
                     , start: datetime.datetime=None
                     , end: datetime.datetime=None
                     , extra_info: str=""
+                    , parent_id: int=-1
                 ):
         event.Event.__init__(self=self, name=name, desc=desc, priority=priority, start=start, end=end)
         self.extra_info = extra_info
+        self.parent_id = parent_id
         
     def __str__(self):
         return '''{name}
@@ -144,7 +146,6 @@ class Schedule:
         self.region = Region(start, end)
         self.region.fill()
         self.work_time = 90 # how long doing one stretch of work is in minutes
-        self.break_time = 15 # how long a break is in minutesScv
         self.break_time = 15 # how long a break is in minutes
         self.event_queue = EventQueue(events)
         self.current_event = None
@@ -158,6 +159,12 @@ class Schedule:
     def calendar_event_data(self):
         return self.actual_events
 
+    def schedule_event_by_id(self, id):
+        for e in self.actual_events:
+            if e.id == id:
+                return e
+        return None
+        
     def update(self) -> None:
         '''
         pop ScheduleEvents off of self.event_queue and push them into self.actual_events, assigning ScheduleEvent.start and ScheduleEvent.end to events that have none
@@ -180,7 +187,7 @@ class Schedule:
                 se = self.generate_task_events(e)
             # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
-                se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT"),)
+                se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT", parent_id=e.id),)
             self.push_generated_events(se, self.today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
 
@@ -225,7 +232,7 @@ class Schedule:
                                                                                        , end_datetime.minute
                                                                                      ) 
                 # generate a ScheduleEvent
-                new_se = ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info)
+                new_se = ScheduleEvent(name=re.name, desc=re.desc, start=start_datetime, end=end_datetime, extra_info=re_extra_info, parent_id=re.id)
                 
                 # if self.earliest_free_region is inside an event happening right now, move it and make it the current event
                 if not self.current_event is None and new_se.start <= self.today < new_se.end:
@@ -259,7 +266,7 @@ class Schedule:
             if(event_length > 0): # hack fix for ignoring "microevents" (less than one minute)
                 # create the new event
                 te_extra_info = "DUE EVENT: due: %s" % (te.due) if isinstance(te, event.DueEvent) else "Task Event"
-                new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info=te_extra_info)
+                new_se = ScheduleEvent(name=te.name, desc=te.desc, start=start_datetime, end=end_datetime, extra_info=te_extra_info, parent_id=te.id)
                 se.add(new_se)
                 print("\t\tstart: %s end: %s" %(new_se.start, new_se.end))
 

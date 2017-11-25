@@ -11,7 +11,10 @@ from .models import init_db, User, UserSchedule, UserEvent
 @app.route('/index')
 def index():
     # todo: get the user's current events and display them here
-    return render_template('index.html', todolist=current_user.get_events())
+    if current_user.is_authenticated: 
+        return render_template('index.html', todolist=current_user.get_events())
+    else:
+        return render_template('index.html')
 
 ### LOGIN PAGES ###
 # standard google login
@@ -51,18 +54,19 @@ def oauth_callback_google():
         return redirect(url_for('index'))
     callback_crap = oauth_callback_base("google")
     print("google callback: %s" % str(callback_crap))
-    social_id, email = callback_crap
-    if social_id is None:
+    _, email = callback_crap
+    if email is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
-    nickname = email.split("@")[0]
     # get the user info
-    print("user config: social_id: %s nickname: %s email: %s" % (social_id, nickname, email))
+    nickname = email.split("@")[0]
+    print("user config: nickname: %s email: %s" % (nickname, email))
     user = User.query.filter_by(email=email).first()
     print("user existence: %s" % str(user))
     # if it's a new user, create it
     if user is None:
-        user = User(social_id=social_id, nickname=nickname, email=email)
+        
+        user = User(nickname=nickname, email=email)
         user.init_schedule()
         db.session.add(user)
         db.session.commit()
@@ -123,6 +127,20 @@ def add_event(event_type):
         flash("%s has been successfully added" % (formed_event.__class__.__name__))
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
+
+### VIEW EVENT PAGE ###
+@app.route("/view_event/<id>", methods=["GET", "POST"])
+@login_required
+def view_event(id):
+    viewthis = current_user.schedule.schedule_event_by_id(id)
+    return render_template("view_event", e=viewthis)
+
+### EDIT EVENT PAGE ###   
+@app.route("/edit_event/<id>", methods=["GET", "POST"])
+@login_required 
+def edit_event(id):
+    editthis = current_user.schedule.schedule_event_by_id(id)
+    return render_template("edit_event", e=editthis)
 
 ### ERROR PAGES  
 @app.errorhandler(404)

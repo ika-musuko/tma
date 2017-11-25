@@ -24,7 +24,7 @@ class EventQueue:
     
     def __getattr__(self, index):
         return self.q[index]
-
+        
     def delete_by_id(self, id: int) -> bool:
         '''
         delete event by id
