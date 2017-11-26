@@ -68,7 +68,7 @@ def get_calendar_events(access_token: str="") -> 'list of Event':
                                     , end=convert_timestr(x['end_at'])
                                   )
                       )
-    print(cal_evs)
+    #print(cal_evs)
     return cal_evs
 
 
