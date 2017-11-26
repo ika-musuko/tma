@@ -1,4 +1,5 @@
 import dateutil.parser
+from dateutil import tz
 import json
 from . import event
 import requests
@@ -96,7 +97,10 @@ def get_headers(access_token: str=""):
 def convert_timestr(timestr: None):
     if timestr is None:
         return timestr
-    return dateutil.parser.parse(timestr, ignoretz=True)-datetime.timedelta(hours=7) # todo, implement actual timezone support instead of this hack
+    dt = dateutil.parser.parse(timestr)
+    dt_ret = dt.replace(tzinfo=tz.tzlocal)
+    return dt_ret
+    #return dateutil.parser.parse(timestr, ignoretz=True)-datetime.timedelta(hours=7) # todo, implement actual timezone support instead of this hack
 
 def remove_tags(text: None):
     if text is None:

@@ -119,6 +119,22 @@ class ScheduleEvent(event.Event):
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
 
+    def as_g_event(self):
+        evnt = {
+            'summary': self.name,
+            'description': self.desc,
+            'start': {
+                'dateTime': self.start.isoformat(), # string or datetime, both of these
+                'timeZone': self.start.tzinfo
+            },
+            'end': {
+                'dateTime': self.end.isoformat(),
+                'timeZone': self.end.tzinfo
+            }
+
+        } #todo: check if it works
+        return evnt
+
     def short_print(self):
         today = datetime.datetime.now()
         dow = "Today" if self.start.weekday() == today.weekday() else "Tomorrow" if (self.start.weekday() - today.weekday())%7 == 1 else ScheduleEvent.DAY_NAMES[self.start.weekday()]
