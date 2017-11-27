@@ -215,4 +215,3 @@ class SleepEvent(RecurringEvent):
                     , name: str="Sleep"
                 ):
         RecurringEvent.__init__(self, name=name, desc=name, start_time=start_time, end_time=end_time, daystr="MTWHFSN")
-        self.different_days = self.start_time > self.end_time

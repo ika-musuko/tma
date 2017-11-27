@@ -3,7 +3,8 @@ from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
 from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
-from .models import init_db, User, UserSchedule, UserEvent
+from .models import init_db, User, UserEvent
+from .scheduler import event, schedule
 
 
 ### HOME PAGE ###
@@ -67,7 +68,6 @@ def oauth_callback_google():
     if user is None:
         
         user = User(nickname=nickname, email=email)
-        user.init_schedule()
         db.session.add(user)
         db.session.commit()
     # login the user
@@ -111,7 +111,7 @@ def add_selector():
 @login_required
 def add_event(event_type):
     formdict = {
-            'regular'     : EventForm 
+            'regular'   : EventForm 
            ,'sleep'     : SleepScheduleForm  # sleep should redirect to editing the sleep schedule but for now it is left here
            ,'recurring' : RecurringEventForm
            ,'task'      : TaskEventForm
@@ -119,15 +119,65 @@ def add_event(event_type):
     form = formdict[event_type]()
     if form.validate_on_submit():
         formed_event = form_to_event(form)
-        current_user.add_event(formed_event)
         print(formed_event)
-        current_user.add_event(formed_event)
-        db.session.add(current_user)
-        db.session.commit()
-        flash("%s has been successfully added" % (formed_event.__class__.__name__))
+        ftype = type(formed_event)
+        # bad : (
+        user_event = None
+        if ftype == event.Event: 
+            user_event =    UserEvent(
+                                         author=current_user
+                                        ,type="Event"
+                                        ,name=formed_event.name
+                                        ,desc=formed_event.desc
+                                        ,priority=formed_event.priority
+                                        ,start=formed_event.start
+                                        ,end=formed_event.end
+                                    )
+        elif ftype == event.RecurringEvent or ftype == event.SleepEvent:  
+            user_event =    UserEvent(
+                                         author=current_user
+                                        ,type="RecurringEvent" if ftype == event.RecurringEvent else "SleepEvent"
+                                        ,name=formed_event.name
+                                        ,desc=formed_event.desc
+                                        ,priority=formed_event.priority
+                                        ,recEvent_period_start=formed_event.period_start
+                                        ,recEvent_period_end=formed_event.period_end
+                                        ,recEvent_start_time=formed_event.start_time
+                                        ,recEvent_end_time=formed_event.end_time
+                                        ,recEvent_daystr=formed_event.daystr
+                                    )
+        elif ftype == event.TaskEvent:
+            user_event =     UserEvent(
+                                         author=current_user
+                                        ,type="TaskEvent"
+                                        ,name=formed_event.name
+                                        ,desc=formed_event.desc
+                                        ,priority=formed_event.priority
+                                        ,taskEvent_done=formed_event.done
+                                        ,taskEvent_duration=formed_event.duration
+                                    )
+        elif ftype == event.DueEvent: 
+            user_event =    UserEvent(
+                                         author=current_user
+                                        ,type="DueEvent"
+                                        ,name=formed_event.name
+                                        ,desc=formed_event.desc
+                                        ,priority=formed_event.priority
+                                        ,taskEvent_done=formed_event.done
+                                        ,taskEvent_duration=formed_event.duration
+                                        ,dueEvent_due=formed_event.due
+                                    )
+
+        if user_event is not None:  
+            db.session.add(user_event)
+            db.session.commit()
+            flash("%s has been successfully added" % (formed_event.__class__.__name__))
+        else:
+            flash("Error in adding event")
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
-
+  
+    
 ### VIEW EVENT PAGE ###
 @app.route("/view_event/<id>", methods=["GET", "POST"])
 @login_required

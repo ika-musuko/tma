@@ -12,32 +12,16 @@ TEST_EVENT_2 = schedule.ScheduleEvent(start=datetime.datetime.today()+datetime.t
     
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id       = db.Column(db.Integer, primary_key=True, unique=True)
     nickname = db.Column(db.String(64), nullable=True, index=True, unique=False)
-    email = db.Column(db.String(256), nullable=False, unique=True)
-    phone = db.Column(db.String(256), nullable=True,index=True, unique=False)
+    email    = db.Column(db.String(256), nullable=False, unique=True)
+    phone    = db.Column(db.String(256), nullable=True,index=True, unique=False)
     cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
-    schedules = db.relationship('UserSchedule', uselist=False, back_populates='users')
-
+    events  = db.relationship('UserEvent', backref='author', lazy='dynamic')
+    
     # figure out how to store canvas info???
     
     ### methods to handle schedule/event stuff ###
-    def init_schedule(self):
-        # use schedules table to initialize current schedule (warning: calling this method will wipe out the existing schedule)
-        pass
-        #schedules.__init__(schedule.Schedule())
-    
-    def add_event(self, e: event.Event):
-        # 1. add an event to self.schedule
-        # 2. write new event to schedules->events
-        pass
-        #schedules.add_event(e)
-
-    def update(self):
-        # 1. self.schedule.update()
-        # 2. write the generated ScheduleEvents to schedules->calendarevents
-        pass
-        #schedules.update()
         
     def get_events(self):
         return [TEST_EVENT, TEST_EVENT_2]
@@ -78,64 +62,6 @@ class User(UserMixin, db.Model):
     
     def __repr__(self):
         return "<User: %r>" % self.nickname
-
-        
-class UserSchedule(db.Model):
-    __tablename__ = 'schedules'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    users = db.relationship('User', back_populates='schedules')
-    id = db.Column(db.Integer, primary_key=True)
-    events = db.relationship('UserEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserEvent.schedule_id')
-    calendarevents = db.relationship('UserCalendarEvent', backref='user', lazy='dynamic', primaryjoin='UserSchedule.id == UserCalendarEvent.schedule_id')
-    
-    def __init__(self, s: schedule.Schedule):
-        pass
-        '''
-        self.schedule = s
-        '''
-
-    def add_event(self, e: event.Event):
-        pass
-        '''
-        self.schedule.add_event(e) # add to class
-        user_event =  # add to database
-        db.add(user_event)
-        '''
-
-    def update(self):
-        pass
-        '''
-        self.schedule.update()
-        # write to database
-        UserCalendarEvents.query.filter_by(UserSchedule.id == UserCalendarEvent.schedule_id).delete() # delete the old items
-        UserCalendarEvents.self.schedule.calendar_event_data:
-        '''  
-    def __repr__(self):
-        return "<UserSchedule: %r>" % self.user_id
- 
-class UserCalendarEvent(db.Model):
-    '''
-        these events get written to the calendar
-    '''
-    __tablename__ = 'calendarevents'
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id')) 
-    id = db.Column(db.Integer, primary_key=True)
-    
-    name = db.Column(db.String(128), nullable=True, index=True, unique=False)
-    desc = db.Column(db.String(1024), nullable=True, index=True, unique=False)
-    extra_info = db.Column(db.String(1024), nullable=True, index=True, unique=False)
-    priority = db.Column(db.Integer, nullable=True, index=True, unique=False)
-    start = db.Column(db.DateTime)
-    end = db.Column(db.DateTime)
-    
-    def __init__(self, se: schedule.ScheduleEvent):
-        '''
-        convert an schedule.ScheduleEvent into a calendar event
-        '''
-        pass
-        
-    def __repr__(self):
-        return "<ScheduleEvent: %r>" % self.name
  
 class UserEvent(db.Model):
     '''
@@ -143,7 +69,7 @@ class UserEvent(db.Model):
         these get converted into schedule events by the algorithm
     '''
     __tablename__ = 'events'
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedules.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(128), nullable=True, index=True, unique=False) # Event, RecurringEvent, TaskEvent, etc
     
@@ -166,12 +92,6 @@ class UserEvent(db.Model):
     recEvent_start_time = db.Column(db.Time)
     recEvent_end_time = db.Column(db.Time)
     recEvent_daystr = db.Column(db.String(64), nullable=True, unique=False)
-    
-    def __init__(self, e: event.Event):
-        '''
-        convert an event.Event into a database entry
-        '''
-        pass
     
     def __repr__(self):
         return "<UserEvent: %r>" % self.name
