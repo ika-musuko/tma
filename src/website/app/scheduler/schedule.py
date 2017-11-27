@@ -119,17 +119,30 @@ class ScheduleEvent(event.Event):
     def __repr__(self):
         return ": ".join(("ScheduleEvent", str(self.__dict__)))
 
-    def as_g_event(self):
+    def as_g_event(self, email: str=""):
+        '''
+
+        :param email: the attendee's email address, a required property
+        see https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+        :return: an event resource that is valid for google calendar api
+        '''
         evnt = {
             'summary': self.name,
             'description': self.desc,
             'start': {
-                'dateTime': self.start.isoformat(), # string or datetime, both of these
+                'dateTime': self.start.isoformat(),  # string or datetime? right now is a string
                 'timeZone': self.start.tzinfo
             },
             'end': {
                 'dateTime': self.end.isoformat(),
                 'timeZone': self.end.tzinfo
+            },
+            'attendees': [
+                {'email': email}
+            ],
+            'reminders': {
+                'useDefault': True,  # google calendar's default reminder method and time before
+                'overrides': []
             }
 
         } #todo: check if it works
