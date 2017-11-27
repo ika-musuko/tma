@@ -185,7 +185,7 @@ class Schedule:
         return self.event_queue
 
     @property
-    def calendar_event_data(self):
+    def schedule_event_data(self):
         return self.actual_events
 
     def schedule_event_by_id(self, id):

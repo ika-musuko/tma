@@ -63,6 +63,17 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User: %r>" % self.nickname
  
+class UserScheduleEvent(db.Model):
+    __tablename__ = 'scheduleevents'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    id = db.Column(db.Integer, primary_key=True) 
+    name = db.Column(db.String(128), nullable=True, index=True, unique=False)
+    desc = db.Column(db.String(1024), nullable=True, index=True, unique=False)
+    extra_info = db.Column(db.String(1024), nullable=True, index=True, unique=False)
+    priority = db.Column(db.Integer, nullable=True, index=True, unique=False)
+    start = db.Column(db.DateTime)
+    end = db.Column(db.DateTime)
+ 
 class UserEvent(db.Model):
     '''
         these are database representations of events that go on the event queue

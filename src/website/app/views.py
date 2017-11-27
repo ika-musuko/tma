@@ -177,19 +177,35 @@ def add_event(event_type):
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
   
+### UPDATE SCHEDULE ###  
+@app.route("/update_schedule/", methods=["GET", "POST"])
+@login_required
+def update_schedule():
+    # 1. make a list all events from the events table
     
+    # 2. write to a new schedule.Schedule object
+    
+    # 3. wipe current user's schedule events from schedulevents table
+    
+    # 4. write new events
+    
+    
+    # 5. commit database
+    db.session.commit()
+    pass
+    
+    
+    
+TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!", parent_id=1)    
 ### VIEW EVENT PAGE ###
 @app.route("/view_event/<id>", methods=["GET", "POST"])
 @login_required
-def view_event(id):
-    viewthis = current_user.schedule.schedule_event_by_id(id)
-    return render_template("view_event", e=viewthis)
 
 ### EDIT EVENT PAGE ###   
 @app.route("/edit_event/<id>", methods=["GET", "POST"])
 @login_required 
 def edit_event(id):
-    editthis = current_user.schedule.schedule_event_by_id(id)
+    editthis = TEST_EVENT
     return render_template("edit_event", e=editthis)
 
 ### ERROR PAGES  
