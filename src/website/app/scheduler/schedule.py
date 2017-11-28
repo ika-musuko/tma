@@ -217,6 +217,8 @@ class Schedule:
             # this is just a normal event so turn it into a tuple of 1 element to extend
             else:
                 se = (ScheduleEvent(name=e.name, desc=e.desc, start=e.start, end=e.end, extra_info="USER EVENT", parent_id=e.id),)
+                if se[0].start <= self.today <= se[0].end:
+                    self.earliest_free_region.start = se[0].end
             self.push_generated_events(se, self.today)
             sort_extend(self.actual_events, se) # add all of the ScheduleEvents
 
@@ -253,7 +255,7 @@ class Schedule:
                 start_datetime = combine(day, re.start_time)
                 # if re is a SleepEvent and the start_time is after the end_time, advance to the next day
                 end_datetime = combine(day+datetime.timedelta(days=int(isinstance(re, event.SleepEvent) and re.start_time > re.end_time)), re.end_time)
-                
+
                 re_extra_info = "SLEEP Event: bed: %s wake: %s" % (re.start_time, re.end_time) if isinstance(re, event.SleepEvent) else  "Recurring Event: %s start: %02d:%02d end: %02d:%02d" % (   re.day_names
                                                                                        , start_datetime.hour
                                                                                        , start_datetime.minute
@@ -267,7 +269,9 @@ class Schedule:
                 if not self.current_event is None and new_se.start <= self.today < new_se.end:
                     self.earliest_free_region.start = new_se.end
                     self.current_event = new_se
-
+                elif new_se.start <= self.today <= new_se.end:
+                    self.current_event = new_se
+                    self.earliest_free_region.start = new_se.end
                 se.add(new_se)
         return se
 
