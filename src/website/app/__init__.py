@@ -2,13 +2,16 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager, UserMixin
+from flask_script import Manager
 
 app = Flask(__name__)
 app.config.from_pyfile('../config.py')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -51,3 +54,5 @@ if not app.debug:
 
 from . import views, models
 db.create_all()
+if __name__ == "__main__":
+    manager.run()

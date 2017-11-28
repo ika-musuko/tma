@@ -5,15 +5,19 @@ from .auth import OAuthSignIn
 from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
 from .models import init_db, User, UserEvent
 from .scheduler import event, schedule
+import datetime
 
 
 ### HOME PAGE ###
 @app.route('/')
 @app.route('/index')
 def index():
-    # todo: get the user's current events and display them here
+    # get the user's current events and display them here
+    schedule_events = current_user.scheduleevents.all()
+    for e in schedule_events:
+        print("%s %s %s" % (e.start, e.end, e.name))
     if current_user.is_authenticated: 
-        return render_template('index.html', todolist=current_user.get_events())
+        return render_template('index.html', todolist=schedule_events)
     else:
         return render_template('index.html')
 
@@ -183,6 +187,7 @@ def add_event(event_type):
 def update_schedule():
     # 1. make a list all events from the events table
     
+    
     # 2. write to a new schedule.Schedule object
     
     # 3. wipe current user's schedule events from schedulevents table
@@ -192,21 +197,23 @@ def update_schedule():
     
     # 5. commit database
     db.session.commit()
-    pass
     
     
     
 TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!", parent_id=1)    
-### VIEW EVENT PAGE ###
-@app.route("/view_event/<id>", methods=["GET", "POST"])
-@login_required
 
-### EDIT EVENT PAGE ###   
-@app.route("/edit_event/<id>", methods=["GET", "POST"])
+### DELETE SCHEDULE EVENT ###   
+@app.route("/delete_schedule_event/<id>", methods=["GET", "POST"])
 @login_required 
-def edit_event(id):
+def delete_schedule_event(id):
+    pass
+
+### EDIT SCHEDULE EVENT PAGE ###   
+@app.route("/edit_schedule_event/<id>", methods=["GET", "POST"])
+@login_required 
+def edit_schedule_event(id):
     editthis = TEST_EVENT
-    return render_template("edit_event", e=editthis)
+    return render_template("edit_schedule_event", e=editthis)
 
 ### ERROR PAGES  
 @app.errorhandler(404)

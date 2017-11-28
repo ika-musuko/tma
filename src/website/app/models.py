@@ -18,6 +18,7 @@ class User(UserMixin, db.Model):
     phone    = db.Column(db.String(256), nullable=True,index=True, unique=False)
     cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
     events  = db.relationship('UserEvent', backref='author', lazy='dynamic')
+    scheduleevents = db.relationship('UserScheduleEvent', backref='author', lazy='dynamic')
     
     # figure out how to store canvas info???
     
@@ -61,7 +62,7 @@ class User(UserMixin, db.Model):
     
     
     def __repr__(self):
-        return "<User: %r>" % self.nickname
+        return "<User: %r>" % self.email
  
 class UserScheduleEvent(db.Model):
     __tablename__ = 'scheduleevents'
