@@ -7,16 +7,16 @@ from .models import init_db, User, UserEvent, UserScheduleEvent, to_event
 from .scheduler import event, schedule
 import datetime
 
+EVENTS_PER_PAGE = 10
 
 ### HOME PAGE ###
-@app.route('/')
-@app.route('/index')
-def index():
-    # get the user's current events and display them here
-    schedule_events = current_user.scheduleevents.all()
-    for e in schedule_events:
-        print("%s %s %s" % (e.start, e.end, e.name))
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index/', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
+def index(page=1):
     if current_user.is_authenticated: 
+        # get the user's current events and display them here
+        schedule_events = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).paginate(page, EVENTS_PER_PAGE, False)
         return render_template('index.html', todolist=schedule_events)
     else:
         return render_template('index.html')
@@ -149,7 +149,7 @@ def add_event(event_type):
                                         ,recEvent_period_end=formed_event.period_end
                                         ,recEvent_start_time=formed_event.start_time
                                         ,recEvent_end_time=formed_event.end_time
-                                        ,recEvent_daystr=formed_event.daystr
+                                        ,recEvent_daystr=formed_event.days
                                     )
         elif ftype == event.TaskEvent:
             user_event =     UserEvent(
@@ -209,8 +209,7 @@ def update_schedule_helper():
 
     # 5. commit database
     db.session.commit()
-    
-    
+
     
 TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!", parent_id=1)    
 

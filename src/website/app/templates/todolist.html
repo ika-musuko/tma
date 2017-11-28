@@ -1,5 +1,5 @@
 {# todolist is a list of ScheduleEvent #}
-{% if todolist|length < 1 %}
+{% if todolist.items|length < 1 %}
 <p>Nothing to do!</p>
 {% else %}
 <table class="table table-striped table-bordered">
@@ -7,20 +7,37 @@
         <th class="table-success">Start</th>
         <th class="table-danger" >End</th>
         <th class="table-primary"   >Name</th>
-        <th class="table-info"   >Type</th>
         <th class="table-secondary"   >Description</th>
         <th class="table-primary"   ></th>
         <th class="table-danger"   ></th>
     </thead>
-
+    <center>
+        <div class="row">
+           
+            <div class="col-sm">
+                {% if todolist.has_prev %}
+                    <a class=" btn btn-danger btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.prev_num) }}">&lt;&lt; go back in time</a>
+                {% else %}
+                <div>you're at the beginning of time!</div>
+                {% endif %}
+            </div>  
+            <div class="col-sm">
+                {% if todolist.has_next %}
+                    <a class="btn btn-primary btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.next_num) }}">travel to the future &gt;&gt;</a>
+                {% else %}
+                    <div>we're not that good at predicting the future...</div>
+                {% endif %}
+            </div>
+        </div>
+    </center>
+    
     <tbody data-link="row" class="rowlink">
-        {% for e in todolist %}
+        {% for e in todolist.items %}
         <tr>
             <td class="col-sm-1 text-success">{{ e.start.replace(microsecond=0).replace(second=0) }}</td>
             <td class="col-sm-1 text-danger">{{ e.end.replace(microsecond=0).replace(second=0) }}</td>
-            <td class="col-sm-2">{{ e.name }}</td>
-            <td class="col-sm-2">{{ e.extra_info }}</td>
-            <td class="col-sm-4">{{ e.desc }}</td>
+            <td class="col-sm-3">{{ e.name }}</td>
+            <td class="col-sm-5">{{ e.desc }}</td>
             <td class="col-sm-1"><a href="{{ url_for('edit_schedule_event', id=e.id) }}" class="btn-sm btn btn-info" role="button">Edit</a></td>
             <td class="col-sm-1"><a href="{{ url_for('delete_schedule_event', id=e.id) }}" class="btn-sm btn btn-danger" role="button">Delete</a></td>
         </tr> 

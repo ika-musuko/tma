@@ -132,7 +132,6 @@ def to_recurring_event(de):
     return event.RecurringEvent(  
                                      name=de.name
                                     ,desc=de.desc
-                                    ,priority=de.priority
                                     ,start_time=de.recEvent_start_time
                                     ,end_time=de.recEvent_end_time
                                     ,period_start=de.recEvent_period_start
