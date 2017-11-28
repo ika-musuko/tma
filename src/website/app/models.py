@@ -71,7 +71,6 @@ class UserScheduleEvent(db.Model):
     name = db.Column(db.String(128), nullable=True, index=True, unique=False)
     desc = db.Column(db.String(1024), nullable=True, index=True, unique=False)
     extra_info = db.Column(db.String(1024), nullable=True, index=True, unique=False)
-    priority = db.Column(db.Integer, nullable=True, index=True, unique=False)
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
  
@@ -85,13 +84,13 @@ class UserEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(128), nullable=True, index=True, unique=False) # Event, RecurringEvent, TaskEvent, etc
     
-    name = db.Column(db.String(128), nullable=True, index=True, unique=False)
-    desc = db.Column(db.String(1024), nullable=True, index=True, unique=False)
+    name    = db.Column(db.String(128), nullable=True, index=True, unique=False)
+    desc    = db.Column(db.String(1024), nullable=True, index=True, unique=False)
     priority = db.Column(db.Integer, nullable=True, index=True, unique=False)
-    start = db.Column(db.DateTime)
-    end = db.Column(db.DateTime)
+    start   = db.Column(db.DateTime)
+    end     = db.Column(db.DateTime)
     
-    taskEvent_done = db.Column(db.Boolean)
+    taskEvent_done      = db.Column(db.Boolean)
     taskEvent_duration = db.Column(db.Integer)
     
     dueEvent_due = db.Column(db.DateTime)
@@ -107,6 +106,60 @@ class UserEvent(db.Model):
     
     def __repr__(self):
         return "<UserEvent: %r>" % self.name
+        
 
+
+
+def to_event(de):
+    return {
+                 "Event"          : to_normal_event
+                ,"RecurringEvent" : to_recurring_event
+                ,"SleepEvent"     : to_recurring_event
+                ,"TaskEvent"      : to_task_event
+                ,"DueEvent"       : to_due_event
+           }[de.type](de)
+
+def to_normal_event(de):
+    return event.Event(  
+                             name=de.name
+                            ,desc=de.desc
+                            ,priority=de.priority
+                            ,start=de.start
+                            ,end=de.end
+                      )
+
+def to_recurring_event(de):
+    return event.RecurringEvent(  
+                                     name=de.name
+                                    ,desc=de.desc
+                                    ,priority=de.priority
+                                    ,start_time=de.recEvent_start_time
+                                    ,end_time=de.recEvent_end_time
+                                    ,period_start=de.recEvent_period_start
+                                    ,period_end=de.recEvent_period_end
+                                    ,daystr=de.recEvent_daystr
+                                )
+
+def to_task_event(de):
+    return event.TaskEvent(
+                              name=     de.name    
+                            , desc=     de.desc    
+                            , priority= de.priority
+                            , done=     de.taskEvent_done    
+                            , duration= de.taskEvent_duration
+                           )
+
+
+
+def to_due_event(de):
+    return event.DueEvent(
+                             name=     de.name    
+                           , desc=     de.desc    
+                           , priority= de.priority
+                           , done=     de.taskEvent_done    
+                           , duration= de.taskEvent_duration
+                           , due=      de.dueEvent_due 
+                          )                       
+                          
 if __name__ == "__main__":
     init_db()

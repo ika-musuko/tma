@@ -3,7 +3,7 @@ from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
 from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
-from .models import init_db, User, UserEvent
+from .models import init_db, User, UserEvent, UserScheduleEvent, to_event
 from .scheduler import event, schedule
 import datetime
 
@@ -126,6 +126,7 @@ def add_event(event_type):
         print(formed_event)
         ftype = type(formed_event)
         # bad : (
+        # sorry for 4 layers of indirection....
         user_event = None
         if ftype == event.Event: 
             user_event =    UserEvent(
@@ -175,6 +176,7 @@ def add_event(event_type):
         if user_event is not None:  
             db.session.add(user_event)
             db.session.commit()
+            update_schedule_helper()
             flash("%s has been successfully added" % (formed_event.__class__.__name__))
         else:
             flash("Error in adding event")
@@ -185,16 +187,26 @@ def add_event(event_type):
 @app.route("/update_schedule/", methods=["GET", "POST"])
 @login_required
 def update_schedule():
-    # 1. make a list all events from the events table
+    update_schedule_helper()
+    flash("Schedule has been updated")
+    return redirect(url_for('index'))
     
+def update_schedule_helper():
+    # 1. make a list of all events from the events table
+    database_events = current_user.events.all()
+    events = [to_event(de) for de in database_events]
     
     # 2. write to a new schedule.Schedule object
+    sched = schedule.Schedule(events)
     
     # 3. wipe current user's schedule events from schedulevents table
+    current_user.scheduleevents.delete()
     
     # 4. write new events
-    
-    
+    for se in sched.schedule_event_data:
+        database_schedule_event = UserScheduleEvent(author=current_user, name=se.name, desc=se.desc, extra_info=se.extra_info, start=se.start, end=se.end)
+        db.session.add(database_schedule_event)
+
     # 5. commit database
     db.session.commit()
     
