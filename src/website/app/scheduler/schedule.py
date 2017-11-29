@@ -16,8 +16,8 @@ from . import canvas
 '''
 
 class Region:
-    DEFAULT_START = datetime.datetime(2017, 10, 1, 0, 0, 0)
-    DEFAULT_END = datetime.datetime(2018, 1, 1, 0, 0, 0)
+    DEFAULT_START = datetime.datetime.today()
+    DEFAULT_END = datetime.datetime.today()+datetime.timedelta(days=90)
     DEFAULT_DURATION = datetime.timedelta(hours=2)
     '''
     the start and end boundaries of a Schedule (for viewing)

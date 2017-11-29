@@ -17,9 +17,18 @@ def index(page=1):
     if current_user.is_authenticated: 
         # get the user's current events and display them here
         schedule_events = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).paginate(page, EVENTS_PER_PAGE, False)
+        #schedule_events = current_user.scheduleevents.paginate(page, EVENTS_PER_PAGE, False)
         return render_template('index.html', todolist=schedule_events)
     else:
         return render_template('index.html')
+
+### EDIT QUEUE PAGE ###
+@app.route('/edit_queue/', methods=['GET', 'POST'])
+@app.route('/edit_queue/<int:page>', methods=['GET', 'POST'])
+@login_required
+def edit_queue(page=1):
+    events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
+    return render_template('edit_queue.html',  event_queue=events)
 
 ### LOGIN PAGES ###
 # standard google login
@@ -124,55 +133,7 @@ def add_event(event_type):
     if form.validate_on_submit():
         formed_event = form_to_event(form)
         print(formed_event)
-        ftype = type(formed_event)
-        # bad : (
-        # sorry for 4 layers of indirection....
-        user_event = None
-        if ftype == event.Event: 
-            user_event =    UserEvent(
-                                         author=current_user
-                                        ,type="Event"
-                                        ,name=formed_event.name
-                                        ,desc=formed_event.desc
-                                        ,priority=formed_event.priority
-                                        ,start=formed_event.start
-                                        ,end=formed_event.end
-                                    )
-        elif ftype == event.RecurringEvent or ftype == event.SleepEvent:  
-            user_event =    UserEvent(
-                                         author=current_user
-                                        ,type="RecurringEvent" if ftype == event.RecurringEvent else "SleepEvent"
-                                        ,name=formed_event.name
-                                        ,desc=formed_event.desc
-                                        ,priority=formed_event.priority
-                                        ,recEvent_period_start=formed_event.period_start
-                                        ,recEvent_period_end=formed_event.period_end
-                                        ,recEvent_start_time=formed_event.start_time
-                                        ,recEvent_end_time=formed_event.end_time
-                                        ,recEvent_daystr=formed_event.days
-                                    )
-        elif ftype == event.TaskEvent:
-            user_event =     UserEvent(
-                                         author=current_user
-                                        ,type="TaskEvent"
-                                        ,name=formed_event.name
-                                        ,desc=formed_event.desc
-                                        ,priority=formed_event.priority
-                                        ,taskEvent_done=formed_event.done
-                                        ,taskEvent_duration=formed_event.duration
-                                    )
-        elif ftype == event.DueEvent: 
-            user_event =    UserEvent(
-                                         author=current_user
-                                        ,type="DueEvent"
-                                        ,name=formed_event.name
-                                        ,desc=formed_event.desc
-                                        ,priority=formed_event.priority
-                                        ,taskEvent_done=formed_event.done
-                                        ,taskEvent_duration=formed_event.duration
-                                        ,dueEvent_due=formed_event.due
-                                    )
-
+        user_event = event_to_userevent(formed_event)
         if user_event is not None:  
             db.session.add(user_event)
             db.session.commit()
@@ -182,7 +143,56 @@ def add_event(event_type):
             flash("Error in adding event")
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
-  
+
+def event_to_userevent(formed_event):
+    ftype = type(formed_event)
+    user_event = None
+    if ftype == event.Event: 
+        user_event =    UserEvent(
+                                     author=current_user
+                                    ,type="Event"
+                                    ,name=formed_event.name
+                                    ,desc=formed_event.desc
+                                    ,priority=formed_event.priority
+                                    ,start=formed_event.start
+                                    ,end=formed_event.end
+                                )
+    elif ftype == event.RecurringEvent or ftype == event.SleepEvent:  
+        user_event =    UserEvent(
+                                     author=current_user
+                                    ,type="RecurringEvent" if ftype == event.RecurringEvent else "SleepEvent"
+                                    ,name=formed_event.name
+                                    ,desc=formed_event.desc
+                                    ,priority=formed_event.priority
+                                    ,recEvent_period_start=formed_event.period_start
+                                    ,recEvent_period_end=formed_event.period_end
+                                    ,recEvent_start_time=formed_event.start_time
+                                    ,recEvent_end_time=formed_event.end_time
+                                    ,recEvent_daystr=formed_event.days
+                                )
+    elif ftype == event.TaskEvent:
+        user_event =     UserEvent(
+                                     author=current_user
+                                    ,type="TaskEvent"
+                                    ,name=formed_event.name
+                                    ,desc=formed_event.desc
+                                    ,priority=formed_event.priority
+                                    ,taskEvent_done=formed_event.done
+                                    ,taskEvent_duration=formed_event.duration
+                                )
+    elif ftype == event.DueEvent: 
+        user_event =    UserEvent(
+                                     author=current_user
+                                    ,type="DueEvent"
+                                    ,name=formed_event.name
+                                    ,desc=formed_event.desc
+                                    ,priority=formed_event.priority
+                                    ,taskEvent_done=formed_event.done
+                                    ,taskEvent_duration=formed_event.duration
+                                    ,dueEvent_due=formed_event.due
+                                )
+    return user_event
+
 ### UPDATE SCHEDULE ###  
 @app.route("/update_schedule/", methods=["GET", "POST"])
 @login_required
@@ -197,7 +207,7 @@ def update_schedule_helper():
     events = [to_event(de) for de in database_events]
     
     # 2. write to a new schedule.Schedule object
-    sched = schedule.Schedule(events)
+    sched = schedule.Schedule(events, start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(days=90))
     
     # 3. wipe current user's schedule events from schedulevents table
     current_user.scheduleevents.delete()
