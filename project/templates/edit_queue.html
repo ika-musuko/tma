@@ -31,24 +31,32 @@
     </center>
     
     <tbody data-link="row" class="rowlink">
-        {% for e in event_queue.items %}
+        {% for e, f in zip(event_queue, event_forms) %}
         <tr>
-            <td class="col">{{ e.name }}</td>
-            <td class="col">{{ e.desc }}</td>
+            {% if e.type != "SleepEvent" %}
+            <td class="col">{{ f.name }}</td>
+            <td class="col">{{ f.desc }}</td>
+            {% else %}
+            <td class="col">SLEEP</td>
+            <td class="col">SLEEP</td>
+            {% endif %}
             <td class="col">{{ e.type }}</td>
             {% if e.type == "Event" %}
-            <td class="col">{{ e.start }}</td>
-            <td class="col">{{ e.end }}</td>
-            {% elif e.type == "RecurringEvent" or e.type == "SleepEvent" %}
-            <td class="col">period start: {{ e.recEvent_period_start }}</td>
-            <td class="col">period end: {{ e.recEvent_period_end }}</td>
-            <td class="col">start time: {{ e.recEvent_start_time }}</td>
-            <td class="col">end time: {{ e.recEvent_end_time }}</td>
-            <td class="col">days of the week: {{ e.recEvent_daystr }}</td>
+            <td class="col">{{ f.start }}</td>
+            <td class="col">{{ f.end }}</td>
+            {% elif e.type == "RecurringEvent" %}
+            <td class="col">period start: {{ f.period_start }}</td>
+            <td class="col">period end: {{ f.period_end }}</td>
+            <td class="col">start time: {{ f.start_time }}</td>
+            <td class="col">end time: {{ f.end_time }}</td>
+            <td class="col">days of the week: {{ f.days }}</td>
+            {% elif e.type == "SleepEvent" %}
+            <td class="col">sleep: {{ f.sleep }}</td>
+            <td class="col">wake: {{ f.wake }}</td>
             {% elif e.type == "TaskEvent" or e.type == "DueEvent" %} 
-            <td class="col">duration: {{ e.taskEvent_duration }} minutes</td>
+            <td class="col">duration: {{ f.duration }} minutes</td>
             {% if e.type == "DueEvent" %}
-            <td class="col">due date: {{ dueEvent_due }}</td>     
+            <td class="col">due date: {{ f.due }}</td>     
             {% endif %}
             {% endif %}
         </tr> 

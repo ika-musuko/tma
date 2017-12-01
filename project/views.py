@@ -23,12 +23,18 @@ def index(page=1):
         return render_template('index.html')
 
 ### EDIT QUEUE PAGE ###
+
 @app.route('/edit_queue/', methods=['GET', 'POST'])
 @app.route('/edit_queue/<int:page>', methods=['GET', 'POST'])
 @login_required
 def edit_queue(page=1):
     events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
-    return render_template('edit_queue.html',  event_queue=events)
+    event_forms = []
+    # TODO: make everything into forms
+    for e in events.items:
+        #event_forms.append(formdict[type]
+        pass
+    return render_template('edit_queue.html', event_forms=event_forms, event_queue=events)
 
 ### LOGIN PAGES ###
 # standard google login
