@@ -9,10 +9,8 @@ Flask-WTF==0.14.2
 gunicorn==19.7.1
 httplib2==0.9.1
 Jinja2==2.10
-lazy-object-proxy==1.3.1
 oauthlib==1.0.3
 rauth==0.7.3
-reportlab==3.3.0
 requests==2.18.4
 sortedcontainers==1.5.7
 SQLAlchemy==1.1.15
@@ -21,9 +19,7 @@ sqlparse==0.2.4
 textmagic==2.0.3
 urllib3==1.22
 validators==0.12.0
-virtkey==0.63.0
 virtualenv==15.0.1
 Werkzeug==0.12.2
-wrapt==1.10.11
 WTForms==2.1
 WTForms-Components==0.10.3
