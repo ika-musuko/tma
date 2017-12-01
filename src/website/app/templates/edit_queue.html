@@ -5,13 +5,10 @@
 {% else %}
 <table class="table table-striped table-bordered">
     <thead>
-        {# <th class="table-success">Start</th>
-        <th class="table-danger" >End</th>
         <th class="table-primary"   >Name</th>
+        <th class="table-warning"   >Description</th>
         <th class="table-info">Type</th>
-        <th class="table-secondary"   >Description</th>
-        <th class="table-primary"   ></th>
-        <th class="table-danger"   ></th> #}
+        <th class="table-secondary">Extra</th>
     </thead>
     <center>
         <div class="row">
@@ -36,8 +33,24 @@
     <tbody data-link="row" class="rowlink">
         {% for e in event_queue.items %}
         <tr>
-            <td class="col-sm-3">{{ e.name }}</td>
-            <td class="col-sm-5">{{ e.desc }}</td>
+            <td class="col">{{ e.name }}</td>
+            <td class="col">{{ e.desc }}</td>
+            <td class="col">{{ e.type }}</td>
+            {% if e.type == "Event" %}
+            <td class="col">{{ e.start }}</td>
+            <td class="col">{{ e.end }}</td>
+            {% elif e.type == "RecurringEvent" or e.type == "SleepEvent" %}
+            <td class="col">period start: {{ e.recEvent_period_start }}</td>
+            <td class="col">period end: {{ e.recEvent_period_end }}</td>
+            <td class="col">start time: {{ e.recEvent_start_time }}</td>
+            <td class="col">end time: {{ e.recEvent_end_time }}</td>
+            <td class="col">days of the week: {{ e.recEvent_daystr }}</td>
+            {% elif e.type == "TaskEvent" or e.type == "DueEvent" %} 
+            <td class="col">duration: {{ e.taskEvent_duration }} minutes</td>
+            {% if e.type == "DueEvent" %}
+            <td class="col">due date: {{ dueEvent_due }}</td>     
+            {% endif %}
+            {% endif %}
         </tr> 
         {% endfor %}
     </tbody>
