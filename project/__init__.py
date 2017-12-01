@@ -55,7 +55,7 @@ if heroku_deploy is not None:
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
-    app.logger.setlevel(logging.INFO)
+    app.logger.setLevel(logging.INFO)
     app.logger.info('time management assistant STARTUP!')
 
 from . import views, models
