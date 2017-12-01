@@ -1,6 +1,6 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, BooleanField, SelectField, SelectMultipleField, widgets
+from wtforms import StringField, IntegerField, BooleanField, SelectField, SelectMultipleField
 #from wtforms.fields.html5 import DateField
 from wtforms.widgets.html5 import TimeInput
 from wtforms_components import TimeField
@@ -44,7 +44,6 @@ class EditForm(FlaskForm):
 from .datetimeform import TimeField
 from wtforms.ext.dateutil.fields import DateField, DateTimeField
 
-
 ### EVENT FORMS ###
 # for use in adding or editing an event
 ### the actual event forms
@@ -55,11 +54,6 @@ DUE_EVENT_PRIORITY = [('low', 89), ('normal', 79), ('high', 69)]
 def list_swapper(seq):
     # sorry : (
     return [(c[1], c[0]) for c in seq]
-
-
-class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
 
 class EventForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
@@ -74,7 +68,7 @@ class SleepScheduleForm(FlaskForm):
 class RecurringEventForm(FlaskForm): 
     name = StringField('name', validators=[DataRequired()])
     desc = StringField('desc')
-    days = MultiCheckboxField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
+    days = SelectMultipleField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
     period_start = DateField('period_start', validators=[Optional()])
     period_end = DateField('period_end', validators=[Optional()])
     start_time = TimeField('start_time', validators=[DataRequired()])

@@ -8,10 +8,8 @@
         <table>
             {% for field in form %}
             <tr>
-                {% if field.name != "csrf_token" %}
                 <td>{{ field.name }}</td>
                 <td>{{ field() }}</td>
-                {% endif %}
                 {% for error in field.errors %}
                 <td>
                     <span style="color: red;">[{{ error }}]</span>
