@@ -1,5 +1,5 @@
 # create the flask app object
-
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -32,7 +32,9 @@ CELLPHONE_PROVIDERS = {
         ,'Virgin Mobile': 'vmpix.com'
 }
 
-if not app.debug:
+heroku_deploy = os.environ.get('HEROKU')
+
+if not app.debug and heroku_deploy is None:
     import logging
     from logging.handlers import SMTPHandler, RotatingFileHandler
     credentials = None
@@ -48,6 +50,13 @@ if not app.debug:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('time management')  
+
+if heroku_deploy is not None:
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    app.logger.setlevel(logging.INFO)
+    app.logger.info('time management assistant STARTUP!')
 
 from . import views, models
 db.create_all()
