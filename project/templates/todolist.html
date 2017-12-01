@@ -16,14 +16,14 @@
            
             <div class="col-sm">
                 {% if todolist.has_prev %}
-                    <a class=" btn btn-danger btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.prev_num) }}">&lt;&lt; go back in time</a>
+                    <a class=" btn btn-danger btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.prev_num) }}">←go back in time</a>
                 {% else %}
                 <div>you're at the beginning of time!</div>
                 {% endif %}
             </div>  
             <div class="col-sm">
                 {% if todolist.has_next %}
-                    <a class="btn btn-primary btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.next_num) }}">travel to the future &gt;&gt;</a>
+                    <a class="btn btn-primary btn-space btn-block" role="button" href="{{ url_for('index', page=todolist.next_num) }}">travel to the future→</a>
                 {% else %}
                     <div>we're not that good at predicting the future...</div>
                 {% endif %}
@@ -31,7 +31,7 @@
         </div>
     </center>
     
-    <tbody data-link="row" class="rowlink">
+    <tbody data-link="row">
         {% for e in todolist.items %}
         <tr>
             <td class="col-sm-1 text-success">{{ e.start.replace(microsecond=0).replace(second=0) }}</td>

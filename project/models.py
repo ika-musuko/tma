@@ -62,7 +62,7 @@ class User(UserMixin, db.Model):
     
     
     def __repr__(self):
-        return "<User: %r>" % self.email
+        return "<User - id: %r email: %r>" % (self.id, self.email)
  
 class UserScheduleEvent(db.Model):
     __tablename__ = 'scheduleevents'

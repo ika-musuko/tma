@@ -22,6 +22,11 @@ def index(page=1):
     else:
         return render_template('index.html')
 
+### HELP PAGE ###
+@app.route('/help/')
+def help():
+    return render_template('help.html')
+        
 ### EDIT QUEUE PAGE ###
 
 @app.route('/edit_queue/', methods=['GET', 'POST'])
@@ -36,6 +41,19 @@ def edit_queue(page=1):
         pass
     return render_template('edit_queue.html', event_forms=event_forms, event_queue=events)
 
+### EDIT EVENT PAGE ###
+@app.route('/edit_event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_event(id):
+    pass
+    #user_event = current_user.events.filter_by(id=id)
+    
+### DELETE EVENT PAGE ###
+@app.route('/delete_event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_event(id):
+    pass
+    
 ### LOGIN PAGES ###
 # standard google login
 @app.route('/login')
