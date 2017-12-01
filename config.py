@@ -17,9 +17,17 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 ### GOOGLE CONFIG ###
 # dynamically load google authorization from file
-with open("gconf.keys", "r") as gconf:
-    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET = gconf.read().splitlines()
-    
+
+
+#with open("gconf.keys", "r") as gconf:
+#    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET = gconf.read().splitlines()
+
+# no local file storage on heroku : ( hardcoded lol pls don't look
+
+
+GOOGLE_CLIENT_ID = "302888478518-1306kq0h1cv540fma6tqc3pafk9bhbdh.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "Jq3Kmr8by4CifX_xVhK6O6fn"
+
 #print("GOOGLE CRAP %s\n%s" % (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET))
 
 ### OAUTH CONFIG ###
