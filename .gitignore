@@ -3,3 +3,4 @@
 *.keys
 *.swp
 *.swn
+__pycache__
