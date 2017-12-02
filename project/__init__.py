@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin
+from flask_heroku import Heroku
 
 app = Flask(__name__)
 app.config.from_pyfile('../config.py')
@@ -32,11 +33,13 @@ CELLPHONE_PROVIDERS = {
         ,'Virgin Mobile': 'vmpix.com'
 }
 
+
 heroku_deploy = os.environ.get('HEROKU')
 
 if not app.debug and heroku_deploy is None:
     import logging
     from logging.handlers import SMTPHandler, RotatingFileHandler
+    heroku = Heroku(app)
     credentials = None
     # if MAIL_USERNAME or MAIL_PASSWORD:
         # credentials = (MAIL_USERNAME, MAIL_PASSWORD)

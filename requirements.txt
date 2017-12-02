@@ -24,3 +24,4 @@ Werkzeug==0.12.2
 WTForms==2.1
 WTForms-Components==0.10.3
 psycopg2==2.7.3.2
+flask-heroku==0.1.9
