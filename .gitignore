@@ -1,9 +1,7 @@
-*.db
 *.pyc
 *.keys
 *.swp
 *.swn
 *.swo
 __pycache__
-migrations
 .idea
