@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Edit Schedule Event: {{ id }}</h1>
+<form action="" method="post" name="edit" class="editform">
+    {{form.hidden_tag()}}
+    <div class="row">
+    <div class="form-group rounded border-0">
+        <table>
+            {% for field in form %}
+            <tr>
+                <td>{{ field.name }}</td>
+                <td>{{ field() }}</td>
+                {% for error in field.errors %}
+                <td>
+                    <span style="color: red;">[{{ error }}]</span>
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <td><input type="submit" value="Add Event"></td>
+            </tr>
+        </table>
+   </div>
+</form>
+{% endblock %}
