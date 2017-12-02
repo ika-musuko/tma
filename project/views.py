@@ -325,6 +325,7 @@ def edit_schedule_event(id):
         event_query.desc  = form.desc.data 
         event_query.start = form.start.data
         event_query.end   = form.end.data  
+        db.session.add(event_query)
         db.session.commit()
         flash('Schedule Event ID: %i has been edited' % id)
         return redirect(url_for('index'))
