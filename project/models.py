@@ -17,6 +17,8 @@ class User(UserMixin, db.Model):
     email    = db.Column(db.String(256), nullable=False, unique=True)
     phone    = db.Column(db.String(256), nullable=True,index=True, unique=False)
     cellphone_provider = db.Column(db.String(256), nullable=True, index=True, unique=False)
+    reminder_frequency = db.Column(db.Time, nullable=True, index=True, unique=False)
+    last_reminder = db.Column(db.DateTime, nullable=True, index=True, unique=False)
     events  = db.relationship('UserEvent', backref='author', lazy='dynamic')
     scheduleevents = db.relationship('UserScheduleEvent', backref='author', lazy='dynamic')
     
@@ -99,10 +101,10 @@ class UserEvent(db.Model):
     assignmentEvent_coursename = db.Column(db.String(64), nullable=True, unique=False)
     
     recEvent_period_start = db.Column(db.DateTime)
-    recEvent_period_end = db.Column(db.DateTime)
-    recEvent_start_time = db.Column(db.Time)
-    recEvent_end_time = db.Column(db.Time)
-    recEvent_daystr = db.Column(db.String(64), nullable=True, unique=False)
+    recEvent_period_end   = db.Column(db.DateTime)
+    recEvent_start_time   = db.Column(db.Time)
+    recEvent_end_time     = db.Column(db.Time)
+    recEvent_daystr       = db.Column(db.String(64), nullable=True, unique=False)
     
     def __repr__(self):
         return "<UserEvent: %r>" % self.name

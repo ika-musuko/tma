@@ -1,12 +1,14 @@
 import datetime
+from .datetimeform import TimeField
+from wtforms.ext.dateutil.fields import DateField, DateTimeField
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, BooleanField, SelectField, SelectMultipleField
+from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, SelectMultipleField
 #from wtforms.fields.html5 import DateField
 from wtforms.widgets.html5 import TimeInput
 from wtforms_components import TimeField
 from wtforms.validators import DataRequired, Length, Optional
 from . import CELLPHONE_PROVIDERS
-from .models import User
+from .models import User, UserEvent, UserScheduleEvent
 from .scheduler import event, schedule
 
 def if_filled(data, userthing):
@@ -20,6 +22,7 @@ class EditForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])    
     phone = StringField('phone', validators=[DataRequired()])    
     cellphone_provider = SelectField(label="Choose a provider", choices=[(k, k) for k in sorted(CELLPHONE_PROVIDERS.keys())])
+    #reminder_frequency = IntegerField('Reminder frequency (in days) (0 for off)', validators=[Optional()])
 
     def __init__(self, original_nickname, *args, **kwargs):
         FlaskForm.__init__(self, *args, **kwargs)
@@ -27,26 +30,13 @@ class EditForm(FlaskForm):
         
     def validate(self):
         return True
-        # if not FlaskForm.validate(self):
-            # return False
-        # if self.nickname.data == self.original_nickname:
-            # return True
-        # user = User.query.filter_by(nickname=self.nickname.data).first()
-        # print("NAME CHANGE DATA:::: %s" % user)
-        # if user is not None:
-            # self.nickname.errors.append("this nickname already exists! change it...")
-            # return False
-        # return True
 
-
-### DATETIME FIELDS ###
-# adapted from https://gist.github.com/tachyondecay/6016d32f65a996d0d94f#file-datetimeform-py-L2
-from .datetimeform import TimeField
-from wtforms.ext.dateutil.fields import DateField, DateTimeField
-
+        
+        
+        
 ### EVENT FORMS ###
 # for use in adding or editing an event
-### the actual event forms
+
 DAYS_OF_THE_WEEK = [('Sun','N'), ('Mon', 'M'), ('Tue', 'T'), ('Wed', 'W'), ('Thu', 'H'), ('Fri', 'F'), ('Sat', 'S')]
 EVENT_PRIORITY = [('low', 2), ('normal', 1), ('high', 0)]
 TASK_EVENT_PRIORITY = [('low', 189), ('normal', 179), ('high', 169)]
@@ -55,35 +45,76 @@ def list_swapper(seq):
     # sorry : (
     return [(c[1], c[0]) for c in seq]
 
+def edit_form_with_args(e: UserEvent):       
+    if e.type == "RecurringEvent": 
+        return RecurringEventForm(
+                name          =e.name   
+               ,desc          =e.desc   
+                
+               ,period_start  =e.recEvent_period_start
+               ,period_end    =e.recEvent_period_end  
+               ,start_time    =e.recEvent_start_time  
+               ,end_time      =e.recEvent_end_time    
+               ,days          =e.recEvent_daystr      
+               )
+   
+    elif e.type == "SleepEvent":        
+        return SleepScheduleForm(
+                     sleep    =e.recEvent_start_time
+                    ,wake     =e.recEvent_end_time
+                    )
+                    
+    elif e.type == "TaskEvent":         
+        return TaskEventForm(
+                     name     =e.name
+                    ,desc     =e.desc
+                    ,duration =e.taskEvent_duration
+                    ,done     =e.taskEvent_done
+                    )
+    elif e.type == "DueEvent":          
+        return TaskEventForm(
+                     name     =e.name
+                    ,desc     =e.desc
+                    ,due      =e.dueEvent_due
+                    ,duration =e.taskEvent_duration
+                    ,done     =e.taskEvent_done
+                    )
+                    
+    return EventForm(
+                     name     =e.name
+                    ,desc     =e.desc
+                    ,start    =e.start
+                    ,end      =e.end
+                    )
+        
+
+## the actual event forms    
 class EventForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    desc = StringField('desc')
-    start = DateTimeField('start')
-    end = DateTimeField('end', validators=[Optional()])
+    name = StringField('Name', validators=[DataRequired()])
+    desc = TextAreaField('Description')
+    start = DateTimeField('Start Date/Time')
+    end = DateTimeField('End Date/Time', validators=[Optional()])
 
 class SleepScheduleForm(FlaskForm):
-    sleep = TimeField('sleep', validators=[DataRequired()])
-    wake = TimeField('wake', validators=[DataRequired()])
+    sleep = TimeField('Sleep Time', validators=[DataRequired()])
+    wake = TimeField('Wake Time', validators=[DataRequired()])
 
 class RecurringEventForm(FlaskForm): 
-    name = StringField('name', validators=[DataRequired()])
-    desc = StringField('desc')
-    days = SelectMultipleField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
-    period_start = DateField('period_start', validators=[Optional()])
-    period_end = DateField('period_end', validators=[Optional()])
-    start_time = TimeField('start_time', validators=[DataRequired()])
-    end_time = TimeField('end_time', validators=[DataRequired()])
+    name         = StringField('Name', validators=[DataRequired()])
+    desc         = TextAreaField('Description')
+    days         = SelectMultipleField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
+    period_start = DateField('Generate From Date', validators=[Optional()])
+    period_end   = DateField('Generate To Date', validators=[Optional()])
+    start_time   = TimeField('Start Time', validators=[DataRequired()])
+    end_time     = TimeField('End Time', validators=[DataRequired()])
 
 class TaskEventForm(FlaskForm):
     # for use with task or due events
-    name = StringField('name', validators=[DataRequired()])
-    desc = StringField('desc')
-    due = DateTimeField('due', validators=[Optional()]) # optional, for DueEvents
+    name = StringField('Name', validators=[DataRequired()])
+    desc = TextAreaField('Description')
+    due = DateTimeField('Due Date/Time', validators=[Optional()]) # optional, for DueEvents
+    duration = IntegerField('Time', validators=[Optional()])
     finished = BooleanField('finished')
-    duration = IntegerField('time', validators=[Optional()])
-
-### DELETE EVENT FORM ###
-# todo
 
 def isblank(thing):
     return thing == "" or thing is None
@@ -131,14 +162,27 @@ def task_form_conv(form: TaskEventForm) -> "event.TaskEvent or event.DueEvent":
         return event.TaskEvent(
                           name     = form.name.data
                         , desc     = form.desc.data
-                        , done     = form.finished.data
                         , duration = form.duration.data
+                        , done = form.finished.data
                     ) 
     return event.DueEvent (
                           due      = form.due.data
                         , name     = form.name.data
                         , desc     = form.desc.data
-                        , done     = form.finished.data
                         , duration = form.duration.data
+                        , done = form.finished.data
                     )
-    
+ 
+# dynamic type abuse 
+formdict = {
+        'regular'   : EventForm 
+       ,'sleep'     : SleepScheduleForm  
+       ,'recurring' : RecurringEventForm
+       ,'task'      : TaskEventForm
+       
+       ,event.Event           : EventForm 
+       ,event.SleepEvent      : SleepScheduleForm 
+       ,event.RecurringEvent  : RecurringEventForm
+       ,event.TaskEvent       : TaskEventForm
+       ,event.DueEvent        : TaskEventForm
+}

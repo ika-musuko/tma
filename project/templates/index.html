@@ -2,23 +2,25 @@
 {% block content %}
     {% if current_user.is_authenticated %}
         <div class="row">
-            <div class="col-sm-2 rounded">
+            <div class="col-sm-3 rounded">
                 <div class="container-fluid">
                 <nav class="hidden-xs-down bg-faded sidebar">
-                    <ul class="nav nav-pills nav-stacked flex-column">
-                        <li class="nav-item"><p><a class="btn btn-lg btn-danger btn-block" href="{{ url_for('update_schedule') }}" role="button">Update Schedule</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-success btn-block" href="{{ url_for('add_event', event_type='regular') }}" role="button">Add Event &raquo;</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-primary btn-block" href="{{ url_for('add_event', event_type='recurring') }}" role="button">Add Recurring Event &raquo;</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-primary btn-block" href="{{ url_for('add_event', event_type='task') }}" role="button">Add Task Event &raquo;</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-sample btn-block" href="{{ url_for('add_event', event_type='sleep') }}" role="button">Sleep Schedule &raquo;</a></p></li>   
-                        <li class="nav-item"><p><a class="btn btn-info btn-block" href="{{ url_for('edit_queue') }} " role="button">Edit Queue &raquo;</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-warning btn-block" href="#" role="button">Edit Global Region &raquo;</a></p></li>
-                        <li class="nav-item"><p><a class="btn btn-secondary btn-block" href="#" role="button">Send Reminders &raquo;</a></p></li>
-                    </ul>
+                    <div>
+                        <a class="btn btn-lg btn-danger btn-block" href="{{ url_for('update_schedule') }}" role="button">Update Schedule</a>
+                        <hr/>
+                        <a class="btn btn-xs btn-success btn-block" href="{{ url_for('add_event', event_type='regular') }}"   role="button">Add Event &raquo;</a></p>
+                        <a class="btn btn-xs btn-primary btn-block" href="{{ url_for('add_event', event_type='recurring') }}" role="button">Add Recurring Event &raquo;
+                        <a class="btn btn-xs btn-primary btn-block" href="{{ url_for('add_event', event_type='task') }}"      role="button">Add Task Event &raquo;</a></p>
+                        <a class="btn btn-xs btn-sample  btn-block" href="{{ url_for('add_event', event_type='sleep') }}"     role="button">Sleep Schedule &raquo;</a></p>
+                        <hr/>
+                        <a class="btn btn-info btn-block" href="{{ url_for('edit_queue') }} " role="button">Edit Queue &raquo;</a></p>
+{#                      <a class="btn btn-warning btn-block" href="#" role="button">Edit Global Region &raquo;</a></p> #}
+                        <a class="btn btn-secondary btn-block" href="#" role="button">Send Reminders &raquo;</a></p>
+                    </div>
                 </nav>
                 </div>
             </div>
-            <div class="col-sm-1"></div>
+
             <main class="col-sm-9 wrapper">
                 <div class="container-fluid">
                     <script type="text/javascript">

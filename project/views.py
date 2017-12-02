@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session, make_respo
 from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
-from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled
+from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled, formdict, edit_form_with_args
 from .models import init_db, User, UserEvent, UserScheduleEvent, to_event
 from .scheduler import event, schedule
 import datetime
@@ -26,34 +26,7 @@ def index(page=1):
 @app.route('/help/')
 def help():
     return render_template('help.html')
-        
-### EDIT QUEUE PAGE ###
-
-@app.route('/edit_queue/', methods=['GET', 'POST'])
-@app.route('/edit_queue/<int:page>', methods=['GET', 'POST'])
-@login_required
-def edit_queue(page=1):
-    events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
-    event_forms = []
-    # TODO: make everything into forms
-    for e in events.items:
-        #event_forms.append(formdict[type]
-        pass
-    return render_template('edit_queue.html', event_forms=event_forms, event_queue=events)
-
-### EDIT EVENT PAGE ###
-@app.route('/edit_event/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_event(id):
-    pass
-    #user_event = current_user.events.filter_by(id=id)
-    
-### DELETE EVENT PAGE ###
-@app.route('/delete_event/<int:id>', methods=['GET', 'POST'])
-@login_required
-def delete_event(id):
-    pass
-    
+ 
 ### LOGIN PAGES ###
 # standard google login
 @app.route('/login')
@@ -122,12 +95,13 @@ def load_user(id):
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
-    form = EditForm(current_user.nickname)
+    form = EditForm(nickname=current_user.nickname, reminder_frequency=current_user.reminder_frequency)
     if form.validate_on_submit():
         current_user.nickname           = if_filled(form.nickname.data, current_user.nickname)
         current_user.email              = if_filled(form.email.data, current_user.email)
         current_user.phone              = if_filled(''.join(c for c in form.phone.data if c.isdigit()), current_user.phone)
         current_user.cellphone_provider = if_filled(form.cellphone_provider.data, current_user.cellphone_provider)
+        #current_user.reminder_frequency = if_filled(form.reminder_frequency, current_user.reminder_frequency)
         db.session.add(current_user)
         db.session.commit()
         flash("Your settings have been updated.")
@@ -147,12 +121,6 @@ def add_selector():
 @app.route("/add_event/<event_type>", methods=["GET", "POST"])
 @login_required
 def add_event(event_type):
-    formdict = {
-            'regular'   : EventForm 
-           ,'sleep'     : SleepScheduleForm  # sleep should redirect to editing the sleep schedule but for now it is left here
-           ,'recurring' : RecurringEventForm
-           ,'task'      : TaskEventForm
-    }
     form = formdict[event_type]()
     if form.validate_on_submit():
         formed_event = form_to_event(form)
@@ -168,6 +136,82 @@ def add_event(event_type):
         return redirect(url_for('index'))
     return render_template('add_event.html', event_type=event_type, form_type=formdict[event_type], form=form)
 
+### EDIT QUEUE PAGE ###
+@app.route('/edit_queue/', methods=['GET', 'POST'])
+@app.route('/edit_queue/<int:page>', methods=['GET', 'POST'])
+@login_required
+def edit_queue(page=1):
+    events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
+    return render_template('edit_queue.html', event_queue=events)
+
+### EDIT EVENT PAGE ###
+@app.route('/edit_event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_event(id):
+    event_query = current_user.events.filter_by(id=id).first()
+    if event_query == None:
+        flash('Event ID: %i was not found' % id)
+        return redirect(url_for('edit_queue'))
+    form = edit_form_with_args(event_query)
+    if form.validate_on_submit():
+        if event_query.type == "RecurringEvent": 
+            event_query.name                   = form.name.data                                      
+            event_query.desc                   = form.desc.data                 
+            event_query.recEvent_period_start  = form.period_start.data
+            event_query.recEvent_period_end    = form.period_end.data  
+            event_query.recEvent_start_time    = form.start_time.data  
+            event_query.recEvent_end_time      = form.end_time.data    
+            event_query.recEvent_daystr        = form.days.data 
+        
+        elif event_query.type == "SleepEvent":
+            event_query.recEvent_start_time    = form.sleep.data
+            event_query.recEvent_end_time      = form.wake.data
+        
+        elif event_query.type == "TaskEvent":
+            event_query.name                  = form.name.data    
+            event_query.desc                  = form.desc.data    
+            event_query.taskEvent_duration    = form.duration.data
+            event_query.taskEvent_done        = form.done.data    
+            
+        elif event_query.type == "DueEvent":
+            event_query.name                  = form.name.data    
+            event_query.desc                  = form.desc.data    
+            event_query.dueEvent_due          = form.due.data     
+            event_query.taskEvent_duration    = form.duration.data
+            event_query.taskEvent_done        = form.done.data    
+            
+        else:
+            event_query.name     = form.name.data  
+            event_query.desc     = form.desc.data  
+            event_query.start    = form.start.data 
+            event_query.end      = form.end.data   
+        
+        db.session.commit()
+        update_schedule_helper()
+        flash("%s: %i has been successfully edited" % (event_query.type, event_query.id))
+        return redirect(url_for('edit_queue'))
+    return render_template("edit_event.html", form=form, id=id)
+        
+        
+### RESCHEDULE TASK ###
+@app.route('/reschedule_task/<int:id>', methods=['GET','POST'])
+@login_required
+def reschedule_task(id):
+    pass
+    
+### DELETE EVENT ###
+@app.route('/delete_event/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_event(id):
+    query = current_user.events.filter_by(id=id)
+    if query.first() == None:
+        flash('Event ID: %i was not found' % id)
+        return redirect(url_for('edit_queue'))
+    query.delete()
+    db.session.commit()
+    flash('Event ID: %i has been deleted' % id)
+    return redirect(url_for('edit_queue'))    
+    
 def event_to_userevent(formed_event):
     ftype = type(formed_event)
     user_event = None

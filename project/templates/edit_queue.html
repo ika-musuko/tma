@@ -25,9 +25,10 @@
         <th class="table-success"   >Name</th>
         <th class="table-primary"   >Description</th>
         <th class="table-info"      >Type</th>
+         <th class="table-secondary">Extra</th>
         <th class="table-warning"   ></th>
         <th class="table-danger"   ></th>
-{#         <th class="table-secondary">Extra</th> #}
+
     </thead>
 
 
@@ -41,7 +42,7 @@
             <td class="col">{{ e.type }}</td>
             <td class="col-sm"><a href="{{ url_for('edit_event', id=e.id) }}" class="btn btn-sm btn-warning" role="button">Edit</a></td>
             <td class="col-sm"><a href="{{ url_for('delete_event', id=e.id) }}" class="btn btn-sm btn-danger" role="button">Delete</a></td>
-{#            {% if e.type == "Event" %}
+          {% if e.type == "Event" %}
             <td class="col">{{ e.start }}</td>
             <td class="col">{{ e.end }}</td>
             {% elif e.type == "RecurringEvent" or e.type == "SleepEvent" %}
@@ -50,12 +51,13 @@
             <td class="col">start time: {{ e.recEvent_start_time }}</td>
             <td class="col">end time: {{ e.recEvent_end_time }}</td>
             <td class="col">days of the week: {{ e.recEvent_daystr }}</td>
-            {% elif e.type == "TaskEvent" or e.type == "DueEvent" %} 
+            {% elif e.type == "TaskEvent" or e.type == "DueEvent" %}  
+            <td class="col-sm"><a href="{{ url_for('reschedule_task', id=e.id) }}" class="btn btn-sm btn-info" role="button">↻Reschedule</a></td>
             <td class="col">duration: {{ e.taskEvent_duration }} minutes</td>
             {% if e.type == "DueEvent" %}
             <td class="col">due date: {{ dueEvent_due }}</td>     
             {% endif %}
-            {% endif %} #}
+            {% endif %}
         </tr> 
         {% endfor %}
     </tbody>
