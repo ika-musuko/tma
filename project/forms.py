@@ -89,11 +89,12 @@ def edit_form_with_args(e: UserEvent):
         
 
 ## the actual event forms    
+
 class EventForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    desc = TextAreaField('Description')
+    name  = StringField('Name', validators=[DataRequired()])
+    desc  = TextAreaField('Description')
     start = DateTimeField('Start Date/Time')
-    end = DateTimeField('End Date/Time', validators=[Optional()])
+    end   = DateTimeField('End Date/Time', validators=[Optional()])
 
 class SleepScheduleForm(FlaskForm):
     sleep = TimeField('Sleep Time', validators=[DataRequired()])

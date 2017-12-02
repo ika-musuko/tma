@@ -211,7 +211,8 @@ def delete_event(id):
     db.session.commit()
     flash('Event ID: %i has been deleted' % id)
     return redirect(url_for('edit_queue'))    
-    
+
+## misc    
 def event_to_userevent(formed_event):
     ftype = type(formed_event)
     user_event = None
@@ -292,17 +293,42 @@ def update_schedule_helper():
 TEST_EVENT = schedule.ScheduleEvent(start=datetime.datetime.today(), end=datetime.datetime.today()+datetime.timedelta(hours=2), name="test event", desc="description lol", extra_info="extra info!", parent_id=1)    
 
 ### DELETE SCHEDULE EVENT ###   
-@app.route("/delete_schedule_event/<id>", methods=["GET", "POST"])
+@app.route("/delete_schedule_event/<int:id>", methods=["GET", "POST"])
 @login_required 
 def delete_schedule_event(id):
-    pass
+    query = current_user.scheduleevents.filter_by(id=id)
+    if query.first() == None:
+        flash('Schedule Event ID: %i was not found' % id)
+        return redirect(url_for('index'))
+        
+    query.delete()
+    db.session.commit()
+    flash('Schedule Event ID: %i has been deleted' % id)
+    return redirect(url_for('index'))    
 
 ### EDIT SCHEDULE EVENT PAGE ###   
-@app.route("/edit_schedule_event/<id>", methods=["GET", "POST"])
+@app.route("/edit_schedule_event/<int:id>", methods=["GET", "POST"])
 @login_required 
 def edit_schedule_event(id):
-    editthis = TEST_EVENT
-    return render_template("edit_schedule_event", e=editthis)
+    event_query = current_user.scheduleevents.filter_by(id=id).first()
+    if event_query == None:
+        flash('ScheduleEvent ID: %i was not found' % id)
+        return redirect(url_for('index'))
+    form = EventForm(
+                      name   = event_query.name    
+                     ,desc   = event_query.desc 
+                     ,start  = event_query.start
+                     ,end    = event_query.end  
+                    )
+    if form.validate_on_submit():
+        event_query.name  = form.name.data 
+        event_query.desc  = form.desc.data 
+        event_query.start = form.start.data
+        event_query.end   = form.end.data  
+        db.session.commit()
+        flash('Schedule Event ID: %i has been edited' % id)
+        return redirect(url_for('index'))
+    return render_template("edit_schedule_event.html", id=event_query.id, form=form)
 
 ### ERROR PAGES  
 @app.errorhandler(404)

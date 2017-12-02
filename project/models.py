@@ -60,9 +60,7 @@ class User(UserMixin, db.Model):
                 break
             version += 1
         return new_nickname
-    
-    
-    
+
     def __repr__(self):
         return "<User - id: %r email: %r>" % (self.id, self.email)
  

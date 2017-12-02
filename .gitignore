@@ -2,6 +2,7 @@
 *.keys
 *.swp
 *.swn
+*.db
 *.swo
 __pycache__
 .idea
