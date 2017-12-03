@@ -52,6 +52,7 @@ def weeklydays(start: datetime.date, end: datetime.date=None, dayofweek: str="")
         weeklydays(r, "T") -> generates every Tuesday in r 
     '''
     current_date = start
+    print("weeklydays day of week:::: %s" % dayofweek)
     next_day_increment = ({d: i for i, d in enumerate("MTWHFSN")}[dayofweek] - start.weekday()) % 7
     current_date += datetime.timedelta(days=next_day_increment) # go to the next day that matches dayofweek
     if end is None:
