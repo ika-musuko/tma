@@ -24,10 +24,12 @@ class EditForm(FlaskForm):
     cellphone_provider = SelectField(label="Choose a provider", choices=[(k, k) for k in sorted(CELLPHONE_PROVIDERS.keys())])
     #reminder_frequency = IntegerField('Reminder frequency (in days) (0 for off)', validators=[Optional()])
 
+    '''
     def __init__(self, original_nickname, *args, **kwargs):
         FlaskForm.__init__(self, *args, **kwargs)
         self.original_nickname = original_nickname
         
+    '''
     def validate(self):
         return True
 
