@@ -1,14 +1,12 @@
 import datetime
-from .datetimeform import TimeField
-from wtforms.ext.dateutil.fields import DateField, DateTimeField
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, SelectMultipleField
+from wtforms import StringField, TextAreaField, DateTimeField, DateField, IntegerField, BooleanField, SelectField, SelectMultipleField, widgets
 #from wtforms.fields.html5 import DateField
 from wtforms.widgets.html5 import TimeInput
 from wtforms_components import TimeField
 from wtforms.validators import DataRequired, Length, Optional
 from . import CELLPHONE_PROVIDERS
-from .models import User, UserEvent, UserScheduleEvent
+from .models import User, UserScheduleEvent, UserEvent
 from .scheduler import event, schedule
 
 def if_filled(data, userthing):
@@ -33,8 +31,10 @@ class EditForm(FlaskForm):
     def validate(self):
         return True
 
-        
-        
+### MULTICHECKBOX FIELD ###        
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
         
 ### EVENT FORMS ###
 # for use in adding or editing an event
@@ -90,8 +90,9 @@ def edit_form_with_args(e: UserEvent):
                     )
         
 
-## the actual event forms    
 
+
+## the actual event forms    
 class EventForm(FlaskForm):
     name  = StringField('Name', validators=[DataRequired()])
     desc  = TextAreaField('Description')
@@ -105,7 +106,7 @@ class SleepScheduleForm(FlaskForm):
 class RecurringEventForm(FlaskForm): 
     name         = StringField('Name', validators=[DataRequired()])
     desc         = TextAreaField('Description')
-    days         = SelectMultipleField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
+    days = MultiCheckboxField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
     period_start = DateField('Generate From Date', validators=[Optional()])
     period_end   = DateField('Generate To Date', validators=[Optional()])
     start_time   = TimeField('Start Time', validators=[DataRequired()])

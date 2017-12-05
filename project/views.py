@@ -2,9 +2,9 @@ from flask import render_template, flash, redirect, url_for, session, make_respo
 from . import app, db, login_manager
 from flask_login import login_user, logout_user, current_user, login_required
 from .auth import OAuthSignIn
-from .forms import form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled, formdict, edit_form_with_args
+from .forms import isblank, form_to_event, EditForm, EventForm, SleepScheduleForm, RecurringEventForm, TaskEventForm, if_filled, formdict, edit_form_with_args
 from .models import init_db, User, UserEvent, UserScheduleEvent, to_event
-from .scheduler import event, schedule
+from .scheduler import event, schedule, txt
 import datetime
 
 EVENTS_PER_PAGE = 10
@@ -330,6 +330,23 @@ def edit_schedule_event(id):
         flash('Schedule Event ID: %i has been edited' % id)
         return redirect(url_for('index'))
     return render_template("edit_schedule_event.html", id=event_query.id, form=form)
+
+
+@app.route("/send_reminders/", methods=["GET","POST"])
+@login_required
+def send_reminders():
+    '''
+    sends an email or text message (via multimedia message) of the schedule in a more abbreviated way
+    '''
+    getactual = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).limit(10).all()
+    event_list = [se.msg_print for se in getactual]
+    message = "Schedule:\n\n"+'\n'.join(event_list)
+    if not isblank(current_user.txt_address):
+        txt.send_email(message, current_user.txt_address)
+    if not isblank(current_user.email):
+        txt.send_email(message, current_user.email)
+    flash("Reminders sent!")
+    return redirect(url_for('index'))
 
 ### ERROR PAGES  
 @app.errorhandler(404)

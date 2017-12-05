@@ -1,8 +1,18 @@
-from .scheduler import event, schedule
+from .scheduler import event, schedule, util
 import datetime
 
-from . import db
+from . import db, CELLPHONE_PROVIDERS
 from flask_login import UserMixin
+
+DAY_NAMES = {
+        0 : "Monday",
+        1 : "Tuesday",
+        2 : "Wednesday",
+        3 : "Thursday",
+        4 : "Friday",
+        5 : "Saturday",
+        6 : "Sunday"
+}
 
 def init_db():
     db.create_all()
@@ -30,6 +40,13 @@ class User(UserMixin, db.Model):
         return [TEST_EVENT, TEST_EVENT_2]
 
     ### user property methods ###
+    @property
+    def txt_address(self):
+        print(self.cellphone_provider)
+        mailstring = "%s@%s" % (self.phone, CELLPHONE_PROVIDERS[self.cellphone_provider])
+        print(mailstring)
+        return mailstring
+
     # return True unless there is some reason the user should not be authenticated
     @property
     def is_authenticated(self):
@@ -73,6 +90,12 @@ class UserScheduleEvent(db.Model):
     extra_info = db.Column(db.String(1024), nullable=True, index=True, unique=False)
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
+
+    @property
+    def msg_print(self): 
+        today = datetime.datetime.now()
+        dow = "Today" if self.start.weekday() == today.weekday() else "Tomorrow" if (self.start.weekday() - today.weekday())%7 == 1 else DAY_NAMES[self.start.weekday()]
+        return "{name}\n{dow}\nstart: {start}\nend: {end}\n".format(name=self.name, dow=dow, start=util.hm(self.start), end=util.hm(self.end))
  
 class UserEvent(db.Model):
     '''
