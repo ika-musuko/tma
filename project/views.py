@@ -341,11 +341,15 @@ def send_reminders():
     getactual = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).limit(10).all()
     event_list = [se.msg_print for se in getactual]
     message = "Schedule:\n\n"+'\n'.join(event_list)
-    if not isblank(current_user.txt_address):
+    status = ""
+    if not (isblank(current_user.cellphone_provider) or isblank(current_user.phone)):
         txt.send_email(message, current_user.txt_address)
+        status += "Phone"
     if not isblank(current_user.email):
         txt.send_email(message, current_user.email)
-    flash("Reminders sent!")
+        status += "Email" if status == "" else " and Email"
+    if status == "": status = "No"
+    flash("%s Reminders sent!" % status)
     return redirect(url_for('index'))
 
 ### ERROR PAGES  
