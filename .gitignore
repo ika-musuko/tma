@@ -10,3 +10,4 @@ src_old
 .git
 *conflicted copy*
 *.db
+*.dump
