@@ -5,6 +5,14 @@
 <p>Nothing on the queue!</p>
 {% else %}
 <center>
+    {#<div class="row">
+        <a class="btn btn-success btn-sm" role="button" href="{{ url_for('edit_queue', filt='
+
+
+
+
+
+    </div> #}
     <div>
         {% if event_queue.has_prev %}
             <a class=" btn btn-danger btn-space btn-block" role="button" href="{{ url_for('edit_queue', page=event_queue.prev_num) }}">↑ higher events ↑</a>
