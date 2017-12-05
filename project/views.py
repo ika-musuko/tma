@@ -161,7 +161,7 @@ def edit_event(id):
             event_query.recEvent_period_end    = form.period_end.data  
             event_query.recEvent_start_time    = form.start_time.data  
             event_query.recEvent_end_time      = form.end_time.data    
-            event_query.recEvent_daystr        = form.days.data 
+            event_query.recEvent_daystr        = ''.join(c for c in form.days.data if c in "NMTWHFS")
         
         elif event_query.type == "SleepEvent":
             event_query.recEvent_start_time    = form.sleep.data
