@@ -1,8 +1,9 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateTimeField, DateField, IntegerField, BooleanField, SelectField, SelectMultipleField, widgets
+from wtforms import StringField, TextAreaField, IntegerField, BooleanField, SelectField, SelectMultipleField, widgets
 #from wtforms.fields.html5 import DateField
 from wtforms.widgets.html5 import TimeInput
+from wtforms.fields.html5 import DateField, DateTimeField
 from wtforms_components import TimeField
 from wtforms.validators import DataRequired, Length, Optional
 from . import CELLPHONE_PROVIDERS
@@ -33,7 +34,7 @@ class EditForm(FlaskForm):
 
 ### MULTICHECKBOX FIELD ###        
 class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
+    widget = widgets.TableWidget()
     option_widget = widgets.CheckboxInput()
         
 ### EVENT FORMS ###
