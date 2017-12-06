@@ -6,6 +6,7 @@ from .forms import isblank, form_to_event, EditForm, EventForm, SleepScheduleFor
 from .models import init_db, User, UserEvent, UserScheduleEvent, to_event
 from .scheduler import event, schedule, txt
 import datetime
+from sqlalchemy import desc
 
 EVENTS_PER_PAGE = 10
 
@@ -16,7 +17,7 @@ EVENTS_PER_PAGE = 10
 def index(page=1):
     if current_user.is_authenticated: 
         # get the user's current events and display them here
-        schedule_events = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).paginate(page, EVENTS_PER_PAGE, False)
+        schedule_events = current_user.scheduleevents.filter(UserScheduleEvent.end >= datetime.datetime.today()).order_by(UserScheduleEvent.start).paginate(page, EVENTS_PER_PAGE, False)
         #schedule_events = current_user.scheduleevents.paginate(page, EVENTS_PER_PAGE, False)
         return render_template('index.html', todolist=schedule_events)
     else:
