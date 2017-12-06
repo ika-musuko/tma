@@ -97,8 +97,8 @@ def edit_form_with_args(e: UserEvent):
 class EventForm(FlaskForm):
     name  = StringField('Name', validators=[DataRequired()])
     desc  = TextAreaField('Description')
-    start = DateTimeField('Start Date/Time')
-    end   = DateTimeField('End Date/Time', validators=[Optional()])
+    start = DateTimeField('Start Date/Time', format='%Y-%m-%d %h:%m')
+    end   = DateTimeField('End Date/Time', format='%Y-%m-%d %h:%m', validators=[Optional()])
 
 class SleepScheduleForm(FlaskForm):
     sleep = TimeField('Sleep Time', validators=[DataRequired()])
@@ -108,16 +108,16 @@ class RecurringEventForm(FlaskForm):
     name         = StringField('Name', validators=[DataRequired()])
     desc         = TextAreaField('Description')
     days = MultiCheckboxField(label='Select Days of the Week', choices=list_swapper(DAYS_OF_THE_WEEK))
-    period_start = DateField('Generate From Date', validators=[Optional()])
-    period_end   = DateField('Generate To Date', validators=[Optional()])
-    start_time   = TimeField('Start Time', validators=[DataRequired()])
-    end_time     = TimeField('End Time', validators=[DataRequired()])
+    period_start = DateField('Generate From Date', format='%Y-%m-%d', validators=[Optional()])
+    period_end   = DateField('Generate To Date', format='%Y-%m-%d', validators=[Optional()])
+    start_time   = TimeField('Start Time',  format='%h:%m', validators=[DataRequired()])
+    end_time     = TimeField('End Time', format='%h:%m', validators=[DataRequired()])
 
 class TaskEventForm(FlaskForm):
     # for use with task or due events
     name = StringField('Name', validators=[DataRequired()])
     desc = TextAreaField('Description')
-    due = DateTimeField('Due Date/Time', validators=[Optional()]) # optional, for DueEvents
+    due = DateTimeField('Due Date/Time', format='%Y-%m-%d %h:%m', validators=[Optional()]) # optional, for DueEvents
     duration = IntegerField('Time', validators=[Optional()])
     finished = BooleanField('finished')
 
