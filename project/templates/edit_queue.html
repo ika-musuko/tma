@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Event Queue Editor</h1>
+    <h5>Filter By:</h5>
     <div class="row">
         <div class='col-sm'> 
-            <a class="btn btn-danger btn-sm" role="button" href="{{ url_for('edit_queue') }}">All Events</a>
+            <a class="btn btn-danger " role="button" href="{{ url_for('edit_queue') }}">All Events</a>
         </div>
         <div class='col-sm'>
-            <a class="btn btn-success btn-sm" role="button" href="{{ url_for('edit_queue', filt='Event') }}">User Events</a>
+            <a class="btn btn-success" role="button" href="{{ url_for('edit_queue', filt='Event') }}">User Events</a>
         </div>
         <div class='col-sm'>
-            <a class="btn btn-primary btn-sm" role="button" href="{{ url_for('edit_queue', filt='RecurringEvent') }}">RecurringEvents</a>
+            <a class="btn btn-primary" role="button" href="{{ url_for('edit_queue', filt='RecurringEvent') }}">RecurringEvents</a>
         </div>
         <div class='col-sm'>
-            <a class="btn btn-primary btn-sm" role="button" href="{{ url_for('edit_queue', filt='TaskEvent') }}">TaskEvents</a>
+            <a class="btn btn-primary" role="button" href="{{ url_for('edit_queue', filt='TaskEvent') }}">TaskEvents</a>
         </div>
         <div class='col-sm'>
-            <a class="btn btn-warning btn-sm" role="button" href="{{ url_for('edit_queue', filt='DueEvent') }}">DueEvents</a>
+            <a class="btn btn-warning" role="button" href="{{ url_for('edit_queue', filt='DueEvent') }}">DueEvents</a>
         </div>
         <div class='col-sm'>
-            <a class="btn btn-sample btn-sm" role="button" href="{{ url_for('edit_queue', filt='SleepEvent') }}">SleepEvents</a>
+            <a class="btn btn-sample " role="button" href="{{ url_for('edit_queue', filt='SleepEvent') }}">SleepEvents</a>
         </div>
     </div>
 {% if event_queue.items|length < 1 %}

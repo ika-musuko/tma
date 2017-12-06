@@ -330,9 +330,11 @@ def edit_schedule_event(id):
         event_query.desc  = form.desc.data 
         event_query.start = form.start.data
         event_query.end   = form.end.data  
-        db.session.add(event_query)
+        #db.session.add(event_query)
         db.session.commit()
+        post_query = current_user.scheduleevents.filter_by(id=id).first()
         flash('Schedule Event ID: %i has been edited' % id)
+        flash('%s - name: %s start: %s end: %s' % (id, post_query.name, post_query.start, post_query.end))
         return redirect(url_for('index'))
     return render_template("edit_schedule_event.html", id=event_query.id, form=form)
 
