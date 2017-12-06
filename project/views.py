@@ -141,7 +141,12 @@ def add_event(event_type):
 @app.route('/edit_queue/<int:page>', methods=['GET', 'POST'])
 @login_required
 def edit_queue(page=1):
-    events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
+    filt = request.args.get('filt')
+    print("using filter %s" % filt)
+    if filt in ('Event','RecurringEvent','TaskEvent','DueEvent','SleepEvent'):
+        events = current_user.events.filter_by(type=filt).paginate(page,EVENTS_PER_PAGE, False)
+    else:
+        events = current_user.events.paginate(page, EVENTS_PER_PAGE, False)
     return render_template('edit_queue.html', event_queue=events)
 
 ### EDIT EVENT PAGE ###
