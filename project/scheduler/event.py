@@ -191,6 +191,8 @@ class RecurringEvent(Event):
         Event.__init__(self, name, desc, priority=0, start=None, end=None)
         self.period_start = period_start
         self.period_end = period_end
+        if self.period_end is not None:
+            self.period_end += datetime.timedelta(hours=23, minutes=59, seconds=59)
         self.start_time = start_time
         self.end_time = end_time
         
