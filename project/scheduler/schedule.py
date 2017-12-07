@@ -104,6 +104,8 @@ class ScheduleEvent(event.Event):
                     , parent_id: int=-1
                 ):
         event.Event.__init__(self=self, name=name, desc=desc, priority=priority, start=start, end=end)
+        if self.start > self.end:
+            self.end += datetime.timedelta(days=1)
         self.extra_info = extra_info
         self.parent_id = parent_id
         
@@ -254,7 +256,7 @@ class Schedule:
                 # make dates from the RecurringEvent's start_time and end_time
                 start_datetime = combine(day, re.start_time)
                 # if re is a SleepEvent and the start_time is after the end_time, advance to the next day
-                end_datetime = combine(day+datetime.timedelta(days=int(isinstance(re, event.SleepEvent) and re.start_time > re.end_time)), re.end_time)
+                end_datetime = combine(day, re.end_time)
 
                 re_extra_info = "SLEEP Event: bed: %s wake: %s" % (re.start_time, re.end_time) if isinstance(re, event.SleepEvent) else  "Recurring Event: %s start: %02d:%02d end: %02d:%02d" % (   re.day_names
                                                                                        , start_datetime.hour
