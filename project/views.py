@@ -177,14 +177,14 @@ def edit_event(id):
             event_query.name                  = form.name.data    
             event_query.desc                  = form.desc.data    
             event_query.taskEvent_duration    = form.duration.data
-            event_query.taskEvent_done        = form.done.data    
+            event_query.taskEvent_done        = form.finished.data    
             
         elif event_query.type == "DueEvent":
             event_query.name                  = form.name.data    
             event_query.desc                  = form.desc.data    
             event_query.dueEvent_due          = form.due.data     
             event_query.taskEvent_duration    = form.duration.data
-            event_query.taskEvent_done        = form.done.data    
+            event_query.taskEvent_done        = form.finished.data    
             
         else:
             event_query.name     = form.name.data  
